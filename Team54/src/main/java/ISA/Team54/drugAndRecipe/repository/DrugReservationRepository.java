@@ -15,4 +15,5 @@ public interface DrugReservationRepository extends JpaRepository<DrugReservation
     void deleteById(long id);
     DrugReservation findOneByIdAndReservedDrugDrugInPharmacyIdPharmaciIdAndStatus(long id, long reservedDrugPharmaciId, ReservationStatus status);
     DrugReservation findOneById(long id);
+    List<DrugReservation> findAllByPatientIdAndStatus(long id, ReservationStatus sold);
 }

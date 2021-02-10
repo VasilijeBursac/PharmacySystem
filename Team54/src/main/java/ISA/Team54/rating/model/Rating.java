@@ -1,19 +1,17 @@
 package ISA.Team54.rating.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.Null;
 
+import ISA.Team54.users.model.Patient;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import ISA.Team54.rating.enums.RatingObject;
 import ISA.Team54.users.model.Dermatologist;
 import ISA.Team54.users.model.Pharmacist;
 import ISA.Team54.users.model.Pharmacy;
+import org.springframework.lang.Nullable;
+
 @Entity
 public class Rating {
 	@Id
@@ -22,18 +20,21 @@ public class Rating {
 	
 	@JsonBackReference
 	@ManyToOne
-	@Null
+	@Nullable
 	private Dermatologist dermatologist;
 	
 	@JsonBackReference
 	@ManyToOne
-	@Null
+	@Nullable
 	private Pharmacist pharmacist;
 	
 	@JsonBackReference
 	@ManyToOne
-	@Null
+	@Nullable
 	private Pharmacy pharmacy;
+
+	@OneToOne
+	private Patient patient;
 	
 	@Column(unique = false,nullable = false)
 	private double rating;
@@ -50,11 +51,11 @@ public class Rating {
 		this.id = id;
 	}
 
-	public Dermatologist getDermatoligist() {
+	public Dermatologist getDermatologist() {
 		return dermatologist;
 	}
 
-	public void setDermatoligist(Dermatologist dermatoligist) {
+	public void setDermatologist(Dermatologist dermatoligist) {
 		this.dermatologist = dermatoligist;
 	}
 
@@ -82,6 +83,12 @@ public class Rating {
 	public void setRating(double rating) {
 		this.rating = rating;
 	}
-	
-	
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 }

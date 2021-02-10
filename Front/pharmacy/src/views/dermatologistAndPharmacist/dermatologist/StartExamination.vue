@@ -1,7 +1,8 @@
 <template>
     <div class="container">
     <notifications animation-type="velocity"/>
-        <h4 class="h4 align-middle my-4">Pregled pacijenta</h4>
+        <h4 class="h4 align-middle my-4" v-if="userRole == 'ROLE_DERMATOLOGIST'">Pregled pacijenta</h4>
+         <h4 class="h4 align-middle my-4" v-if="userRole == 'ROLE_PHARMACIST'">Savetovanje pacijenta</h4>
         <div>
   
 
@@ -162,8 +163,11 @@ export default {
             .then(response => {this.examination = response.data
                                 this.name = this.examination.soonestExamination.dermatologistName
                                 this.surname = this.examination.soonestExamination.dermatologistSurname
-                                this.start = this.examination.soonestExamination.examinationStart
+                                this.start = new Date(this.examination.soonestExamination.examinationStart).toLocaleString()
                                 this.items = this.examination.historyExaminations
+                                for(let i in this.items){
+                                  this.items[i].examinationStart = new Date(this.examination.historyExaminations[i].examinationStart).toLocaleString()
+                                }
                                 this.examinationId = this.examination.soonestExamination.id
                                 this.allDrugs = this.examination.drugsForPatient
                                 })
@@ -172,6 +176,8 @@ export default {
             console.error("There was an error!", error);});
             
         
+    }, mounted(){
+        this.userRole = localStorage.getItem("UserRole");
     }, components:{
         NewExamination
     },methods: {
@@ -253,7 +259,6 @@ export default {
          
         },
         hideModal() {
-        
         this.$refs['my-modal'].hide()
       },
         submit : function(){
@@ -265,8 +270,10 @@ export default {
                 title: 'Success',
                 text: this.message,              
                 closeOnClick : true
-            })});
-            
+            })
+            }); 
+
+            setTimeout(() => {  this.$router.push("my-calendar"); }, 2000);
         }
     }
 }

@@ -83,6 +83,10 @@ export default {
       .get("http://localhost:9001/examination/definedExaminations/" + 4)
       .then((response) => {
         this.definedExaminations = response.data;
+        for(let i in this.definedExaminations){
+          this.definedExaminations[i].examinationStart = new Date(response.data[i].examinationStart).toLocaleString()
+        }
+      
       })
       .catch((error) => {
         this.errorMessage = error.message;

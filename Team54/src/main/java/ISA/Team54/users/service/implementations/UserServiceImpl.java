@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,12 +31,14 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Lazy
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private AuthorityService authService;
-	
+
+	@Lazy
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
@@ -48,7 +51,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public User findById(Long id) throws AccessDeniedException {
-		User u = userRepository.findById(id).orElseGet(null);
+		User u = userRepository.findById(id).orElse(null);
 		return u;
 	}
 

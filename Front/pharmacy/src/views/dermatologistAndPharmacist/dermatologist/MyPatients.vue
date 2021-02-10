@@ -22,7 +22,11 @@ export default {
   },created() {
             // GET request for examination information
             this.$axios.get("http://localhost:9001/patient/examinatedPatients/"+1)
-            .then(response => this.items = response.data)
+            .then(response => {this.items = response.data
+              for(let i in this.items){
+                this.items[i].term = new Date(response.data[i].term).toLocaleString()
+              }
+            })
             .catch(error => {
             this.errorMessage = error.message;
             console.error("There was an error!", error);});}

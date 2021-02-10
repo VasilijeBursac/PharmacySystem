@@ -58,6 +58,7 @@ export default {
         { key: "surname", sortable: true },
       ], imeIPrezime : '',
          choosedPatient :'',
+          userRole: 'ROLE_UNREGISTERED',
       };
     },
      created() {

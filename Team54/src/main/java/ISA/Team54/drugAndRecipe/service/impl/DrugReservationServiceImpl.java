@@ -1,5 +1,14 @@
 package ISA.Team54.drugAndRecipe.service.impl;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import ISA.Team54.drugAndRecipe.enums.ReservationStatus;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
@@ -8,18 +17,20 @@ import ISA.Team54.drugAndRecipe.model.DrugReservation;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugReservationRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugsInPharmacyRepository;
-import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugReservationService;
 import ISA.Team54.exceptions.InvalidTimeLeft;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacist;
+import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.repository.PatientRepository;
 import ISA.Team54.users.repository.PharmacistRepository;
+import ISA.Team54.users.repository.PharmacyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -38,8 +49,12 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 
 	@Autowired
 	private DrugRepository drugRepository;
+
 	@Autowired
 	private PharmacistRepository pharmacistRepository;
+
+	@Autowired
+	private PharmacyRepository pharmacyRepository;
 
 	@Override
 	public void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) {
@@ -88,7 +103,6 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 	}
 
 	public void sellDrug(long drugReservationId) {
-
 		DrugReservation drugReservation = drugReservationRepository.findOneById(drugReservationId);
 		DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findOneByDrugInPharmacyId(drugReservation.getReservedDrug().getDrugInPharmacyId());
 		drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - 1);
@@ -96,21 +110,38 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 		drugReservationRepository.save(drugReservation);
 	}
 
-	public Drug isDrugReservationAvailable(long reservationId) {
+	private List<DrugReservation> getSoldReservationsForPatient(){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		try {
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+
+		return drugReservationRepository.findAllByPatientIdAndStatus(patient.getId(), ReservationStatus.Sold );
+	}
+
+	@Override
+	public List<Pharmacy> getPatientPharmacies() {
+		List<DrugReservation> drugReservations = getSoldReservationsForPatient();
+		List<Pharmacy> pharmacies = new ArrayList<Pharmacy>();
+		for (DrugReservation drugReservation : drugReservations) {
+			long pharmacyId = drugReservation.getReservedDrug().getDrugInPharmacyId().getPharmaciId();
+			pharmacies.add(pharmacyRepository.findById(pharmacyId));
+		}
+
+		return pharmacies;
+	}
+
+	public Drug isDrugReservationAvailable(long reservationId) throws InvalidTimeLeft {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 			Pharmacist pharmacist = pharmacistRepository.findOneById(((Pharmacist) authentication.getPrincipal()).getId());
 			DrugReservation drugReservation = drugReservationRepository.findOneByIdAndReservedDrugDrugInPharmacyIdPharmaciIdAndStatus(reservationId, pharmacist.getPharmacy().getId(), ReservationStatus.Reserved);
 			if (drugReservation == null) {
 				return null;
 			}
 			if (hasExpired(drugReservation)) {
-				return null;
+				throw new InvalidTimeLeft();
 			}
 			//sellDrug(drugReservation.getId());
 			return drugRepository.findOneById(drugReservation.getReservedDrug().getDrugInPharmacyId().getDrugId());
-		} catch (Exception e) {
-			return null;
-		}
+		
 	}
 }

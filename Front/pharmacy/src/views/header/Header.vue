@@ -48,11 +48,11 @@ export default {
 
 <style>
     .nav>li {
-        margin-left: 0.3rem;
+        margin-left: 0.2rem;
     }
 
     .nav .nav-link{
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         font-weight: 500;
     }
 </style>

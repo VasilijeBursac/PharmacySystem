@@ -11,7 +11,6 @@ import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
 import ISA.Team54.drugAndRecipe.model.Drug;
-import ISA.Team54.drugAndRecipe.model.DrugAllergy;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacyId;
 import ISA.Team54.drugAndRecipe.model.DrugSpecification;
@@ -19,15 +18,15 @@ import ISA.Team54.drugAndRecipe.repository.DrugAllergyRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugsInPharmacyRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.model.Patient;
-import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.repository.PatientRepository;
 
 @Service
 public class DrugServiceImpl implements DrugService {
 
 	@Autowired
-	private DrugRepository drugRepsoitory;
+	private DrugRepository drugRepository;
 	@Autowired
 	private ExaminationRepository examinationRepository;
 	@Autowired
@@ -36,10 +35,12 @@ public class DrugServiceImpl implements DrugService {
 	private DrugsInPharmacyRepository drugsInPharmacyRepository;
 	@Autowired
 	private PatientRepository patientRepository;
+	@Autowired
+	private EmailService emailService;
 	
 	@Override
 	public List<Drug> getDrugsForPatient(Long id) {
-		List<Drug> allDrugs = drugRepsoitory.findAll();
+		List<Drug> allDrugs = drugRepository.findAll();
 		List<Drug> drugsForPatient = new ArrayList<Drug>();
 		if(allDrugs== null) 
 			return new ArrayList<Drug>();
@@ -55,7 +56,7 @@ public class DrugServiceImpl implements DrugService {
 	}
 	
 	private boolean isPatientAlergicOnDrug(Long patientId, Long drugId) {
-		Drug drug = drugRepsoitory.findOneById(drugId);
+		Drug drug = drugRepository.findOneById(drugId);
 		Patient patient = patientRepository.findOneById(patientId);
 		for(Drug allergyDrug : patient.getDrugAllergies()) {
 			if(drug.getId()==allergyDrug.getId()) {
@@ -80,20 +81,22 @@ public class DrugServiceImpl implements DrugService {
 		Examination examination = examinationRepository.findOneById(examinationId);
 		Patient patient = examination.getPatient();
 		IsAvalableDrugDTO availableDTO = new IsAvalableDrugDTO();
-		boolean isAvailable = isDrugAvailable((long)drugId,examination);
+		boolean isAvailable = isDrugAvailable(drugId,examination);
 		if(isAvailable) {
 			availableDTO.setAvailable(true);
 			return availableDTO;
 		}
+		Drug missingDrug = drugRepository.findOneById(drugId);
+		emailService.sendEmail("team54isa@gmail.com","MANJAK LEKA","-- LEK --  ime :"+missingDrug.getName()+" code :" + missingDrug.getCode() + " nedostaje u bolnici");
 		List<Drug> substituteDrugsForPatient = new ArrayList<Drug>();
-		Drug mainDrug = drugRepsoitory.findOneById((long)drugId);
+		Drug mainDrug = drugRepository.findOneById((long)drugId);
 		List<Drug> substituteDrugs = mainDrug.getMainDrugs();
 		for(Drug substituteDrug : substituteDrugs) {
 			if(isDrugAvailable((long)substituteDrug.getId(),examination) && isPatientAlergicOnDrug(patient.getId(),(long)substituteDrug.getId())) {
 				substituteDrugsForPatient.add(substituteDrug);
 			}
 		}		
-		availableDTO.setAvailable(false);
+		availableDTO.setAvailable(false);  
 		for(Drug drug : substituteDrugsForPatient) {
 			availableDTO.getDrugsDTO().add(new DrugMapper().DrugIntoDrugDTO(drug));
 		}
@@ -108,7 +111,7 @@ public class DrugServiceImpl implements DrugService {
 
 	@Override
 	public DrugSpecification getSpecificationForDrug(Long drugId) {
-		Drug drug = drugRepsoitory.findOneById(drugId);
+		Drug drug = drugRepository.findOneById(drugId);
 		if(drug!=null) {
 			return drug.getDrugSpecification();
 		}
@@ -116,12 +119,12 @@ public class DrugServiceImpl implements DrugService {
 	}
 	@Override
 	public List<Drug> getAllDrugs() {
-		return drugRepsoitory.findAll();
+		return drugRepository.findAll();
 	}
 
 	@Override
 	public Drug findById(long id) {
-		return drugRepsoitory.findById(id).orElse(null);
+		return drugRepository.findById(id).orElse(null);
 	}
 	
 }

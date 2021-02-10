@@ -17,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import ISA.Team54.Examination.model.Examination;
@@ -69,7 +70,7 @@ public class Pharmacy {
 	@JoinTable(name = "dermatologistsInPharmacy", joinColumns = @JoinColumn(name = "pharmacy_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "dermatologist_id", referencedColumnName = "id"))
 	public List<Dermatologist> dermatologists;
 
-	@JsonManagedReference
+	@JsonBackReference
 	@OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public List<Pharmacist> pharmacists;
 

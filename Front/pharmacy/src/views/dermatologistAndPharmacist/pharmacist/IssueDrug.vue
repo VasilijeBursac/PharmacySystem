@@ -64,7 +64,7 @@ export default {
     },methods:{
         find: function(){
             this.reservationIdForSend =this.drugReservation
-            this.$axios.get("http://localhost:9001/drugReservation/reservedDrugs/"+ this.drugReservation)
+            this.$axios.get("http://localhost:9001/reservation/reservedDrugs/"+ this.drugReservation)
            .then(response => {
             // ako lek nije dostupan obavesti ga 
               if(response.status == 200){
@@ -77,16 +77,23 @@ export default {
             console.error("There was an error!", error);
             this.drug = ""
             this.drugShow = " ";
+            if(error.response.status == 405){
              this.$notify({  
                 type: "error",
-                title: 'Erroe',
+                title: 'Error',
+                text: ' Rezervacija je istekla!',
+                closeOnClick : true});
+            }else{
+                 this.$notify({  
+                type: "error",
+                title: 'Error',
                 text: ' Ne postoji trazena rezervacija!',
                 closeOnClick : true});
-            
+            }
             });
            
         },sell: function(){
-              this.$axios.post("http://localhost:9001/drugReservation/sellDrug/"+this.reservationIdForSend)
+              this.$axios.post("http://localhost:9001/reservation/sellDrug/"+this.reservationIdForSend)
 
                 
                 .then(response => {this.message = response.data
