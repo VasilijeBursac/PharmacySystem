@@ -13,6 +13,7 @@ public class PharmacyMapper {
 		pharmacy.setAddress(pharmacyDTO.getAddress());
 		pharmacy.setCity(pharmacyDTO.getCity());
 		pharmacy.setCountry(pharmacyDTO.getCountry());
+		pharmacy.setDescription(pharmacyDTO.getDescription());
 		return pharmacy;						
 	}
 	
@@ -24,6 +25,7 @@ public class PharmacyMapper {
 				pharmacy.getCity(),
 				pharmacy.getCountry(),
 				pharmacy.getRatings(),
-				pharmacy.getPharmacistPrice());
+				pharmacy.getPharmacistPrice(),
+				pharmacy.getDescription());
 	}
 }
