@@ -27,9 +27,7 @@ export default {
             var geocodingAddressParts = [this.pharmacy.address, this.pharmacy.city, this.pharmacy.country]
             var geocodingAddress = geocodingAddressParts.join(" ").replace(/ /g, "%20")
             
-            var geocodingURL =  this.geocodingURLbase.concat(geocodingAddress, '.json?country=RS&access_token=', this.mapboxglAccessToken)
-
-            console.log(geocodingURL)
+            var geocodingURL =  this.geocodingURLbase.concat(geocodingAddress, '.json?access_token=', this.mapboxglAccessToken)
 
             return geocodingURL;
         },
