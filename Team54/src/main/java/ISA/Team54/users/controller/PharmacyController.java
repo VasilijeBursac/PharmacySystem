@@ -27,6 +27,7 @@ import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.users.dto.PharmacyDTO;
 import ISA.Team54.users.dto.PharmacyExaminationDTO;
 import ISA.Team54.users.mappers.PharmacyMapper;
+import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.service.interfaces.PharmacyService;
 
@@ -49,6 +50,12 @@ public class PharmacyController {
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public  List<Pharmacy> findAll(){
 		return this.pharmacyService.findAll();
+	}
+	
+	@GetMapping("/{id}")
+	public PharmacyDTO loadById(@PathVariable long id){
+		Pharmacy pharmacy =  this.pharmacyService.getPharmacyById(id);
+		return PharmacyMapper.PharmacyToPharmacyDTO(pharmacy);
 	}
 	
 	@PostMapping("/all-examinations")

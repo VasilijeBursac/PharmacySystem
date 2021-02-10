@@ -16,11 +16,13 @@ public class PharmacyMapper {
 		return pharmacy;						
 	}
 	
-	public PharmacyDTO PharmacyToPharmacyDTO(Pharmacy pharmacy) {
+	public static PharmacyDTO PharmacyToPharmacyDTO(Pharmacy pharmacy) {
 		return new PharmacyDTO(
 				pharmacy.getId(),
 				pharmacy.getName(),
 				pharmacy.getAddress(),
+				pharmacy.getCity(),
+				pharmacy.getCountry(),
 				pharmacy.getRatings(),
 				pharmacy.getPharmacistPrice());
 	}
