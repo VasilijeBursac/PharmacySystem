@@ -27,4 +27,5 @@ public interface PharmacyService {
 	Pharmacy getPharmacyById(long pharmacyId);
 	List<Pharmacy> findAll();
     List<Pharmacy> getPatientPharmacies();
+    void updatePharmacyInfo(PharmacyDTO pharmacyDTO);
 }

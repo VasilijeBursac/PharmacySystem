@@ -25,7 +25,7 @@ export default {
     methods:{
         generateGeocodingURL(){
             var geocodingAddressParts = [this.pharmacy.address, this.pharmacy.city, this.pharmacy.country]
-            var geocodingAddress = geocodingAddressParts.join(" ").replace(/ /g, "%20")
+            var geocodingAddress = geocodingAddressParts.join(' ').replace(/ /g, '%20')
             
             var geocodingURL =  this.geocodingURLbase.concat(geocodingAddress, '.json?access_token=', this.mapboxglAccessToken)
 
@@ -62,7 +62,7 @@ export default {
             new mapboxgl.Marker()
                 .setLngLat(this.pharmacyLocationCoordinates)
                 .setPopup(new mapboxgl.Popup({ offset: 25 }) // Add popups
-                .setHTML('<h3>' +  this.pharmacy.name + '</h3><p>' + this.pharmacy.address + ", " + this.pharmacy.city + ", " + this.pharmacy.country + '</p>'))
+                .setHTML('<h6>' +  this.pharmacy.name + '</h6><p>' + this.pharmacy.address + ", " + this.pharmacy.city + ", " + this.pharmacy.country + '</p>'))
                 .addTo(map);
         }
     }
@@ -84,5 +84,10 @@ export default {
     .mapboxgl-popup-content {
         text-align: center;
         font-family: 'Segoe UI', Avenir, Helvetica, Arial, sans-serif;
+        font-size: 13px;
+    }
+
+    .mapboxgl-popup-content p {
+        font-style: italic;
     }
 </style>

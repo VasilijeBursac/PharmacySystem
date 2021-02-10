@@ -146,4 +146,12 @@ public class PharmacyServiceImpl implements PharmacyService {
 		return pharmacies;
 	}
 
+	@Override
+	public void updatePharmacyInfo(PharmacyDTO pharmacyDTO) {
+		Pharmacy pharmacy = pharmacyRepository.findById(pharmacyDTO.getId());
+		PharmacyMapper.PharmacyDTOToPharmacyUpdateInfo(pharmacyDTO, pharmacy);
+		pharmacyRepository.save(pharmacy);
+		
+	}
+
 }

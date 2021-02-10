@@ -9,6 +9,7 @@ public class PharmacyMapper {
 		
 	public static Pharmacy PharmacyDTOToPharmacy(PharmacyDTO pharmacyDTO) {
 		Pharmacy pharmacy = new Pharmacy();
+		pharmacy.setId(pharmacyDTO.getId());
 		pharmacy.setName(pharmacyDTO.getName());	
 		pharmacy.setAddress(pharmacyDTO.getAddress());
 		pharmacy.setCity(pharmacyDTO.getCity());
@@ -27,5 +28,13 @@ public class PharmacyMapper {
 				pharmacy.getRatings(),
 				pharmacy.getPharmacistPrice(),
 				pharmacy.getDescription());
+	}
+	
+	public static void PharmacyDTOToPharmacyUpdateInfo(PharmacyDTO pharmacyDTO, Pharmacy pharmacy) {
+		pharmacy.setName(pharmacyDTO.getName());
+		pharmacy.setDescription(pharmacyDTO.getDescription());
+		pharmacy.setAddress(pharmacyDTO.getAddress());
+		pharmacy.setCity(pharmacyDTO.getCity());
+		pharmacy.setCountry(pharmacyDTO.getCountry());
 	}
 }
