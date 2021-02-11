@@ -9,6 +9,7 @@ import ISA.Team54.unit.UserTests;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	UserTests.class,
+	DrugTests.class
 })
 public class AllTests {
 	

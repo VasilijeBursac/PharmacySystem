@@ -63,7 +63,7 @@ public class UserTests{
 	
 	 
 	 @Test 
-	 public void findPatientBySurnameAndName_ReturnPatient(String surnameAndName) {
+	 public void findPatientBySurnameAndName_ReturnPatient() {
 		 Patient patientTest1 = new Patient();
 		 patientTest1.setName("Milica");
 		 patientTest1.setSurname("Ivanovic");
@@ -77,7 +77,7 @@ public class UserTests{
 	 }	 
 	 
 	 @Test 
-	 public void findPatientBySurnameAndName_ReturnsAllPatients(String surnameAndName) {
+	 public void findPatientBySurnameAndName_ReturnsAllPatients() {
 		 
 		 Patient patientTest1 = new Patient();
 		 patientTest1.setName("Milica");

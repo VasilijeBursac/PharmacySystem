@@ -1,7 +1,7 @@
 package ISA.Team54.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ISA.Team54.drugAndRecipe.model.Drug;
-import ISA.Team54.drugAndRecipe.model.DrugReservation;
+import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
+import ISA.Team54.drugAndRecipe.model.DrugInPharmacyId;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
-import ISA.Team54.drugAndRecipe.repository.DrugReservationRepository;
+import ISA.Team54.drugAndRecipe.repository.DrugsInPharmacyRepository;
+import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugReservationService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.users.model.Patient;
@@ -37,16 +39,19 @@ public class DrugTests {
 	private DrugRepository drugRepositoryMocked;
 	
 	@MockBean
-	private DrugReservationRepository drugReservationRepositoryMocked;
+	private DrugsInPharmacyRepository drugsInPharmacyRepositoryMock;
 	
 	@Autowired
 	private DrugReservationService drugReservationService;
 	
 	@Autowired
+	private DrugInPharmacyService drugInPharmacyService;
+	
+	@Autowired
 	private DrugService drugService;
 	
 	
-	@Test void  isPatientAlergicOnDrugTest(){
+	@Test public void  isPatientAlergicOnDrugTest(){
 		Drug drug = new Drug(1,"Aspirin","23425",3);
 		List<Drug> drugAllergies = new ArrayList<Drug>();
 		drugAllergies.add(new Drug(1,"Aspirin","23425",3));
@@ -57,30 +62,34 @@ public class DrugTests {
 		Mockito.when(drugRepositoryMocked.findOneById(1L)).thenReturn(drug);
 		Mockito.when(patientRepositoryMocked.findOneById(1L)).thenReturn(patient);
 		boolean isAllergic = drugService.isPatientAlergicOnDrug(Constants.PATIENT_ID1,Constants.DRUG_ID1);
-		assertTrue(isAllergic);
+		assertFalse(isAllergic);
 	}	
 	
-	 @Test public void getReservationsForPatient_ReturnsDrugReservations() {
+	 @Test public void getDrugsInPharmaciesByDrug_ReturnsDrugInPharmacies() {
 		 
-		 Patient patientTest = new Patient();
+		 DrugInPharmacyId drugInPharmacyId1 = new DrugInPharmacyId(1,1);
+		 DrugInPharmacyId drugInPharmacyId2 = new DrugInPharmacyId(3,1);
+		 DrugInPharmacyId drugInPharmacyId3 = new DrugInPharmacyId(2,1);
+		 DrugInPharmacyId drugInPharmacyId4 = new DrugInPharmacyId(5,1);
+		 DrugInPharmacyId drugInPharmacyId5 = new DrugInPharmacyId(1,3);
 		 
-		 DrugReservation drugReservation1 = new DrugReservation();
-		 DrugReservation drugReservation2 = new DrugReservation();
-		 DrugReservation drugReservation3 = new DrugReservation();
-		 DrugReservation drugReservation4 = new DrugReservation();
-		 DrugReservation drugReservation5 = new DrugReservation();
+		 DrugInPharmacy drugnInPharmacy1  = new DrugInPharmacy(drugInPharmacyId1,20);
+		 DrugInPharmacy drugnInPharmacy2  = new DrugInPharmacy(drugInPharmacyId2,10);
+		 DrugInPharmacy drugnInPharmacy3  = new DrugInPharmacy(drugInPharmacyId3,70);
+		 DrugInPharmacy drugnInPharmacy4  = new DrugInPharmacy(drugInPharmacyId4,2);
+		 DrugInPharmacy drugnInPharmacy5  = new DrugInPharmacy(drugInPharmacyId5,53);
 		 
-		 List<DrugReservation> drugReservationsForPatientTest = new ArrayList<DrugReservation>();
+		 List<DrugInPharmacy> drugInPharmacy = new ArrayList<DrugInPharmacy>();
 		 
-		 drugReservationsForPatientTest.add(drugReservation1);
-		 drugReservationsForPatientTest.add(drugReservation2);
-		 drugReservationsForPatientTest.add(drugReservation3);
-		 drugReservationsForPatientTest.add(drugReservation4);
-		 drugReservationsForPatientTest.add(drugReservation5);
+		 drugInPharmacy.add(drugnInPharmacy1);
+		 drugInPharmacy.add(drugnInPharmacy2);
+		 drugInPharmacy.add(drugnInPharmacy3);
+		 drugInPharmacy.add(drugnInPharmacy4);
+		 drugInPharmacy.add(drugnInPharmacy5);
 		 
-		 Mockito.when(patientRepositoryMocked.findById(2)).thenReturn(patientTest);
-		 Mockito.when(drugReservationRepositoryMocked.findAllByPatientId(Constants.PATIENT_ID2)).thenReturn(drugReservationsForPatientTest);
-		 List<DrugReservation> drugReservationsForPatient = drugReservationService.getReservationsForPatient();
-		 assertEquals(drugReservationsForPatient.size(),5);
+		 Mockito.when(drugsInPharmacyRepositoryMock.findByDrugId(1L)).thenReturn(drugInPharmacy);
+		 
+		 List<DrugInPharmacy> drugInPharmacies = drugInPharmacyService.getDrugsInPharmaciesByDrug(Constants.DRUG_ID1);
+		 assertEquals(drugInPharmacies.size(),5);
 	 }
 }
