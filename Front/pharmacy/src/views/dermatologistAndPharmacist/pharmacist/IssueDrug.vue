@@ -91,7 +91,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
           this.drug = "";
           this.drugShow = " ";
           if (error.response.status == 405) {
@@ -131,7 +131,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
           this.$notify({
             type: "error",
             title: "Erroe",

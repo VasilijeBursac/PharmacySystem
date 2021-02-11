@@ -63,7 +63,7 @@ export default {
 		this.$http
             .post('examination/future', {type: 'DermatologistExamination'})
             .then( res => {
-                console.log(res.data)
+               // console.log(res.data)
 				let data = []
                 res.data.forEach(element => {
 					data.push({ 

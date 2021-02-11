@@ -250,7 +250,7 @@ export default {
       })
       .catch((error) => {
         this.errorMessage = error.message;
-        console.error("There was an error!", error);
+        //console.error("There was an error!", error);
       });
   },
   mounted() {
@@ -287,7 +287,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
         });
     },
     getDrugs: function(drug) {

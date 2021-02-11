@@ -32,7 +32,8 @@ export default {
             })
             .catch(error => {
             this.errorMessage = error.message;
-            console.error("There was an error!", error);});}
+            //console.error("There was an error!", error);
+            });}
 };
 </script>
 <style>

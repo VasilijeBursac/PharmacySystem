@@ -190,7 +190,7 @@ export default {
       })
       .catch((error) => {
         this.errorMessage = error.message;
-        console.error("There was an error!", error);
+        //console.error("There was an error!", error);
         this.$notify({
           type: "success",
           title: "Success",
@@ -226,7 +226,7 @@ export default {
 
     handleEventClick(clickInfo) {
       this.$refs["my-modal"].show();
-      console.log(clickInfo);
+      //console.log(clickInfo);
       let exam = this.definedExaminations.filter((obj) => {
         return obj.id == clickInfo.event.id;
       });
@@ -270,7 +270,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
         });
     },
     notHere() {
@@ -290,7 +290,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
           this.$notify({
             type: "error",
             title: "Error",

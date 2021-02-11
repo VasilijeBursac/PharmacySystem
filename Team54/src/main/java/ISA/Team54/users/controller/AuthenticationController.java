@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ISA.Team54.exceptions.ResourceConflictException;
-import ISA.Team54.security.Authority;
 import ISA.Team54.security.TokenUtils;
 import ISA.Team54.security.UserTokenState;
 import ISA.Team54.security.auth.JwtAuthenticationRequestDTO;
@@ -35,9 +36,6 @@ import ISA.Team54.users.model.User;
 import ISA.Team54.users.service.implementations.CustomUserDetailsService;
 import ISA.Team54.users.service.interfaces.PharmacyService;
 import ISA.Team54.users.service.interfaces.UserService;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 //Kontroler zaduzen za autentifikaciju korisnika
 @RestController
@@ -82,7 +80,9 @@ public class AuthenticationController {
 		int expiresIn = tokenUtils.getExpiredIn();
 
 
-		UserRole userRole = null;		
+		UserRole userRole = null;	
+		
+		boolean confirmation = user.getConfirmed();
 		
 		if(authentication.getAuthorities().stream()
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_PATIENT"))) {
@@ -91,7 +91,7 @@ public class AuthenticationController {
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_SUPPLIER"))) {
 			userRole = UserRole.ROLE_SUPPLIER;
 		} else if (authentication.getAuthorities().stream()
-		          .anyMatch(r -> r.getAuthority().equals("ROLE_PHARMACY_ADMIN"))) {
+		          .anyMatch(r -> r.getAuthority().equals("ROLE_PHARMACY_ADMIN"))) {  
 			userRole = UserRole.ROLE_PHARMACY_ADMIN;
 		} else if (authentication.getAuthorities().stream()
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_SYSTEM_ADMIN"))) {
@@ -106,7 +106,7 @@ public class AuthenticationController {
 		
 	
 		// Vrati token kao odgovor na uspesnu autentifikaciju
-		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getId(), userRole));
+		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getId(), userRole, confirmation));
 	}
 
 	// Endpoint za registraciju novog korisnika

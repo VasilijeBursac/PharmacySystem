@@ -90,7 +90,7 @@ export default {
       })
       .catch((error) => {
         this.errorMessage = error.message;
-        console.error("There was an error!", error);
+        //console.error("There was an error!", error);
       });
   },
   methods: {
@@ -143,7 +143,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
           this.$notify({
             type: "error",
             title: "Error",
