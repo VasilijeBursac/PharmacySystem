@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Team54</name>
 	<description>Pharmacy System</description>
+	<packaging>war</packaging>
 	<properties>
 		<java.version>11</java.version>
 		<sonar.projectKey>VasilijeBursac_PharmacySystem</sonar.projectKey>
