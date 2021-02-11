@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -127,6 +128,11 @@ public class DrugReservationController {
             return new ResponseEntity<>("Doslo je do greske!", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!", HttpStatus.OK);
+    }
+
+    @Scheduled(cron = "${reservation.check}")
+    public void penalIfDeadlineOver(){
+        drugReservationService.penalIfDeadlineOver();
     }
 
 }

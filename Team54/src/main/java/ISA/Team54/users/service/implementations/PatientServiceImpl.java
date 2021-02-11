@@ -141,5 +141,14 @@ public class PatientServiceImpl implements PatientService {
 		canceledExamination.setPatient(null);
 		examinationRepository.save(canceledExamination);
 		patientRepository.save(patient);
-	} 
+	}
+
+	@Override
+	public void deletePenaltyPointsForAll() {
+		List<Patient> patients = patientRepository.findAll();
+		for (Patient patient : patients) {
+			patient.setPenaltyPoints(0);
+			patientRepository.save(patient);
+		}
+	}
 }

@@ -49,12 +49,12 @@ values (6,'Ruzveltova 34','Beograd', true,'Srbija','mihajlo@gmail.com','Mihajlo'
 /* ana@gmail.com, ana */
 insert into patient(id,address, city, confirmed, country, email, name, password, phone_number, surname, loyalty_points, penalty_points) 
 values (7,'Bulevar Oslobodjenja 56','Novi Sad', true,'Srbija','ana@gmail.com','Ana','$2y$10$Ot3AbKBsBoZSRign2IFkI.vuY6iuUbKxGhtWJY39D9oH6OGJWbUFq',
-		'061985622','Anic', 0, 0);
+		'061985622','Anic', 0, 1);
 		
 /* kristina@gmail.com, kristina */
 insert into patient(id,address, city, confirmed, country, email, name, password, phone_number, surname, loyalty_points, penalty_points) 
 values (8,'Somborski bulevar 97','Zajecar', true,'Srbija','kristina@gmail.com','Kristina','$2y$10$IZLi/JPnH2LrQ9TxyVVhZOpLCY.Z3ZJGp1szResXjLUOFCTb/4vum',
-		'061985622','Krstic', 27, 0);
+		'061985622','Krstic', 27, 2);
 
 
 
@@ -390,15 +390,18 @@ values (9, 1300,'2020-12-01 9:00','2021-12-01 9:00',5,2);
 	/* -- DRUG RESERVATION --*/
  
 
-  insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id) 
+ insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
  values ('2021-03-09 10:00',0,7,3,1);
-  insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id) 
+ insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
  values ('2021-02-06 11:00',2,5,4,1);
 
-  insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id) 
+ insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
  values ('2021-05-07 10:00',0,7,1,2);
-  insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id) 
+ insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
  values ('2021-03-04 12:00',0,8,1,2);
+
+ insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
+  values ('2021-02-09 12:00',0,6,1,2);
   
  /* -- ERECIPE --*/
  

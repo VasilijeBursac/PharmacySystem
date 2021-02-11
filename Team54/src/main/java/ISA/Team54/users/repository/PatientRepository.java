@@ -34,4 +34,5 @@ public interface PatientRepository extends JpaRepository<Patient, Long>{
 	List<User> findByNameOrSurnameIgnoreCaseIn(String name,String surname);
 	List<Patient> findAll();
 	Optional<Patient> findById(Long id);
+
 }

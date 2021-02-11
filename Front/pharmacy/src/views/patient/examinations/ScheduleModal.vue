@@ -36,9 +36,17 @@
                 </div>                
                 <b-table striped hover :items="pharmacistItems" :fields="pharmacistFields" class="mt-3">
                     <template #cell(akcije)="row">
-                        <b-button @click="scheduleExamination(row)" variant="success" size="sm" block>
-                            Zakaži
-                        </b-button>
+                        <b-overlay
+                            :show="busy"
+                            rounded
+                            opacity="0.6"
+                            spinner-small
+                            spinner-variant="primary"
+                            class="d-inline-block">
+                            <b-button @click="scheduleExamination(row)" variant="success" size="sm" block>
+                                Zakaži
+                            </b-button>
+                        </b-overlay>
                     </template>
                 </b-table>     
             </div>
@@ -62,7 +70,9 @@ export default {
             showPharmacist: false,
 
             date: '',
-            time: ''
+            time: '',
+
+            busy: false
         }
     },
     methods:{
@@ -93,19 +103,26 @@ export default {
 
         },
         scheduleExamination(row){
+            this.busy = true
+
             this.$http
                 .get('examination/schedule/' + row.item.id)
                 .then( res => {
                     if(res.status == 200){
-                        this.$bvModal.hide('my-modal')
                         this.toast('Uspešno ste zakazali konsultovanje kod farmaceuta!', 'Uspešno', 'success')
+                        this.$bvModal.hide('my-modal')
                         this.closeModal(true)
+
+                        setTimeout( () => {
+                            this.$router.go(0)
+                        }, 250)
                     }                        
                 })
 		},
         closeModal(close = false){
             this.showPharmacy = true
             this.showPharmacist = false
+            this.busy = false
             if(close == true){
                 this.pharmacyItems = []
                 this.pharmacistItems = []
@@ -137,7 +154,15 @@ export default {
                             })
                         });
                         this.pharmacyItems = data
+
+                        if(data.length == 0){
+                            this.toast('Nažalost ne postoji nijedan slobodan farmaceut za dati termin. Molimo pokušajte drugi termin.', 'Neuspešno', 'danger')
+                        }
                     }            
+                })
+                .catch( (error) => {
+                    if(error.response.status != 200)
+                        this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
                 })
         },
         toast(message, title, variant){

@@ -23,9 +23,17 @@
             <h6 class="h6 my-3">Izaberite apoteku</h6>
             <b-table striped hover :items="items" :fields="fields" class="mt-3">
                 <template #cell(akcije)="row">
-                    <b-button @click="reserveDrug(row)" block size="sm" >
-                        Rezerviši
-                    </b-button>
+                    <b-overlay
+                            :show="busy"
+                            rounded
+                            opacity="0.6"
+                            spinner-small
+                            spinner-variant="primary"
+                            class="d-inline-block">
+                            <b-button @click="reserveDrug(row)" block size="sm" >
+                                Rezerviši
+                            </b-button>
+                    </b-overlay>
                 </template>
             </b-table>             
         </b-modal>
@@ -41,7 +49,9 @@ export default {
 
             selected: null,
             options: [],            
-            date: ''
+            date: '',
+
+            busy: false
         }
     },
     methods:{
@@ -49,6 +59,11 @@ export default {
 
             if( this.selected == null || this.date == ''){
                 this.toast('Morate uneti i naziv leka i rok za preuzimanje kako bi pretražili lek!', 'Neuspešno', 'danger')
+                return;
+            }
+
+            if(new Date(this.date).getTime() < new Date().getTime()){
+                this.toast('Rok za preuzimanje ne može biti pre današnjeg dana!', 'Neuspešno', 'danger')
                 return;
             }
 
@@ -73,6 +88,9 @@ export default {
                 })
         },
         reserveDrug(row){
+
+            this.busy = true
+
             this.$http
                 .post('reservation/reserve', {
                     'drugInPharmacyId': row.item.id,
@@ -80,9 +98,12 @@ export default {
                 })
                 .then( res => {
                     if(res.status == 200){
-                        this.closeModal();
-                        this.$router.go(0)
                         this.toast('Uspešno ste rezervisali lek!', 'Uspešno', 'success')
+                        this.closeModal();
+
+                        setTimeout( () => {
+                            this.$router.go(0)
+                        }, 250)
                     }        
                 })
                 .catch( (error) => {
@@ -95,6 +116,7 @@ export default {
             this.selected = null
             this.date = ''
             this.items = []
+            this.busy = false
         },
         toast(message, title, variant){
             this.$bvToast.toast(message, {
