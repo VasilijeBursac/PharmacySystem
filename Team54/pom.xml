@@ -15,6 +15,9 @@
 	<description>Pharmacy System</description>
 	<properties>
 		<java.version>11</java.version>
+		<sonar.projectKey>VasilijeBursac_PharmacySystem</sonar.projectKey>
+		<sonar.organization>team54-isa</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
 		<dependency>

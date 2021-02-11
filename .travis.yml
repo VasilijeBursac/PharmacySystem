@@ -2,6 +2,10 @@ sudo: required
 language: java
 jdk: oraclejdk11
 
+script: 
+  - cd Team54
+  - ls  
+
 services:
   - postgresql
 
