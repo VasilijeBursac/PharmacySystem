@@ -7,7 +7,7 @@
                     <li v-for="(allergy, index) in splicedAllergies(0)" :key="index">
                         {{allergy.name}}
                         <b-button @click="deleteAllergy(allergy)" size="sm" variant="danger" class="button ml-2">
-                            <b-icon-trash-fill variant="default"></b-icon-trash-fill>
+                            <b-icon-trash-fill scale="0.75" shift-v="3" shift-h="-5" variant="default"></b-icon-trash-fill>
                         </b-button>
                     </li>
                 </ul>
@@ -18,7 +18,7 @@
                     <li v-for="(allergy, index) in splicedAllergies(1)" :key="index">
                         {{allergy.name}}
                         <b-button @click="deleteAllergy(allergy)" size="sm" variant="danger" class="button ml-2">
-                            <b-icon-trash-fill variant="default"></b-icon-trash-fill>
+                            <b-icon-trash-fill scale="0.75" shift-v="3" shift-h="-5" variant="default"></b-icon-trash-fill>
                         </b-button>
                     </li>
                 </ul>
@@ -28,9 +28,8 @@
                 <ul class="text-left">
                     <li v-for="(allergy, index) in splicedAllergies(2)" :key="index">
                         {{allergy.name}}
-                        <b-button @click="deleteAllergy(allergy)" size="sm" variant="danger" class="button ml-2" 
-                                  v-b-tooltip.hover title="Obriši alergiju">
-                            <b-icon-trash-fill width="16" height="16" variant="default"></b-icon-trash-fill>
+                        <b-button @click="deleteAllergy(allergy)" size="sm" variant="danger" class="button ml-2">
+                            <b-icon-trash-fill scale="0.75" shift-v="3" shift-h="-5" variant="default"></b-icon-trash-fill>
                         </b-button>
                     </li>
                 </ul>
@@ -56,6 +55,11 @@ export default {
             .then( res => {
                 this.allergies = res.data
             })
+
+        this.$root.$on('add-allergy', (allergy) => {
+            console.log(allergy)
+            this.allergies.push(allergy)
+        })
     },
     methods:{
         splicedAllergies: function(index) {
@@ -69,8 +73,16 @@ export default {
                     if(res.status == 200){
                         let index = this.allergies.indexOf(allergy)
                         this.allergies.splice(index, 1)
+                        this.toast('Uspešno ste izbrisali alergiju!', 'Uspešno', 'success')
                     }
-                })
+                })                
+        },
+        toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
+                autoHideDelay: 5000
+            })
         }
     },
     components:{
@@ -84,10 +96,6 @@ export default {
     .button{
         width: 1.4rem;
         height: 1.4rem;
-    }
-
-    .button > * {
-
     }
 
 </style>

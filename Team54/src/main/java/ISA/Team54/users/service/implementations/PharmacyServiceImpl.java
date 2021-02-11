@@ -1,11 +1,20 @@
 package ISA.Team54.users.service.implementations;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import ISA.Team54.Examination.model.Examination;
+import ISA.Team54.Examination.repository.ExaminationRepository;
+import ISA.Team54.drugAndRecipe.model.DrugReservation;
+import ISA.Team54.users.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import ISA.Team54.drugAndRecipe.dto.DrugWithPharmacyDTO;
 import ISA.Team54.security.Authority;
 import ISA.Team54.users.dto.DermatologistRequestDTO;
 import ISA.Team54.users.dto.PharmacistRequestDTO;
@@ -14,13 +23,6 @@ import ISA.Team54.users.dto.PharmacyDTO;
 import ISA.Team54.users.dto.UserRequestDTO;
 import ISA.Team54.users.mappers.PharmacyMapper;
 import ISA.Team54.users.mappers.UserMapper;
-import ISA.Team54.users.model.Dermatologist;
-import ISA.Team54.users.model.Patient;
-import ISA.Team54.users.model.Pharmacist;
-import ISA.Team54.users.model.Pharmacy;
-import ISA.Team54.users.model.PharmacyAdministrator;
-import ISA.Team54.users.model.Supplier;
-import ISA.Team54.users.model.SystemAdministrator;
 import ISA.Team54.users.repository.DermatologistRepository;
 import ISA.Team54.users.repository.PatientRepository;
 import ISA.Team54.users.repository.PharmacyAdministratorRepository;
@@ -47,20 +49,23 @@ public class PharmacyServiceImpl implements PharmacyService {
 	
 	@Autowired
 	private SupplierRepository supplierRepository;
-	
+
+	@Lazy
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private AuthorityService authService;
-	
+
 	@Autowired
 	private PharmacyRepository pharmacyRepository;
+
+	@Autowired
+	private ExaminationRepository examinationRepository;
 	
 	@Override
 	public Pharmacy addPharmacy(PharmacyDTO pharmacyDTO) {
-		Pharmacy pharmacy = PharmacyMapper.PharmacyDTOToPharmacy(pharmacyDTO);
-		return pharmacyRepository.save(pharmacy);		
+		return pharmacyRepository.save(PharmacyMapper.PharmacyDTOToPharmacy(pharmacyDTO));		
 	} 
 	
 	@Override
@@ -89,7 +94,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 		UserMapper.UserRequestDTOToUser(userRequest,supplier);	
 		supplier.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 		List<Authority> auth = authService.findByname("ROLE_SUPPLIER");
-		supplier.setAuthorities(auth);
+		supplier.setAuthorities(auth); 
 		return supplierRepository.save(supplier);			
 	}
 
@@ -119,5 +124,26 @@ public class PharmacyServiceImpl implements PharmacyService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	@Override
+	public Pharmacy getPharmacyById(long pharmacyId) {
+		return pharmacyRepository.findById(pharmacyId);
+	}
+
+	public List<Pharmacy> findAll() {
+		return this.pharmacyRepository.findAll();
+	}
+
+	@Override
+	public List<Pharmacy> getPatientPharmacies(){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+
+		List<Examination> examinations =  examinationRepository.findByPatientId(patient.getId());
+		List<Pharmacy> pharmacies = new ArrayList<Pharmacy>();
+		examinations.forEach(e -> pharmacies.add(e.getPharmacy()));
+
+		return pharmacies;
+	}
+
 }

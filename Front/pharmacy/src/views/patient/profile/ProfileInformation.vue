@@ -118,7 +118,7 @@ export default {
                 })
         },
         toast(){
-            this.$bvToast.toast(`Uspešno ste izmeni svoje informacije!`, {
+            this.$bvToast.toast(`Uspešno ste izmenili svoje informacije!`, {
                 title: 'Uspešno!',
                 variant: 'success',
                 autoHideDelay: 5000

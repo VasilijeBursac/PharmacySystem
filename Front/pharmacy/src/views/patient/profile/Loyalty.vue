@@ -7,9 +7,9 @@
                     <b-col>
                         <div class="loyalty-category">
                             <b-icon-award-fill width="32" height="32"></b-icon-award-fill>
-                            <h3 class="h3">GOLD</h3>
+                            <h3 class="h3">{{loyalty_category | upperCase}}</h3>
                         </div>                        
-                        <span>30% popusta</span>
+                        <span>{{discount}}% popusta</span>
                     </b-col>
                     <b-col>
                         <div class="loyalty-points">
@@ -35,7 +35,19 @@ export default {
     data(){
         return{
             loyalty_points: 0,
-            penalty_points: 0
+            penalty_points: 0,
+            discount: 0,
+            loyalty_category: ''
+        }
+    },
+    methods:{
+        fillCategory(){
+            this.$http
+            .get('/loyalty/points')
+            .then( res => {
+                this.loyalty_category = res.data.name
+                this.discount = res.data.discount
+            })
         }
     },
     mounted(){
@@ -44,7 +56,13 @@ export default {
             .then( res => {
                 this.loyalty_points = res.data.loyaltyPoints
                 this.penalty_points = res.data.penaltyPoints
+                this.fillCategory()
             })
+    },
+    filters:{
+        upperCase: function(value){
+            return value.toUpperCase()
+        }
     }
 }
 </script>
@@ -56,14 +74,14 @@ export default {
         align-content: center;
     }
 
-    .loyalty-points{
+    /*.loyalty-points{
         border: 2px solid black;
         border-radius: 50%;
         width: 100px;
         height: 100px;
         text-align: center;
         align-self: center;
-    }
+    }*/
 
     .penalty-points > *{
         display: block;

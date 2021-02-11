@@ -11,8 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import ISA.Team54.drugAndRecipe.model.enums.ReservationStatus;
+import ISA.Team54.drugAndRecipe.enums.ReservationStatus;
 import ISA.Team54.users.model.Patient;
 
 @Entity
@@ -27,10 +28,12 @@ public class DrugReservation {
 	@Column(unique = false,nullable = true)
 	private ReservationStatus status; 
 	
+	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Patient patient;
 	
-	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@JsonBackReference
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private DrugInPharmacy reservedDrug;
 	
 	public DrugReservation() {
@@ -76,4 +79,5 @@ public class DrugReservation {
 	public void setReservedDrug(DrugInPharmacy reservedDrug) {
 		this.reservedDrug = reservedDrug;
 	}
+	
 }

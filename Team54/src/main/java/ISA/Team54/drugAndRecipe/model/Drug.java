@@ -10,10 +10,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 import ISA.Team54.Examination.model.Examination;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Drug {
@@ -25,23 +29,47 @@ public class Drug {
 	@Column(unique = false,nullable = false)
 	private String code;
 	@Column(unique = false,nullable = true)
-	private int loyalityPoints;
+	private int loyaltyPoints;
 	
+	@JsonBackReference
 	@ManyToMany(mappedBy="drugs")
 	private Set<Examination> examinations;
 	
 	@ManyToMany(mappedBy="drugs")
 	private Set<ERecipe> erecipes;
-	
-	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+
+	@OneToOne(mappedBy = "drug",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private DrugSpecification drugSpecification;
+
+	@JsonManagedReference
+	@ManyToMany
+	@JoinTable(name="substituteDrugs",
+	 joinColumns=@JoinColumn(name="mainDrugId"),
+	 inverseJoinColumns=@JoinColumn(name="substituteDrugId")
+	)
+	private List<Drug> mainDrugs;
+
+	@JsonBackReference
+	@ManyToMany
+	@JoinTable(name="substituteDrugs",
+	 joinColumns=@JoinColumn(name="substituteDrugId"),
+	 inverseJoinColumns=@JoinColumn(name="mainDrugId")
+	)
+	private List<Drug> substituteDrugs;
 	
 	public Drug() {
 		super();
 	}
 
+	public Drug(long id, String name, String code, int loyaltyPoints) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.code = code;
+		this.loyaltyPoints = loyaltyPoints;
+	}
 	public long getId() {
-		return id;
+		return  id;
 	}
 
 	public void setId(long id) {
@@ -65,11 +93,11 @@ public class Drug {
 	}
 
 	public int getLoyalityPoints() {
-		return loyalityPoints;
+		return loyaltyPoints;
 	}
 
-	public void setLoyalityPoints(int loyalityPoints) {
-		this.loyalityPoints = loyalityPoints;
+	public void setLoyalityPoints(int loyaltyPoints) {
+		this.loyaltyPoints = loyaltyPoints;
 	}
 
 	public Set<Examination> getExaminations() {
@@ -95,4 +123,23 @@ public class Drug {
 	public void setDrugSpecification(DrugSpecification drugSpecification) {
 		this.drugSpecification = drugSpecification;
 	}
+
+	public List<Drug> getMainDrugs() {
+		return mainDrugs;
+	}
+
+	public void setMainDrugs(List<Drug> mainDrugs) {
+		this.mainDrugs = mainDrugs;
+	}
+
+	public List<Drug> getSubstituteDrugs() {
+		return substituteDrugs;
+	}
+
+	public void setSubstituteDrugs(List<Drug> substituteDrugs) {
+		this.substituteDrugs = substituteDrugs;
+	}
+
+	
+	
 }

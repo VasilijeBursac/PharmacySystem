@@ -1,37 +1,46 @@
 package ISA.Team54.rating.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.Null;
+
+import ISA.Team54.users.model.Patient;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import ISA.Team54.rating.enums.RatingObject;
+import ISA.Team54.users.model.Dermatologist;
+import ISA.Team54.users.model.Pharmacist;
+import ISA.Team54.users.model.Pharmacy;
+import org.springframework.lang.Nullable;
+
 @Entity
 public class Rating {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = false,nullable = false)
-	private Long objectId;
+	@JsonBackReference
+	@ManyToOne
+	@Nullable
+	private Dermatologist dermatologist;
+	
+	@JsonBackReference
+	@ManyToOne
+	@Nullable
+	private Pharmacist pharmacist;
+	
+	@JsonBackReference
+	@ManyToOne
+	@Nullable
+	private Pharmacy pharmacy;
+
+	@OneToOne
+	private Patient patient;
 	
 	@Column(unique = false,nullable = false)
 	private double rating;
 	
-	@Column(unique = false,nullable = false)
-	private RatingObject objectType;
-
 	public Rating() {
 		super();
-	}
-
-	public Rating(Long id, Long objectId, double rating, RatingObject objectType) {
-		super();
-		this.id = id;
-		this.objectId = objectId;
-		this.rating = rating;
-		this.objectType = objectType;
 	}
 
 	public Long getId() {
@@ -42,12 +51,29 @@ public class Rating {
 		this.id = id;
 	}
 
-	public Long getObjectId() {
-		return objectId;
+	public Dermatologist getDermatologist() {
+		return dermatologist;
 	}
 
-	public void setObjectId(Long objectId) {
-		this.objectId = objectId;
+	public void setDermatologist(Dermatologist dermatoligist) {
+		this.dermatologist = dermatoligist;
+	}
+
+	public Pharmacist getPharmacist() {
+		return pharmacist;
+	}
+
+	
+	public void setPharmacist(Pharmacist pharmacist) {
+		this.pharmacist = pharmacist;
+	}
+
+	public Pharmacy getPharmacy() {
+		return pharmacy;
+	}
+
+	public void setPharmacy(Pharmacy pharmacy) {
+		this.pharmacy = pharmacy;
 	}
 
 	public double getRating() {
@@ -58,14 +84,11 @@ public class Rating {
 		this.rating = rating;
 	}
 
-	public RatingObject getObjectType() {
-		return objectType;
+	public Patient getPatient() {
+		return patient;
 	}
 
-	public void setObjectType(RatingObject objectType) {
-		this.objectType = objectType;
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
-	
-	
-	
 }

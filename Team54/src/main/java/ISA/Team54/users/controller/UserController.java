@@ -7,9 +7,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.model.User;
 import ISA.Team54.users.service.interfaces.UserService;
 
@@ -45,6 +48,12 @@ public class UserController {
 	public List<User> loadBySurname(@PathVariable String name){
 		return this.userService.findBySurname(name);
 	}
+	
+	@PutMapping("/user")
+	@PreAuthorize("hasAnyRole('PATIENT','SUPPLIER','DERMATOLOGIST','PHARMACIST','PHARMACY_ADMIN','SYSTEM_ADMIN')")
+	public void updateUserInfo(@RequestBody UserInfoDTO user){
+		this.userService.updateUserInfo(user);
+	} 
 	/*
 	@GetMapping("/user/all")
 	@PreAuthorize("hasRole('ADMIN')")

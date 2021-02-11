@@ -2,7 +2,7 @@ package ISA.Team54.vacationAndWorkingTime.model;
 
 import javax.persistence.*;
 
-import ISA.Team54.sharedModel.DateRange;
+import ISA.Team54.shared.model.DateRange;
 import ISA.Team54.users.model.Dermatologist;
 import ISA.Team54.users.model.Pharmacist;
 import ISA.Team54.vacationAndWorkingTime.enums.VacationRequestStatus;
@@ -29,10 +29,9 @@ public class VacationRequest {
 		super();
 	}
 
-	public VacationRequest(Long id, DateRange timePeriod, VacationRequestStatus status, Dermatologist dermatologist,
+	public VacationRequest( DateRange timePeriod, VacationRequestStatus status, Dermatologist dermatologist,
 			Pharmacist pharmacist) {
 		super();
-		this.id = id;
 		this.timePeriod = timePeriod;
 		this.status = status;
 		this.dermatologist = dermatologist;

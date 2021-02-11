@@ -1,6 +1,6 @@
 package ISA.Team54.users.mappers;
 
-import ISA.Team54.sharedModel.DateRange;
+import ISA.Team54.shared.model.DateRange;
 import ISA.Team54.users.dto.DermatologistRequestDTO;
 import ISA.Team54.users.dto.PharmacistRequestDTO;
 import ISA.Team54.users.dto.PharmacyAdministratorRequestDTO;

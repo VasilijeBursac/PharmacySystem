@@ -2,6 +2,8 @@ package ISA.Team54.users.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import ISA.Team54.users.enums.ComplaintType;
 
 @Entity
@@ -19,6 +21,7 @@ public class Complaint {
 	@Enumerated
 	private ComplaintType type;
 	
+	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Patient patient;
 	

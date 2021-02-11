@@ -22,11 +22,40 @@ public class LoyaltyCategory {
 	
 	@Embedded
 	private LoyaltyCategoryIntertval interval;
-	
-	public LoyaltyCategory(String name, float discount, int upperInterval, int lowerInterval) {
+
+	public LoyaltyCategory() {
 		super();
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
 		this.name = name;
+	}
+
+	public float getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(float discount) {
 		this.discount = discount;
-		this.interval = new LoyaltyCategoryIntertval(upperInterval, lowerInterval);
-	}		
+	}
+
+	public LoyaltyCategoryIntertval getInterval() {
+		return interval;
+	}
+
+	public void setInterval(LoyaltyCategoryIntertval interval) {
+		this.interval = interval;
+	}	
 }

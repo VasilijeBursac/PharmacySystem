@@ -9,6 +9,11 @@ import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import Notifications from 'vue-notification';
+import velocity      from 'velocity-animate'
+
+Vue.use(Notifications, { velocity })
+
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 

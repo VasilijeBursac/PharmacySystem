@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import ISA.Team54.users.model.Pharmacy;
 
 @Entity
@@ -19,9 +21,9 @@ public class DrugInPharmacy {
 	private DrugInPharmacyId drugInPharmacyId;
 
 	@Column(unique = false, nullable = true)
-	private int quantity;
+	private int quantity;	
 	
-	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "reservedDrug", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<DrugReservation> drugReservations = new ArrayList<DrugReservation>();
 

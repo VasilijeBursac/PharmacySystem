@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import ISA.Team54.drugOrdering.enums.OrderStatus;
 import ISA.Team54.users.model.PharmacyAdministrator;
 
@@ -25,7 +28,8 @@ public class DrugsOrder {
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
 	
-	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@JsonBackReference
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private PharmacyAdministrator administrator;
 
 	public DrugsOrder() {

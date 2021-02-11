@@ -10,5 +10,9 @@ public class LoyaltyCategoryIntertval {
 	public LoyaltyCategoryIntertval(int upper, int lower) {
 		this.upper = upper;
 		this.lower = lower;
+	}
+
+	public LoyaltyCategoryIntertval() {
+		super();
 	}	
 }

@@ -1,35 +1,24 @@
 package ISA.Team54.drugAndRecipe.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
-import org.hibernate.annotations.Proxy;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import ISA.Team54.users.model.Patient;
-
-
+@Entity
 public class DrugAllergy {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
-	private Drug drug;	
+	private Drug drug;
+
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	private Patient patient;
@@ -38,10 +27,10 @@ public class DrugAllergy {
 		super();
 	}
 
-	public DrugAllergy(long id, Drug drugs, Patient patient) {
+	public DrugAllergy(long id, Drug drug, Patient patient) {
 		super();
 		this.id = id;
-		this.drug = drugs;
+		this.drug = drug;
 		this.patient = patient;
 	}
 
@@ -68,10 +57,5 @@ public class DrugAllergy {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
-
-	
-	
-	
-	
 	
 }

@@ -33,6 +33,7 @@ public class Patient extends User {
 	@Column(unique = false, nullable = true)
 	private int loyaltyPoints;
 
+	@JsonManagedReference
 	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<ERecipe> eRecipes;
 
@@ -40,34 +41,23 @@ public class Patient extends User {
 	@JoinTable(name = "drug_allergies", joinColumns = @JoinColumn(name = "patient_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "drug_id", referencedColumnName = "id"))
 	public List<Drug> drugAllergies;
 
+	@JsonManagedReference
 	@OneToMany(mappedBy="patient",cascade = CascadeType.ALL,fetch = FetchType.LAZY)	
 	private List<Complaint> complaints;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy="patient",cascade = CascadeType.ALL,fetch = FetchType.LAZY)	
 	private List<DrugReservation> drugReservations;	
 	
 	@ManyToMany(mappedBy= "subscribedPatients")
 	private List<Pharmacy> prescriptionsPharmacies;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy="patient",cascade = CascadeType.ALL,fetch = FetchType.LAZY)	
 	private List<Examination> examinations;
 
 	public Patient() {
 		super();
-	}
-
-	public Patient(long id, String email, String password, String name, String surname, String address, String city,
-			String country, String phoneNumber, int penaltyPoints, int loyaltyPoints, List<ERecipe> eRecipes,
-			List<DrugAllergy> drugAllergies, List<Complaint> complaints, List<DrugReservation> drugReservations,
-			List<Pharmacy> pharmacys, List<Examination> examinations) {
-		super(id, email, password, name, surname, address, city, country, phoneNumber);
-		this.penaltyPoints = penaltyPoints;
-		this.loyaltyPoints = loyaltyPoints;
-		this.eRecipes = eRecipes;
-		this.complaints = complaints;
-		this.drugReservations = drugReservations;
-		// this.pharmacys = pharmacys;
-		this.examinations = examinations;
 	}
 
 	public int getPenaltyPoints() {

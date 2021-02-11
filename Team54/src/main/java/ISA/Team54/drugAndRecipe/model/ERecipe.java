@@ -17,6 +17,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import ISA.Team54.users.model.Patient;
 
 @Entity
@@ -33,6 +35,7 @@ public class ERecipe {
 	@JoinTable(name = "drugsInERecipe", joinColumns = @JoinColumn(name = "erecipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "drug_id", referencedColumnName = "id"))
 	public List<Drug> drugs = new ArrayList<Drug>();
 
+	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Patient patient;
 

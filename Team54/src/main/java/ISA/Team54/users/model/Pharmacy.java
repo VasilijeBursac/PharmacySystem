@@ -2,6 +2,7 @@ package ISA.Team54.users.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,28 +15,40 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import ISA.Team54.Examination.model.Examination;
-import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
 import ISA.Team54.promotion.model.Promotion;
+import ISA.Team54.rating.model.Rating;
+import ISA.Team54.vacationAndWorkingTime.model.DermatologistWorkSchedule;
 
 @Entity
 public class Pharmacy {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "mySeqGen2", sequenceName = "mySeq2",initialValue = 3,allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGen2")
 	private long id;
 
 	@Column(unique = false, nullable = false)
 	private String name;
 	@Column(unique = false, nullable = false)
 	private String address;
-	@Column(unique = false, nullable = true)
-	private String description;
-
-	public Pharmacy() {
-		super();
-	}
+	@Column(unique = false, nullable = false)
+	private String city;
+	@Column(unique = false, nullable = false)
+	private String country;
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<DermatologistWorkSchedule> dermatologistWorkingSchedules;
+
+	@Column(nullable = false)
+	private double pharmacistPrice;
+
+	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public List<PharmacyAdministrator> pharmacyAdministrators;
 	
@@ -52,17 +65,28 @@ public class Pharmacy {
 	@JoinTable(name = "prescriptedPatientsToPharmacies", joinColumns = @JoinColumn(name = "pharmacy_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "dermatologist_id", referencedColumnName = "id"))
 	public List<Patient> subscribedPatients = new ArrayList<Patient>();
 
-	@ManyToMany
+	@JsonManagedReference
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "dermatologistsInPharmacy", joinColumns = @JoinColumn(name = "pharmacy_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "dermatologist_id", referencedColumnName = "id"))
-	public List<Dermatologist> dermatologists = new ArrayList<Dermatologist>();
+	public List<Dermatologist> dermatologists;
 
+	@JsonBackReference
 	@OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	public List<Pharmacist> pharmacists = new ArrayList<Pharmacist>();
+	public List<Pharmacist> pharmacists;
 
+	@JsonManagedReference
 	@OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Examination> examinations = new ArrayList<Examination>();
+	private List<Examination> examinations;
+	
+	@JsonManagedReference	
+	@OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private Set<Rating> ratings;
+	
+	public Pharmacy() {
+		super();
+	}
 
-	public Pharmacy(long id, String name, String address, String description,
+	public Pharmacy(long id, String name, String address, String city, String country,
 			List<PharmacyAdministrator> pharmacyAdministrators, List<Promotion> promotion,
 			List<Patient> subscribedPatients, List<Dermatologist> dermatologists, List<Pharmacist> pharmacists,
 			List<Examination> examinations) {
@@ -70,7 +94,8 @@ public class Pharmacy {
 		this.id = id;
 		this.name = name;
 		this.address = address;
-		this.description = description;
+		this.city = city;
+		this.country = country;
 		this.pharmacyAdministrators = pharmacyAdministrators;
 
 		this.promotion = promotion;
@@ -81,6 +106,22 @@ public class Pharmacy {
 	}
 
 	
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -105,13 +146,6 @@ public class Pharmacy {
 		this.address = address;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
 	public List<PharmacyAdministrator> getPharmacyAdministrators() {
 		return pharmacyAdministrators;
@@ -161,5 +195,26 @@ public class Pharmacy {
 		this.examinations = examinations;
 	}
 	
+	public double getRatings() {
+		double rating = 0;
+		int count = 0;
+		for (Rating r : ratings) {
+			rating += r.getRating();
+			count++;
+		}
+		return count != 0 ? (double)rating/count : 0;
+	}
+
+	public void setRatings(Set<Rating> ratings) {
+		this.ratings = ratings;
+	}
+
+	public double getPharmacistPrice() {
+		return pharmacistPrice;
+	}
+
+	public void setPharmacistPrice(double pharmacistPrice) {
+		this.pharmacistPrice = pharmacistPrice;
+	}
 	
 }

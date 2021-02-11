@@ -1,6 +1,7 @@
 package ISA.Team54.users.dto;
 
 public class PatientDTO {
+	private int id;
 	private String Name;
 	private String Surname;
 	
@@ -9,8 +10,9 @@ public class PatientDTO {
 		super();
 	}
 
-	public PatientDTO(String name, String surname) {
+	public PatientDTO(int id,String name, String surname) {
 		super();
+		this.id = id;
 		Name = name;
 		Surname = surname;
 	}
@@ -29,6 +31,14 @@ public class PatientDTO {
 
 	public void setSurname(String surname) {
 		Surname = surname;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	

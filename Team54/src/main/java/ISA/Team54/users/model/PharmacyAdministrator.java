@@ -5,18 +5,24 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import ISA.Team54.drugOrdering.model.DrugsOrder;
 
 @Entity
 public class PharmacyAdministrator extends User{
 
+	@JsonManagedReference
 	@OneToMany(mappedBy = "administrator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<DrugsOrder> drugOrders;
 	
-	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@JsonBackReference
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Pharmacy pharmacy;
 	
 	public PharmacyAdministrator() {

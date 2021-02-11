@@ -8,7 +8,7 @@
     </b-button>
 
     <b-modal id="change-password" hide-footer title="Promeni lozinku">
-        <b-form @submit="onSubmit" @reset="onReset">
+        <b-form>
             <b-form-group id="old-password-group" label="Stara lozinka:" label-for="old-password-input" class="text-left">
                 <b-form-input
                     id="old-password-input"

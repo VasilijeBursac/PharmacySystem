@@ -5,7 +5,7 @@
                 <PharmacyFilters />
             </b-col>
             <b-col>
-                <PharmacyTable />
+                <PharmacyTable class="mt-5" />
             </b-col>
         </b-row>
     </div>

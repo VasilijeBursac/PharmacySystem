@@ -1,5 +1,8 @@
 package ISA.Team54.users.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,12 +36,17 @@ import ISA.Team54.users.service.implementations.CustomUserDetailsService;
 import ISA.Team54.users.service.interfaces.PharmacyService;
 import ISA.Team54.users.service.interfaces.UserService;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 //Kontroler zaduzen za autentifikaciju korisnika
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
+	protected final Log LOGGER = LogFactory.getLog(getClass());
+
+	
 	@Autowired
 	private TokenUtils tokenUtils;
 
@@ -77,22 +86,22 @@ public class AuthenticationController {
 		
 		if(authentication.getAuthorities().stream()
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_PATIENT"))) {
-			userRole = UserRole.PATIENT;
+			userRole = UserRole.ROLE_PATIENT;
 		} else if (authentication.getAuthorities().stream()
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_SUPPLIER"))) {
-			userRole = UserRole.SUPPLIER;
+			userRole = UserRole.ROLE_SUPPLIER;
 		} else if (authentication.getAuthorities().stream()
-		          .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"))) {
-			userRole = UserRole.ADMIN;
+		          .anyMatch(r -> r.getAuthority().equals("ROLE_PHARMACY_ADMIN"))) {
+			userRole = UserRole.ROLE_PHARMACY_ADMIN;
 		} else if (authentication.getAuthorities().stream()
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_SYSTEM_ADMIN"))) {
-			userRole = UserRole.SYSTEM_ADMIN;
+			userRole = UserRole.ROLE_SYSTEM_ADMIN;
 		} else if (authentication.getAuthorities().stream()
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_DERMATOLOGIST"))) {
-			userRole = UserRole.DERMATOLOGIST;
+			userRole = UserRole.ROLE_DERMATOLOGIST;
 		} else if (authentication.getAuthorities().stream()
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_PHARMACIST"))) {
-			userRole = UserRole.PHARMACIST;
+			userRole = UserRole.ROLE_PHARMACIST;
 		}
 		
 	
@@ -127,10 +136,10 @@ public class AuthenticationController {
 		}
 		User user = null;
 		switch(userRequest.getRole()) {
-			case SUPPLIER:
+			case ROLE_SUPPLIER:
 				user = this.pharmacyService.addSupplier(userRequest);
 				break;
-			case SYSTEM_ADMIN:
+			case ROLE_SYSTEM_ADMIN:
 				user = this.pharmacyService.addSystemAdministrator(userRequest);	
 				break;
 		}
@@ -172,16 +181,16 @@ public class AuthenticationController {
 		return new ResponseEntity<>(user, HttpStatus.CREATED); 
 	} 
 
-
-	/* @RequestMapping(value = "/change-password", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
+	
+	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('PATIENT','SUPPLIER','DERMATOLOGIST','PHARMACIST','PHARMACY_ADMIN','SYSTEM_ADMIN')")
 	public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
-		userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
+		userService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
 
 		Map<String, String> result = new HashMap<>();
 		result.put("result", "success");
-		return ResponseEntity.accepted().body(result);
-	} */
+		return ResponseEntity.ok().body(result);
+	}
 
 	static class PasswordChanger {
 		public String oldPassword;

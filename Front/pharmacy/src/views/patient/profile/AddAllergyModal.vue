@@ -20,9 +20,6 @@
             <b-button @click="closeModal" block variant="danger">
                 Otkaži
             </b-button>
-
-            <!--<b-button class="mt-3" variant="outline-danger" block @click="hideModal">Close Me</b-button>
-            <b-button class="mt-2" variant="outline-warning" block @click="toggleModal">Toggle Me</b-button>-->
         </b-form>
     </b-modal>
   </div>
@@ -42,15 +39,25 @@ export default {
                 this.$http
                     .post('patient/allergies/' + this.selected)
                     .then( () => {
-                        this.toast()
+                        this.$root.$emit('add-allergy', {
+                            id: this.selected,
+                            name: this.options[this.selected].text
+                        })
+                        this.toast('Uspešno ste dodali alergiju!', 'Uspešno', 'success')
                         this.closeModal()
+                        this.selected = null
                     })
+                    .catch( (error) => {
+                        if(error.response.status == 400){
+                            this.toast('Ne možete dodati dve iste alergije!', 'Neuspešno', 'danger')
+                        }else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+                })
             }            
         },
-        toast(){
-            this.$bvToast.toast(`Uspešno ste dodali alergiju!`, {
-                title: 'Uspešno!',
-                variant: 'success',
+        toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
                 autoHideDelay: 5000
             })
         },
@@ -63,7 +70,7 @@ export default {
     },
     mounted(){
         this.$http
-            .get('drug')
+            .get('drugs')
             .then( (res) => {
                 if(res.status == 200){
                     this.options = []

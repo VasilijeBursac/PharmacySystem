@@ -24,6 +24,25 @@ public class UserRequestDTO {
 	
 	private UserRole role;
 
+	
+	public UserRequestDTO() {
+		super();
+	}
+
+	public UserRequestDTO(String email, String password, String firstName, String lastName, String address, String city,
+			String country, String phoneNumber, UserRole role) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.city = city;
+		this.country = country;
+		this.phoneNumber = phoneNumber;
+		this.role = role;
+	}
+
 	public UserRole getRole() {
 		return role;
 	}

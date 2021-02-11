@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="contraindications")
 public class Contraindication {
@@ -21,6 +23,7 @@ public class Contraindication {
 	@Column(unique = false,nullable = true)
 	private String name;
 	
+	@JsonBackReference(value="clinci_movement")
 	@ManyToMany(mappedBy = "contraindications")
 	private Set<DrugSpecification> drugSpecifications = new HashSet<DrugSpecification>();
 	
