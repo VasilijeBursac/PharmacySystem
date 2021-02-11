@@ -55,7 +55,7 @@ public class DrugServiceImpl implements DrugService {
 		return drugsForPatient;
 	}
 	
-	private boolean isPatientAlergicOnDrug(Long patientId, Long drugId) {
+	public boolean isPatientAlergicOnDrug(Long patientId, Long drugId) {
 		Drug drug = drugRepository.findOneById(drugId);
 		Patient patient = patientRepository.findOneById(patientId);
 		for(Drug allergyDrug : patient.getDrugAllergies()) {
