@@ -126,5 +126,11 @@ public class DrugServiceImpl implements DrugService {
 	public Drug findById(long id) {
 		return drugRepository.findById(id).orElse(null);
 	}
+
+	@Override
+	public List<Drug> getSubstituteForDrug(Long drugId) {
+		Drug mainDrug = drugRepository.findOneById((long)drugId);
+		 return mainDrug.getMainDrugs();
+	}
 	
 }

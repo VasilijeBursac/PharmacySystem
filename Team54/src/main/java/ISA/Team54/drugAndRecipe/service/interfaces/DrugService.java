@@ -15,4 +15,5 @@ public interface DrugService {
 	DrugSpecification getSpecificationForDrug(Long drugId);
 	List<Drug> getAllDrugs();
 	Drug findById(long id);
+	public List<Drug> getSubstituteForDrug(Long drugId);
 }

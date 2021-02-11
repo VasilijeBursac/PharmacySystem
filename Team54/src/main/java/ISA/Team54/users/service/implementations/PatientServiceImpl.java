@@ -134,7 +134,7 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public void addPenaltyPointForPatient(Long id) {
-		Examination canceledExamination = examinationService.getCurrentExaminationByDermatologistId();
+		Examination canceledExamination = examinationService.getCurrentExaminationForEmployee();
 		Patient patient = patientRepository.findOneById(id);
 		patient.setPenaltyPoints(patient.getPenaltyPoints()+1);
 		canceledExamination.setStatus(ExaminationStatus.Unfilled);

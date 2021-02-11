@@ -6,17 +6,16 @@
     <b-row>
       <b-col>
         <div id="app">
-        <h4> Izaberite zeljeni termin </h4>
+          <h4>Izaberite zeljeni termin</h4>
           <b-table
             primary-key="id"
-            
             :items="definedExaminations"
             :fields="Fields"
-           :select-mode="selectMode"
+            :select-mode="selectMode"
             responsive="sm"
             ref="selectableTable"
             selectable
-             @row-selected="onRowSelected"
+            @row-selected="onRowSelected"
           ></b-table>
         </div>
       </b-col>
@@ -83,10 +82,11 @@ export default {
       .get("http://localhost:9001/examination/definedExaminations/" + 4)
       .then((response) => {
         this.definedExaminations = response.data;
-        for(let i in this.definedExaminations){
-          this.definedExaminations[i].examinationStart = new Date(response.data[i].examinationStart).toLocaleString()
+        for (let i in this.definedExaminations) {
+          this.definedExaminations[i].examinationStart = new Date(
+            response.data[i].examinationStart
+          ).toLocaleString();
         }
-      
       })
       .catch((error) => {
         this.errorMessage = error.message;
@@ -96,13 +96,11 @@ export default {
   methods: {
     open: function() {
       this.$refs["my-modal"].show();
-    },onRowSelected(items) {
-        this.selected = items
-           this.$axios
-        .post("http://localhost:9001/examination/saveExamination", {
-          currentExaminationId: 4,
-          newExaminationId : items[0].examinationId
-        })
+    },
+    onRowSelected(items) {
+      this.selected = items;
+      this.$axios
+        .post("http://localhost:9001/examination/saveExamination/"+  items[0].examinationId)
         .then((response) => {
           this.message = response.data;
           if (response.status == 200) {
@@ -113,17 +111,17 @@ export default {
               closeOnClick: true,
             });
           }
-        })
-         this.getDefExaminations(items[0])
-      },
+        });
+      this.getDefExaminations(items[0]);
+    },
     hideModal: function() {
       this.$refs["my-modal"].hide();
-    }, 
-    getDefExaminations: function(examination){
-          var newArray = this.definedExaminations.filter(function (examination2) {
-          return examination2.examinationId != examination.examinationId;
-        });
-          this.definedExaminations = newArray
+    },
+    getDefExaminations: function(examination) {
+      var newArray = this.definedExaminations.filter(function(examination2) {
+        return examination2.examinationId != examination.examinationId;
+      });
+      this.definedExaminations = newArray;
     },
     submitModal: function() {
       let startDate = new Date(this.date);
@@ -131,10 +129,7 @@ export default {
       startDate.setHours(startTime[0], startTime[1], 0, 0);
       startDate = startDate.getTime();
       this.$axios
-        .post("http://localhost:9001/examination/scheduleExamination", {
-          examinationId: 4,
-          date: startDate,
-        })
+        .post("http://localhost:9001/examination/scheduleExamination", { date: startDate })
         .then((response) => {
           this.message = response.data;
           if (response.status == 200) {

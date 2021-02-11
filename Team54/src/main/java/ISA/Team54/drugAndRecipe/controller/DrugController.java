@@ -62,7 +62,8 @@ public class DrugController {
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
 	public DrugSpecificationDTO getDrugSpecification(@PathVariable Long drugId){
 		DrugSpecification drugSpecification = drugService.getSpecificationForDrug(drugId);
-		return new DrugSpecificationMapper().DrugSpecificationIntoDrugSpecificationDTO(drugSpecification);
+		List<Drug> drugSubstitute = drugService.getSubstituteForDrug(drugId);
+		return new DrugSpecificationMapper().DrugSpecificationIntoDrugSpecificationDTO(drugSpecification,drugSubstitute);
 	}
 	
 	@GetMapping("")
