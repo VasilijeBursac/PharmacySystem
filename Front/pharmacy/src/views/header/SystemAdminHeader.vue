@@ -22,7 +22,6 @@ export default {
       localStorage.removeItem("JWT")
       this.$router.push("Registration");
       window.location.reload()
-
     }
   }
 

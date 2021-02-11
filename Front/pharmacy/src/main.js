@@ -27,5 +27,11 @@ new Vue({
 	created(){
 		axios.defaults.baseURL = 'http://localhost:9001/';
 		axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getJWT;
+
+		var a = localStorage.getItem("UserId") 
+		console.log(a)
+		if( a == undefined){
+			localStorage.setItem("UserRole","ROLE_UNREGISTERED")
+		}
 	}
 }).$mount("#app");

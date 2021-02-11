@@ -105,8 +105,6 @@ export default {
                                 this.$router.push("patient-profile");
                             }
 
-
-
                         } else {
                             this.toast('danger', 'Neuspešno!', 'Greška pri izmeni lozinke!')
                         }
@@ -126,7 +124,7 @@ export default {
             })
             scroll(0,0)
         },
-
+        
         closeModal(){
             this.$bvModal.hide('change-password')
             this.resetInputFields()

@@ -11,3 +11,19 @@
     </ul>
 </template>
 
+
+<script>
+export default {
+  methods:{
+    logout : function(){
+      localStorage.setItem("UserRole","ROLE_UNREGISTERED")
+      localStorage.removeItem("UserId")
+      localStorage.removeItem("JWT")
+      this.$router.push("Registration");
+      window.location.reload()
+    }
+  }
+
+}
+</script>
+
