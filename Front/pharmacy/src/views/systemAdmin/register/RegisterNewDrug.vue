@@ -278,7 +278,7 @@ export default {
                 })                    
                 .catch(function (error) {
                     if(error.response.status === 500) {
-                    alert('Ne valja');               
+                    alert('Error');               
                     }
                 });       
         },
