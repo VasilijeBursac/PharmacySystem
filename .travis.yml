@@ -10,6 +10,7 @@ services:
   - postgresql
 
 before_install:
+  - cd Team54
   - chmod +x mvnw
 
 addons:
