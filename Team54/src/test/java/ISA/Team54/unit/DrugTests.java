@@ -83,7 +83,4 @@ public class DrugTests {
 		 List<DrugReservation> drugReservationsForPatient = drugReservationService.getReservationsForPatient();
 		 assertEquals(drugReservationsForPatient.size(),5);
 	 }
-	 
-	 
-	 
 }
