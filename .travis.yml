@@ -16,10 +16,10 @@ before_install:
 addons:
   sonarcloud:
   organization: "team54-isa"
-  token: $SONAR_TOKEN
+  token: $SONAR_TOKEN1
 
 script:
   - ./mvnw clean install -DskipTests=false -B
-  - ./mvnw sonar:sonar -Dsonar.projectKey=$PROJECT_KEY -Dsonar.organization=team54-isa -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+  - ./mvnw sonar:sonar -Dsonar.projectKey=$PROJECT_KEY1 -Dsonar.organization=team54-isa -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN1
 
 dist: trusty
