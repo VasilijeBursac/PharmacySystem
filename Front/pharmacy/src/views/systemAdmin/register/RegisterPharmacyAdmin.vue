@@ -94,9 +94,9 @@
                 </b-form-input>
             </b-form-group>          
             <b-form-group id="pharmacies-group" label="Apoteka:" label-for="pharmacy-input" class="text-center">
-                 <select v-model="selected" >
+                 <b-select v-model="selected" >
                     <option v-for="pharmacy in pharmacies" v-bind:key = "pharmacy" v-bind:value="pharmacy.id">{{pharmacy.name}}</option>
-                </select>
+                </b-select>
             </b-form-group>
 
             <div class="buttons text-center">                        

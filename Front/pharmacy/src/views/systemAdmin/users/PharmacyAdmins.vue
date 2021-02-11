@@ -10,8 +10,8 @@ export default {
     return {
       fields: [   
         { key: "email", sortable: true },
-        { key: "firstName", sortable: true },
-        { key: "lastName", sortable: true },
+        { key: "name", sortable: true },
+        { key: "surname", sortable: true },
         { key: "address", sortable: true },
         { key: "city", sortable: true },
         { key: "country", sortable: true },

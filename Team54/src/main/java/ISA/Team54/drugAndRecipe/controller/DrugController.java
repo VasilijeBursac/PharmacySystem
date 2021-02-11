@@ -105,8 +105,9 @@ public class DrugController {
 	@PostMapping("/addDrug")
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public  ResponseEntity<Drug> addDrug(@RequestBody DrugDTO drugDTO){
-		Drug newDrug = drugService.addDrug(DrugMapper.DrugDTOIntoDrug(drugDTO));
-		newDrug.setSubstituteDrugs(drugDTO.getSubstituteDrugs());
-		return new ResponseEntity<>(drugService.addDrug(DrugMapper.DrugDTOIntoDrug(drugDTO)), HttpStatus.OK);	
+		Drug d = new Drug(drugDTO.getName(),drugDTO.getCode(),drugDTO.getType(),drugDTO.getShape(),drugDTO.getManifacturer(),drugDTO.getAdditionalInfo(),drugDTO.getLoyalityPoints(),drugDTO.getSubstituteDrugs());	
+		//Drug newDrug = drugService.addDrug(DrugMapper.DrugDTOIntoDrug(drugDTO));
+		//newDrug.setSubstituteDrugs(drugDTO.getSubstituteDrugs());
+		return new ResponseEntity<>(drugService.addDrug(d), HttpStatus.OK);	
 	} 
 }

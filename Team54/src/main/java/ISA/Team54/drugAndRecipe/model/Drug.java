@@ -77,7 +77,7 @@ public class Drug {
 		super();
 	}
 
-	public Drug(String name, String code, String type, String shape, String manifacturer, String additionalInfo,int loyaltyPoints) {
+	public Drug(String name, String code, String type, String shape, String manifacturer, String additionalInfo,int loyaltyPoints, List<Drug> substituteDrugs) {
 		super();
 		this.name = name;
 		this.code = code;
@@ -86,7 +86,7 @@ public class Drug {
 		this.manifacturer = manifacturer;
 		this.additionalInfo = additionalInfo;		
 		this.loyaltyPoints = loyaltyPoints;
-	
+		this.substituteDrugs = substituteDrugs;
 	}
 	
 	public long getId() {

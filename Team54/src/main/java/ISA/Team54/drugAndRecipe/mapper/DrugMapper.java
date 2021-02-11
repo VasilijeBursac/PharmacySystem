@@ -12,7 +12,7 @@ public class DrugMapper {
 	
 	public static Drug DrugDTOIntoDrug(DrugDTO drugdto)
 	{
-		return new Drug(drugdto.getName(), drugdto.getCode(), drugdto.getType(), drugdto.getShape(), drugdto.getManifacturer(), drugdto.getAdditionalInfo(), drugdto.getLoyalityPoints());
+		return new Drug(drugdto.getName(), drugdto.getCode(), drugdto.getType(), drugdto.getShape(), drugdto.getManifacturer(), drugdto.getAdditionalInfo(), drugdto.getLoyalityPoints(), drugdto.getSubstituteDrugs());
 	}
 	
 }
