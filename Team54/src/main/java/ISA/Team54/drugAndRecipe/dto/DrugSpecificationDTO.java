@@ -11,17 +11,28 @@ public class DrugSpecificationDTO {
 	private List<Ingredient> ingredients;
 	private String suggestedDose;
 	private Drug drug;
+	private List<DrugDTO> substitute;
+
 	public DrugSpecificationDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
+	
+
 	public DrugSpecificationDTO(List<Contraindication> contraindication, List<Ingredient> ingredients,
-			String suggestedDose) {
+			String suggestedDose, List<DrugDTO> substitute) {
 		super();
 		this.contraindication = contraindication;
 		this.ingredients = ingredients;
 		this.suggestedDose = suggestedDose;
+		this.substitute = substitute;
+	}
+
+
+
+	public List<DrugDTO> getSubstitute() {
+		return substitute;
 	}
 	public DrugSpecificationDTO(List<Contraindication> contraindication, List<Ingredient> ingredients,
 			String suggestedDose, Drug drug) {
@@ -31,6 +42,14 @@ public class DrugSpecificationDTO {
 		this.suggestedDose = suggestedDose;
 		this.drug = drug;
 	}
+
+
+
+	public void setSubstitute(List<DrugDTO> substitute) {
+		this.substitute = substitute;
+	}
+
+
 
 	public List<Contraindication> getContraindication() {
 		return contraindication;

@@ -44,6 +44,7 @@ public class Drug {
 	@Column(unique = false,nullable = true)
 	private int loyaltyPoints;
 	
+	@JsonBackReference
 	@ManyToMany(mappedBy="drugs")
 	private Set<Examination> examinations;
 	

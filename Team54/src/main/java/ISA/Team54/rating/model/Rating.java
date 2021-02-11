@@ -6,14 +6,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Null;
+
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.users.model.Dermatologist;
+import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacist;
 import ISA.Team54.users.model.Pharmacy;
+
 @Entity
 public class Rating {
 	@Id
@@ -22,18 +27,21 @@ public class Rating {
 	
 	@JsonBackReference
 	@ManyToOne
-	@Null
+	@Nullable
 	private Dermatologist dermatologist;
 	
 	@JsonBackReference
 	@ManyToOne
-	@Null
+	@Nullable
 	private Pharmacist pharmacist;
 	
 	@JsonBackReference
 	@ManyToOne
-	@Null
+	@Nullable
 	private Pharmacy pharmacy;
+
+	@OneToOne
+	private Patient patient;
 	
 	@JsonBackReference
 	@ManyToOne
@@ -55,11 +63,11 @@ public class Rating {
 		this.id = id;
 	}
 
-	public Dermatologist getDermatoligist() {
+	public Dermatologist getDermatologist() {
 		return dermatologist;
 	}
 
-	public void setDermatoligist(Dermatologist dermatoligist) {
+	public void setDermatologist(Dermatologist dermatoligist) {
 		this.dermatologist = dermatoligist;
 	}
 
@@ -88,14 +96,6 @@ public class Rating {
 		this.rating = rating;
 	}
 
-	public Dermatologist getDermatologist() {
-		return dermatologist;
-	}
-
-	public void setDermatologist(Dermatologist dermatologist) {
-		this.dermatologist = dermatologist;
-	}
-
 	public Drug getDrug() {
 		return drug;
 	}
@@ -103,6 +103,13 @@ public class Rating {
 	public void setDrug(Drug drug) {
 		this.drug = drug;
 	}
-	
-	
+		
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+
 }

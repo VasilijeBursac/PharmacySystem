@@ -1,17 +1,27 @@
 package ISA.Team54.Examination.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import ISA.Team54.Examination.enums.ExaminationStatus;
 import ISA.Team54.Examination.enums.ExaminationType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacy;
@@ -53,6 +63,7 @@ public class Examination {
 	private Pharmacy pharmacy;
 
 	// da li ce trebati nova tabela ovde za kolicinu? --proveritiii
+	@JsonManagedReference
 	@ManyToMany
 	@JoinTable(name = "drugsInExamination", joinColumns = @JoinColumn(name = "examination_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "drug_id", referencedColumnName = "id"))
 	public List<Drug> drugs;

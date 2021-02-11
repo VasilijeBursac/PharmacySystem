@@ -21,6 +21,9 @@ public interface ExaminationRepository extends JpaRepository<Examination, Long> 
 	public List<Examination> findByEmplyeedIdAndPharmacyId(Long emplyeedId,Long pharmacyId);
 	public List<Examination> findByEmplyeedIdAndStatusAndPharmacyId(Long emplyeedId,ExaminationStatus es,Long pharmacyId);
 	
+	@Query("SELECT e FROM Examination e where emplyeed_id = ?1 and status = ?2 and cast(start as java.util.Date) > ?3 and  cast(start as java.util.Date) < ?4") 
+	List<Examination> getSoonestDates(long id, ExaminationStatus ex, Date before, Date after);
+	
 	@Query("SELECT e FROM Examination e where patient_id = ?1 and type = ?2 and status = ?3 and start < CURRENT_TIMESTAMP") 
 	List<Examination> getHistoryExaminationsForPatient(long id, ExaminationType type, ExaminationStatus status);
 	

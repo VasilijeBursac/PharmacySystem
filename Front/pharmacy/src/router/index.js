@@ -4,11 +4,13 @@ import Home from "../views/Home.vue";
 import PatientProfile from "../views/patient/profile/Profile.vue";
 import Registration from "../views/registration/Registration.vue";
 import PharmacyAdminProfile from  "../views/pharmacyAdmin/profile/PharmacyAdminProfile.vue";
+import DermatologistProfile from  "../views/dermatologistAndPharmacist/dermatologist/DermatologistProfile.vue";
+import PharmacistProfile from  "../views/dermatologistAndPharmacist/pharmacist/PharmacistProfile.vue";
 import Examination from "../views/dermatologistAndPharmacist/dermatologist/StartExamination.vue"
 import IssueDrug from "../views/dermatologistAndPharmacist/pharmacist/IssueDrug.vue"
 import SystemAdminsPage from "../views/systemAdmin/users/SystemAdminsPage.vue"
 import Vacation from "../views/dermatologistAndPharmacist/ScheduleVacation.vue"
-
+import MyCalendar from "../views/dermatologistAndPharmacist/myCalendar.vue"
 Vue.use(VueRouter);
 
 const routes = [
@@ -31,6 +33,11 @@ const routes = [
     path: "/issue-drug",
     name: "Issue drug",
     component: IssueDrug
+  },
+  {
+    path: "/my-calendar",
+    name: "My Calendar",
+    component: MyCalendar
   },
   {
     path: "/about",
@@ -129,6 +136,16 @@ const routes = [
     component: PharmacyAdminProfile
   },
   {
+    path: "/dermatologist-profile",
+    name: "Dermatologist Profile",
+    component: DermatologistProfile
+  },
+  {
+    path: "/pharmacist-profile",
+    name: "Pharmacist Profile",
+    component: PharmacistProfile
+  },
+  {
     path: "/mydrugs",
     name: "MyDrugs",
     component: () =>
@@ -139,12 +156,21 @@ const routes = [
     name: "Pharmacies",
     component: () =>
       import("../views/systemAdmin/PharmacyPage.vue")
+
   }, 
   {
     path: "/drugsPage",
     name: "Drugs",
     component: () =>
       import("../views/systemAdmin/DrugsPage.vue")
+
+  },
+  {
+    path: "/ratings",
+    name: "Rating",
+    component: () =>
+      import("../views/patient/rating/Rating.vue")
+
   }
 ];
 

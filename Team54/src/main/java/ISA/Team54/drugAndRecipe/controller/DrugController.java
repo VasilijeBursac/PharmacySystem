@@ -70,37 +70,14 @@ public class DrugController {
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
 	public DrugSpecificationDTO getDrugSpecification(@PathVariable Long drugId){
 		DrugSpecification drugSpecification = drugService.getSpecificationForDrug(drugId);
-		return new DrugSpecificationMapper().DrugSpecificationIntoDrugSpecificationDTO(drugSpecification);
+		List<Drug> drugSubstitute = drugService.getSubstituteForDrug(drugId);
+		return new DrugSpecificationMapper().DrugSpecificationIntoDrugSpecificationDTO(drugSpecification,drugSubstitute);
 	}
 	
 	@GetMapping("")
 	public List<Drug> getAll(){
 		return drugService.getAllDrugs();
 	}
-	
-	/*	@PostMapping("/addDrug")
-	//@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-	public  ResponseEntity<DrugSpecification>  addDrug(){
-		List<Contraindication> cList = new ArrayList<Contraindication>();
-		Contraindication c = new Contraindication("Kontra indikacija2");
-		contraIndicationRepository.save(c);
-		cList.add(c);
-		Ingredient i = new Ingredient("ingredient2");
-		List<Ingredient> inList = new ArrayList<Ingredient>();
-		ingredientRepository.save(i);
-		inList.add(i);
-		Drug d = new Drug("lek2","12e","anestetik","pilula","hemofarm","no info",35);		
-		Drug d2 = new Drug("lek3","12e","anestetik","pilula","hemofarm","no info",35);
-		drugService.addDrug(d);
-		drugService.addDrug(d2);
-		DrugSpecification ds = new DrugSpecification(cList,inList,"doza preporucena",d);
-		DrugSpecification ds2 = new DrugSpecification(cList,inList,"doza preporucena",d2);
-		List<Drug> sDruggs = new ArrayList<>();
-		sDruggs.add(d);
-		sDruggs.add(d2);
-		d.setSubstituteDrugs(sDruggs);
-		return new ResponseEntity<>(drugSpecificationService.addDrugSpecification(ds), HttpStatus.OK);	
-	} */
 	
 	@PostMapping("/addDrug")
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")

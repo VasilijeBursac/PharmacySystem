@@ -27,8 +27,8 @@ public class Pharmacist extends User{
 	@OneToMany(mappedBy = "pharmacist", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Set<Rating> ratings;
 	
-	@JsonBackReference
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@JsonManagedReference
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	private Pharmacy pharmacy;
 	
 	@Embedded

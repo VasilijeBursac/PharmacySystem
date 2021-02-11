@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <b-table primary-key="id" :tbody-transition-props="transProps" :items="items" :fields="fields"></b-table>
+    <b-table
+      primary-key="id"
+      :tbody-transition-props="transProps"
+      :items="items"
+      :fields="fields"
+    ></b-table>
   </div>
 </template>
 <script>
@@ -12,20 +17,29 @@ export default {
         { key: "id", sortable: true },
         { key: "name", sortable: true },
         { key: "surname", sortable: true },
-        { key: "term", sortable: true }
+        { key: "term", sortable: true },
       ],
       transProps: {
-        name: "flip-list"
+        name: "flip-list",
       },
-      items: []
+      items: [],
     };
-  },created() {
-            // GET request for examination information
-            this.$axios.get("http://localhost:9001/patient/examinatedPatients/"+1)
-            .then(response => this.items = response.data)
-            .catch(error => {
-            this.errorMessage = error.message;
-            console.error("There was an error!", error);});}
+  },
+  created() {
+    // GET request for examination information
+    this.$axios
+      .get("http://localhost:9001/patient/examinatedPatients/")
+      .then((response) => {
+        this.items = response.data;
+        for (let i in this.items) {
+          this.items[i].term = new Date(response.data[i].term).toLocaleString();
+        }
+      })
+      .catch((error) => {
+        this.errorMessage = error.message;
+        console.error("There was an error!", error);
+      });
+  },
 };
 </script>
 <style>

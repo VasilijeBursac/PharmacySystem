@@ -23,5 +23,4 @@ public class DermatologistServiceImpl implements DermatologistService {
 	public Dermatologist findOneById(Long id) {
 		return dermatologistRepository.findOneById(id);
 	}	
-
 }

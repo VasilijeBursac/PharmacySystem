@@ -69,6 +69,7 @@ public class PatientServiceImpl implements PatientService {
 		
 		return results;
 	}
+	
 
 	@Override
 	public List<Patient> findAll() {
@@ -133,10 +134,11 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public void addPenaltyPointForPatient(Long id) {
-		Examination canceledExamination = examinationService.getCurrentExaminationByDermatologistId();
+		Examination canceledExamination = examinationService.getCurrentExaminationForEmployee();
 		Patient patient = patientRepository.findOneById(id);
 		patient.setPenaltyPoints(patient.getPenaltyPoints()+1);
-		canceledExamination.setStatus(ExaminationStatus.Canceled);
+		canceledExamination.setStatus(ExaminationStatus.Unfilled);
+		canceledExamination.setPatient(null);
 		examinationRepository.save(canceledExamination);
 		patientRepository.save(patient);
 	} 

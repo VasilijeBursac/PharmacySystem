@@ -35,10 +35,10 @@ public class ExaminationMapper {
 				rating,
 				examination.getPrice());
 	}
-	public ExaminationDTO ExaminationToExaminationDTOHistory(Examination examination,Dermatologist dermatologist) {
-		if(dermatologist != null) 
+	public ExaminationDTO ExaminationToExaminationDTOHistory(Examination examination,User user) {
+		if(user != null) 
 		{
-			return new ExaminationDTO(examination.getId(),dermatologist.getName(),dermatologist.getSurname(),examination.getTerm().getStart());
+			return new ExaminationDTO(examination.getId(),user.getName(),user.getSurname(),examination.getTerm().getStart());
 			
 		}
 		return null;
