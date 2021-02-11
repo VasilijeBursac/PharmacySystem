@@ -47,12 +47,22 @@ export default {
 </script>
 
 <style>
-    .nav>li {
-        margin-left: 0.2rem;
+    .nav li {
+        margin: 0.5rem 0;        
     }
 
     .nav .nav-link{
         font-size: 0.85rem;
         font-weight: 500;
+        margin-left: 0.2rem;
     }
+
+    .nav .nav-item a{
+        color: gray;
+    }
+
+    .router-link-active{
+        color: #007bff !important;
+    }
+
 </style>

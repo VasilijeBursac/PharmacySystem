@@ -14,7 +14,7 @@
                     id="old-password-input"
                     v-model="form.oldPassword"
                     placeholder="Unesite staru lozinku"
-                    required>
+                    type="password">
                 </b-form-input>
             </b-form-group>
 
@@ -23,7 +23,7 @@
                     id="new-password-input"
                     v-model="form.newPassword"
                     placeholder="Unesite novu lozinku"
-                    required>
+                    type="password">
                 </b-form-input>
             </b-form-group>
 
@@ -32,7 +32,7 @@
                     id="repeat-new-password-input"
                     v-model="form.repeatedNewPassword"
                     placeholder="Ponovo unesite novu lozinku"
-                    required>
+                    type="password">
                 </b-form-input>
             </b-form-group>
 
@@ -65,8 +65,15 @@ export default {
         changePassword(event){
             event.preventDefault()
 
-            if (this.form.newPassword != this.form.repeatedNewPassword)
+            if(this.form.newPassword == '' || this.form.repeatedNewPassword == '' || this.oldPassword == '' ){
+                this.toast('danger', 'Neuspešno!', 'Morate popuniti sva polja!')
+                return;
+            }
+
+            if (this.form.newPassword != this.form.repeatedNewPassword){
+                this.toast('danger', 'Neuspešno!', 'Greška pri izmeni lozinke! Nove lozinke se ne poklapa!')
                 return
+            }
             else{
                 this.$http
                     .post('/auth/change-password', 

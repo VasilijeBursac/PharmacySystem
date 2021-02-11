@@ -16,4 +16,7 @@ public interface DrugReservationRepository extends JpaRepository<DrugReservation
     DrugReservation findOneByIdAndReservedDrugDrugInPharmacyIdPharmaciIdAndStatus(long id, long reservedDrugPharmaciId, ReservationStatus status);
     DrugReservation findOneById(long id);
     List<DrugReservation> findAllByPatientIdAndStatus(long id, ReservationStatus sold);
+
+    @Query("select r from DrugReservation r where reservation_to_date < CURRENT_TIMESTAMP and status = ?1 ")
+    List<DrugReservation> getPassedReservations(ReservationStatus status);
 }

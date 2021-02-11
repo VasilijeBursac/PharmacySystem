@@ -260,6 +260,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 			examination.setPatient(patient);
 
 			examinationRepository.save(examination);
+			emailService.sendEmail("tim54isa@gmail.com","Zakazan pregled","Uspesno ste zakazali pregled!");
 		}
 	}
 

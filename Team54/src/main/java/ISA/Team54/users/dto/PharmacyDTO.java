@@ -24,11 +24,13 @@ public class PharmacyDTO {
 		this.city = city;
 		this.country = country;
 	}
-	public PharmacyDTO(long id, String name, String address, double rating, double pharmacistPrice) {
+	public PharmacyDTO(long id, String name, String address, String city, String country, double rating, double pharmacistPrice) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
+		this.city = city;
+		this.country = country;
 		this.rating = rating;
 		this.pharmacistPrice = pharmacistPrice;
 	}

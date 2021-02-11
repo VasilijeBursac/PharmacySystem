@@ -21,6 +21,8 @@ public class PharmacyMapper {
 				pharmacy.getId(),
 				pharmacy.getName(),
 				pharmacy.getAddress(),
+				pharmacy.getCity(),
+				pharmacy.getCountry(),
 				pharmacy.getRatings(),
 				pharmacy.getPharmacistPrice());
 	}

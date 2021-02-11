@@ -8,7 +8,7 @@
             <template #cell(akcije)="row">
                 <b-button @click="cancel(row)" size="sm" variant="danger" >
                     <b-icon-x></b-icon-x>
-                    Otkaži pregled
+                    Otkaži savetovanje
                 </b-button>
             </template>
         </b-table>

@@ -17,4 +17,5 @@ public interface DrugReservationService {
     Drug isDrugReservationAvailable(long reservationId) throws InvalidTimeLeft;
     void sellDrug(long reservationId);
     List<Pharmacy> getPatientPharmacies();
+    void penalIfDeadlineOver();
 }

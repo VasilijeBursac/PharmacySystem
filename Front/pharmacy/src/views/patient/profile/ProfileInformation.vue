@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import ChangePasswordModal from './ChangePasswordModal.vue';
+import ChangePasswordModal from '../../ChangePasswordModal.vue';
 
 export default {
     props: ['user'],
