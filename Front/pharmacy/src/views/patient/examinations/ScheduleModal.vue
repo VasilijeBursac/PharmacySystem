@@ -125,7 +125,7 @@ export default {
                 .get('examination/schedule/' + row.item.id)
                 .then( res => {
                     if(res.status == 200){
-                        this.toast('Uspešno ste zakazali konsultovanje kod farmaceuta!', 'Uspešno', 'success')
+                        this.toast('Uspešno ste zakazali konsultovanje kod farmaceuta! Uskoro ćete primiti email.', 'Uspešno', 'success')
                         this.$bvModal.hide('my-modal')
                         this.closeModal(true)
 
@@ -188,7 +188,7 @@ export default {
                         this.searchBusy = false
 
                         if(data.length == 0){
-                            this.toast('Nažalost, ne postoji nijedna apoteka u sistemu!.', 'Neuspešno', 'danger')
+                            this.toast('Nažalost, ne postoji nijedan slobodan farmaceut u izabranom terminu. Molimo, pokušajte drugi.', 'Neuspešno', 'danger')
                         }
                     }            
                 })

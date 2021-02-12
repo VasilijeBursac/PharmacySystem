@@ -116,6 +116,12 @@ public class PharmacyController {
 		return distinctPharmacies;
 	}
 
+	@PostMapping("{id}/dermatologist-examinations")
+	@PreAuthorize("hasRole('ROLE_PATIENT')")
+	public  ResponseEntity<List<DermatologistExaminationDTO>> getFreeDermatologistExaminationsForPharmacy(@PathVariable long id, @RequestBody ExaminationTypeDTO type){
+		return new ResponseEntity<List<DermatologistExaminationDTO>>(examinationService.getExaminationsForPharmacy(id, type.getType()), HttpStatus.OK);
+	}
+
 	private boolean CheckIfPharmacyUnique(Pharmacy pharmacy, List<Pharmacy> pharmacies) {
 		for (Pharmacy p : pharmacies) {
 			if(p.getId() == pharmacy.getId())

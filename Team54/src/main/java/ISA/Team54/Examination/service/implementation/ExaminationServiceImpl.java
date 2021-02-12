@@ -162,6 +162,15 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
+	public List<Examination> getPatientExaminationsByType(ExaminationType type){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+
+		List<Examination> examinations =  examinationRepository.getHistoryExaminationsForPatient(patient.getId(), type, ExaminationStatus.Filled);
+		return examinations;
+	}
+
+	@Override
 	public List<Examination> historyOfPatientExamination(Long id) {
 		ExaminationType examinaitonType = ExaminationType.DermatologistExamination;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -263,7 +272,10 @@ public class ExaminationServiceImpl implements ExaminationService {
 			examination.setPatient(patient);
 
 			examinationRepository.save(examination);
-			emailService.sendEmail("tim54isa@gmail.com","Zakazan pregled","Uspesno ste zakazali pregled!");
+			new Thread(() -> {
+				emailService.sendEmail("tim54isa@gmail.com", "Zakazan pregled", "Uspesno ste zakazali pregled!");
+
+			}).start();
 		}
 	}
 
@@ -361,6 +373,23 @@ public class ExaminationServiceImpl implements ExaminationService {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public List<DermatologistExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type) {
+		List<Examination> examinations = examinationRepository.getAllFutureExaminationsForPharmacy(id, type, ExaminationStatus.Unfilled);
+		List<User> employees = new ArrayList<User>();
+		examinations.forEach(
+				e -> employees.add(userRepository.findById(e.getEmplyeedId()).orElse(null))
+		);
+
+		List<DermatologistExaminationDTO> examinationDTOs = new ArrayList<DermatologistExaminationDTO>();
+		ExaminationMapper mapper = new ExaminationMapper();
+		for(int i = 0; i < examinations.size(); i++) {
+			examinationDTOs.add(mapper.ExaminationToDermatologistExaminationDTO(examinations.get(i), employees.get(i), type));
+		}
+
+		return examinationDTOs;
 	}
 
 	public boolean scheduleExamination(Date start) {
