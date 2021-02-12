@@ -23,3 +23,8 @@ script:
   - ./mvnw sonar:sonar -Dsonar.projectKey=$PROJECT_KEY1 -Dsonar.organization=team54-isa -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN1
 
 dist: trusty
+
+deploy:
+  provider: heroku
+  api_key: $HEROKU_API_KEY
+  app: team54-pharmacy-backend

@@ -8,7 +8,11 @@
       Savetovanje pacijenta
     </h4>
     <div>
-      <b-modal ref="my-modal" hide-footer title="Zamenski lekovi dostupni u apoteci">
+      <b-modal
+        ref="my-modal"
+        hide-footer
+        title="Zamenski lekovi dostupni u apoteci"
+      >
         <div class="d-block text-center">
           <div v-for="(item, index) in subdrugs" :key="item">
             <input v-model="item.name" />
@@ -40,7 +44,7 @@
               <b-table
                 primary-key="id"
                 :tbody-transition-props="transProps"
-                :items="contraindications"
+                :items="kontraindikacije"
                 :fields="Fields"
               ></b-table>
             </div>
@@ -50,17 +54,17 @@
               <b-table
                 primary-key="id"
                 :tbody-transition-props="transProps"
-                :items="ingredients"
+                :items="sastojci"
                 :fields="Ingr"
               ></b-table>
             </div>
           </b-col>
-           <b-col>
+          <b-col>
             <div id="app">
               <b-table
                 primary-key="id"
                 :tbody-transition-props="transProps"
-                :items="substitute"
+                :items="zamenskiLekovi"
                 :fields="Subs"
                 :headerTitle="Zamenski"
               ></b-table>
@@ -72,7 +76,11 @@
     <div class="profile-main">
       <b-card no-body>
         <b-tabs pills card align="center" lazy>
-          <b-tab v-if="userRole == 'ROLE_DERMATOLOGIST'" title="Informacije o pacijentu i pregledu" active>
+          <b-tab
+            v-if="userRole == 'ROLE_DERMATOLOGIST'"
+            title="Informacije o pacijentu i pregledu"
+            active
+          >
             <b-card>
               <b-form-group
                 label="Ime pacijenta :"
@@ -102,7 +110,11 @@
               </b-form-group>
             </b-card>
           </b-tab>
-           <b-tab v-if="userRole == 'ROLE_PHARMACIST'" title="Informacije o pacijentu i savetovanju" active>
+          <b-tab
+            v-if="userRole == 'ROLE_PHARMACIST'"
+            title="Informacije o pacijentu i savetovanju"
+            active
+          >
             <b-card>
               <b-form-group
                 label="Ime pacijenta :"
@@ -133,12 +145,18 @@
             </b-card>
           </b-tab>
           <b-tab title="Istorija poseta ">
-            <b-table striped hover :items="items"></b-table>
+            <b-table striped hover :items="istorijaPoseta" :fields="History"></b-table>
           </b-tab>
-          <b-tab v-if="userRole == 'ROLE_DERMATOLOGIST'" title="Zakazivanje pregleda">
+          <b-tab
+            v-if="userRole == 'ROLE_DERMATOLOGIST'"
+            title="Zakazivanje pregleda"
+          >
             <NewExamination />
           </b-tab>
-           <b-tab v-if="userRole == 'ROLE_PHARMACIST'" title="Zakazivanje savetovanja">
+          <b-tab
+            v-if="userRole == 'ROLE_PHARMACIST'"
+            title="Zakazivanje savetovanja"
+          >
             <NewExamination />
           </b-tab>
           <b-tab title="Terapija">
@@ -208,30 +226,36 @@ import NewExamination from "./NewExamination.vue";
 export default {
   data() {
     return {
-      Fields: [{ key: "name", sortable: true }],
-      Ingr: [{ key: "ingredient", sortable: true }],
-       Subs: [{ key: "name", sortable: true }],
+      Fields: [{ key: "kontraindikacije", sortable: true }],
+      History: [
+        { key: "imeStrucnogLica", sortable: true },
+        { key: "prezimeStrucnogLica", sortable: true },
+        { key: "vremePregleda", sortable: true },
+      ],
+      Ingr: [{ key: "sastojci", sortable: true }],
+      Subs: [{ key: "zamenskiLekovi", sortable: true }],
       n: "",
       surname: "",
       start: "",
       examinationId: 0,
       items: [],
+      istorijaPoseta : [],
       allDrugs: [],
       text: "",
       therapy: [],
       subdrugs: [],
       added: 0,
       dose: 0,
-      ingredients: [],
+      sastojci: [],
       therapyDuration: 0,
-      substitute : [],
-      contraindications: [],
+      zamenskiLekovi: [],
+      kontraindikacije: [],
     };
   },
   created() {
     // GET request for examination information
     this.$axios
-      .get("http://localhost:9001/examination/soonestExamination/")
+      .get("examination/soonestExamination/")
       .then((response) => {
         this.examination = response.data;
         this.name = this.examination.soonestExamination.dermatologistName;
@@ -241,6 +265,13 @@ export default {
         ).toLocaleString();
         this.items = this.examination.historyExaminations;
         for (let i in this.items) {
+          this.istorijaPoseta.push({
+            imeStrucnogLica : this.items[i].dermatologistName,
+            prezimeStrucnogLica : this.items[i].dermatologistSurname,
+            vremePregleda : new Date(
+            this.examination.historyExaminations[i].examinationStart
+          ).toLocaleString()
+          })
           this.items[i].examinationStart = new Date(
             this.examination.historyExaminations[i].examinationStart
           ).toLocaleString();
@@ -250,7 +281,7 @@ export default {
       })
       .catch((error) => {
         this.errorMessage = error.message;
-        console.error("There was an error!", error);
+        //console.error("There was an error!", error);
       });
   },
   mounted() {
@@ -263,10 +294,7 @@ export default {
     add: function(item) {
       this.$axios
         .get(
-          "http://localhost:9001/drugs/isAvailableInPharmacy/" +
-            item.id +
-            "/" +
-            this.examinationId
+          "drugs/isAvailableInPharmacy/" + item.id + "/" + this.examinationId
         )
         .then((response) => {
           this.isAvailable = response.data;
@@ -287,7 +315,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
         });
     },
     getDrugs: function(drug) {
@@ -336,10 +364,25 @@ export default {
       this.$axios
         .get("http://localhost:9001/drugs/drugSpecification/" + id)
         .then((response) => {
-          this.contraindications = response.data.contraindication;
-          this.ingredients = response.data.ingredients;
+          this.kontraindikacije = []
+          this.sastojci = []
+          this.zamenskiLekovi = []
+          for(var i in  response.data.contraindication ){
+              this.kontraindikacije.push({
+                kontraindikacije : response.data.contraindication[i].name
+              })
+          }
+          for(var j in  response.data.ingredients ){
+              this.sastojci.push({
+                sastojci : response.data.ingredients[j].ingredient
+              })
+          }
+          for(var k in  response.data.substitute ){
+              this.zamenskiLekovi.push({
+                zamenskiLekovi : response.data.substitute[k].name
+              })
+          }
           this.dose = response.data.suggestedDose;
-          this.substitute = response.data.substitute
           // ako lek nije dostupan obavesti ga
           this.$refs["specification-modal"].show();
         });

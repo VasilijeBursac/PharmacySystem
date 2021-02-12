@@ -68,6 +68,24 @@ public class Examination {
 	@JoinTable(name = "drugsInExamination", joinColumns = @JoinColumn(name = "examination_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "drug_id", referencedColumnName = "id"))
 	public List<Drug> drugs;
 	
+	
+
+	public Examination(long id, String diagnose, int price, Integer therapyDuration, ExaminationType type,
+			ExaminationStatus status, long emplyeedId, Patient patient, Term term, Pharmacy pharmacy,
+			List<Drug> drugs) {
+		super();
+		this.id = id;
+		this.diagnose = diagnose;
+		this.price = price;
+		this.therapyDuration = therapyDuration;
+		this.type = type;
+		this.status = status;
+		this.emplyeedId = emplyeedId;
+		this.patient = patient;
+		this.term = term;
+		this.pharmacy = pharmacy;
+		this.drugs = drugs;
+	}
 
 	public Examination() {
 		super();

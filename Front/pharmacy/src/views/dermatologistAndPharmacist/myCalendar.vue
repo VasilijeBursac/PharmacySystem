@@ -168,7 +168,7 @@ export default {
   created() {
     // GET request for examination information
     this.$axios
-      .get("http://localhost:9001/examination/examinaitonForCalendar/")
+      .get("examination/examinaitonForCalendar/")
       .then((response) => {
         this.definedExaminations = response.data;
         let examinationsForCalendar = [];
@@ -190,7 +190,7 @@ export default {
       })
       .catch((error) => {
         this.errorMessage = error.message;
-        console.error("There was an error!", error);
+        //console.error("There was an error!", error);
         this.$notify({
           type: "success",
           title: "Success",
@@ -226,7 +226,7 @@ export default {
 
     handleEventClick(clickInfo) {
       this.$refs["my-modal"].show();
-      console.log(clickInfo);
+      //console.log(clickInfo);
       let exam = this.definedExaminations.filter((obj) => {
         return obj.id == clickInfo.event.id;
       });
@@ -257,7 +257,7 @@ export default {
     },
     getCurrentExamination() {
       this.$axios
-        .get("http://localhost:9001/examination/soonestExamination/")
+        .get("examination/soonestExamination/")
         .then((response) => {
           this.currentExamination = response.data;
           if (
@@ -270,12 +270,12 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
         });
     },
     notHere() {
       this.$axios
-        .post("http://localhost:9001/patient/addPenaltyPoint/" + this.patientId)
+        .post("patient/addPenaltyPoint/" + this.patientId)
         .then((response) => {
           this.message = response.data;
           if (response.status == 200) {
@@ -290,7 +290,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
           this.$notify({
             type: "error",
             title: "Error",

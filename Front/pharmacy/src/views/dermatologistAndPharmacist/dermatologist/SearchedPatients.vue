@@ -63,11 +63,11 @@ export default {
   created() {
     // GET request using axios with error handling
     this.$axios
-      .get("http://localhost:9001/patient/patientBySurnameAndName/*")
+      .get("patient/patientBySurnameAndName/*")
       .then((response) => (this.items = response.data))
       .catch((error) => {
         this.errorMessage = error.message;
-        console.error("There was an error!", error);
+        //console.error("There was an error!", error);
       });
   },
   methods: {
@@ -78,7 +78,7 @@ export default {
 
       this.$axios
         .get(
-          "http://localhost:9001/patient/patientBySurnameAndName/" + imeIPrezime
+          "patient/patientBySurnameAndName/" + imeIPrezime
         )
         .then((response) => {
           this.items = response.data;
@@ -106,7 +106,7 @@ export default {
     startExamination: function() {
       this.$axios
         .get(
-          "http://localhost:9001/examination/isPatientAppropriate/" +
+          "examination/isPatientAppropriate/" +
             this.choosedPatient.id
         )
         .then((response) => {
@@ -131,7 +131,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
           this.$notify({
             type: "error",
             title: "Error",
@@ -163,7 +163,7 @@ export default {
       this.$refs["my-modal"].hide();
       this.$axios
         .post(
-          "http://localhost:9001/patient/addPenaltyPoint/" +
+          "patient/addPenaltyPoint/" +
             this.choosedPatient.id
         )
         .then((response) => {
@@ -179,7 +179,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
           this.$notify({
             type: "error",
             title: "Error",

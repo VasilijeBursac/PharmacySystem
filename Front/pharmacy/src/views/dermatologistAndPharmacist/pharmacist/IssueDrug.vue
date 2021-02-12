@@ -72,7 +72,7 @@ export default {
       this.reservationIdForSend = this.drugReservation;
       this.$axios
         .get(
-          "http://localhost:9001/reservation/reservedDrugs/" +
+          "reservation/reservedDrugs/" +
             this.drugReservation
         )
         .then((response) => {
@@ -91,7 +91,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
           this.drug = "";
           this.drugShow = " ";
           if (error.response.status == 405) {
@@ -114,7 +114,7 @@ export default {
     sell: function() {
       this.$axios
         .post(
-          "http://localhost:9001/reservation/sellDrug/" +
+          "reservation/sellDrug/" +
             this.reservationIdForSend
         )
 
@@ -131,7 +131,7 @@ export default {
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
           this.$notify({
             type: "error",
             title: "Erroe",
