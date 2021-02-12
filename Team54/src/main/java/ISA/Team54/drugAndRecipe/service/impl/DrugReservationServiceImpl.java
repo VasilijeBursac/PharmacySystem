@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import ISA.Team54.drugAndRecipe.enums.ReservationStatus;
 import ISA.Team54.drugAndRecipe.model.Drug;
@@ -39,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 
 @Service
+@Transactional(readOnly = true)
 public class DrugReservationServiceImpl implements DrugReservationService {
 
 	@Autowired
@@ -120,12 +123,26 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 		return false;
 	}
 
-	public void sellDrug(long drugReservationId) {
-		DrugReservation drugReservation = drugReservationRepository.findOneById(drugReservationId);
-		DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findOneByDrugInPharmacyId(drugReservation.getReservedDrug().getDrugInPharmacyId());
-		drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - 1);
-		drugReservation.setStatus(ReservationStatus.Sold);
-		drugReservationRepository.save(drugReservation);
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void sellDrug(long drugReservationId) throws Exception {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) { 
+			// TODO Auto-generated catch block 
+			e.printStackTrace();
+		}
+		try {
+			DrugReservation drugReservation = drugReservationRepository.findOneById(drugReservationId);
+			if(drugReservation.getStatus() == ReservationStatus.Sold) {
+				throw new Exception();
+			}
+			DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findDrugInPharmacyById(drugReservation.getReservedDrug().getDrugInPharmacyId().getDrugId(),drugReservation.getReservedDrug().getDrugInPharmacyId().getPharmaciId());
+			drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - 1);
+			drugReservation.setStatus(ReservationStatus.Sold);
+			drugReservationRepository.save(drugReservation);
+		}catch(Exception e) {
+			throw new Exception();
+		}
 	}
 
 	private List<DrugReservation> getSoldReservationsForPatient(){

@@ -406,11 +406,23 @@ export default {
             text: this.message,
             closeOnClick: true,
           });
-        });
-
-      setTimeout(() => {
+           setTimeout(() => {
         this.$router.push("my-calendar");
       }, 2000);
+        }).catch((error) => {
+          this.errorMessage = error.message;
+          //console.error("There was an error!", error);
+          this.$notify({
+            type: "error",
+            title: "Error",
+            text: error.message,
+            closeOnClick: true,
+          });
+          window.location.reload();
+
+        });
+
+     
     },
   },
 };

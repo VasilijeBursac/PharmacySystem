@@ -128,11 +128,12 @@ public class DrugReservationController {
     @PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
     public ResponseEntity<String> sellDrug(@PathVariable long reservationId) {
         try {
-            drugReservationService.sellDrug(reservationId);
+            drugReservationService.sellDrug(reservationId); 
+            return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!", HttpStatus.OK);
         }catch(Exception e) {
-            return new ResponseEntity<>("Doslo je do greske!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Doslo je do greske, pokusajte ponovo!", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!", HttpStatus.OK);
+        
     }
 
     @Scheduled(cron = "${reservation.check}")

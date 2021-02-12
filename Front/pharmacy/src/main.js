@@ -25,7 +25,7 @@ new Vue({
 	store,
 	render: h => h(App),
 	created(){
-		axios.defaults.baseURL = 'http://localhost:9001/';
+		//axios.defaults.baseURL = 'http://localhost:9001/';
 		var userId = localStorage.getItem("UserId") 
 		
 		if( userId == undefined ){

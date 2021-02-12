@@ -8,6 +8,7 @@ import ISA.Team54.unit.DrugReservationTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import ISA.Team54.integration.ExaminationIntegrationTests;
 import ISA.Team54.unit.DrugTests;
 import ISA.Team54.unit.UserTests;
 
@@ -15,6 +16,7 @@ import ISA.Team54.unit.UserTests;
 @Suite.SuiteClasses({
 	UserTests.class,
 	DrugTests.class,
+
 		DrugReservationTests.class,
 		DrugReservationIntegrationTests.class,
 		LoyaltyIntegrationTests.class,

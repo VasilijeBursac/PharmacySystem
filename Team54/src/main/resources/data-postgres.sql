@@ -272,9 +272,15 @@ insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (2,3
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
 values('2021-06-01 7:00','2021-06-01 15:00',1,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-02 7:00','2021-06-02 15:00',1,1);
+values('2021-06-02 7:00','2021-06-02 15:00',2,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-07-06 7:00','2021-07-06 15:00',1,1);
+values('2021-07-06 7:00','2021-07-06 15:00',3,1);
+insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
+values('2021-06-02 15:00','2021-06-02 20:00',4,2);
+insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
+values('2021-06-02 15:00','2021-06-02 20:00',1,2);
+insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
+values('2021-06-02 15:00','2021-06-02 20:00',1,2);
 
 /*-- SCHEDULED EXAMINATIONS -DERMATOLOGIST  --*/
 
