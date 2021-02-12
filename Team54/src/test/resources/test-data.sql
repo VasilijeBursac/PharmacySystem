@@ -133,10 +133,17 @@ values (4.7, 3, null,null, 5);
 insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id)
 values (5, 3, null,null, 5);
 insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id)
+values (4.7, 1, null,null, 5);
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id)
+values (5, 2, null,null, 5);
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id)
+values (5, 4, null,null, 5);
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id)
 values (4, null, 10,null, 5);
 insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id)
 values (3, null, 9,null, 7);
-		
+
+
 insert into user_authority( user_id, authority_id) values (1,4);
 insert into user_authority( user_id, authority_id) values (2,4);
 insert into user_authority( user_id, authority_id) values (3,4);
@@ -269,9 +276,15 @@ insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (2,3
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
 values('2021-06-01 7:00','2021-06-01 15:00',1,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-02 7:00','2021-06-02 15:00',1,1);
+values('2021-06-02 7:00','2021-06-02 15:00',2,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-07-06 7:00','2021-07-06 15:00',1,1);
+values('2021-07-06 7:00','2021-07-06 15:00',3,1);
+insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
+values('2021-06-02 15:00','2021-06-02 20:00',4,2);
+insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
+values('2021-06-02 15:00','2021-06-02 20:00',1,2);
+insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
+values('2021-06-02 15:00','2021-06-02 20:00',1,2);
 
 /*-- SCHEDULED EXAMINATIONS -DERMATOLOGIST  --*/
 

@@ -1,15 +1,14 @@
 package ISA.Team54.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
@@ -30,8 +27,7 @@ import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.model.Term;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
-import ISA.Team54.security.UserTokenState;
-import ISA.Team54.security.auth.JwtAuthenticationRequestDTO;
+import ISA.Team54.shared.model.DateRange;
 import ISA.Team54.users.model.Pharmacy;
 
 @RunWith(SpringRunner.class)
@@ -52,23 +48,7 @@ public class ExaminationIntegrationTests {
 	
 	@Autowired
 	private ExaminationService examinationService;
-	@Before
-	public void login() {
-		ResponseEntity<UserTokenState> responseEntity = restTemplate.postForEntity("/login",
-				new JwtAuthenticationRequestDTO("marko@gmail.com", "marko"), UserTokenState.class);
-		accessToken = "Bearer " + responseEntity.getBody().getAccessToken();
-	}
-
-	@PostConstruct
-	public void setup() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-	}
-
-	/*
-	 * long id, String diagnose, int price, Integer therapyDuration, ExaminationType
-	 * type, ExaminationStatus status, long emplyeedId, Patient patient, Term term,
-	 * Pharmacy pharmacy, List<Drug> drugs
-	 */
+	
 	@Test
 	public void getAllExaminaitonsForPharmacy_ReturnsExaminations() {
 		
@@ -92,15 +72,39 @@ public class ExaminationIntegrationTests {
 		examinations.add(examination4);
 		examinations.add(examination5);
 		
-		List<DermatologistExaminationDTO> dermatologistExaminations = examinationService.getAllExaminationsForPharmacy(2L,ExaminationType.DermatologistExamination);
+		List<DermatologistExaminationDTO> dermatologistExaminations = examinationService.getAllExaminationsForPharmacy(1L,ExaminationType.DermatologistExamination);
 		
 		assertEquals(dermatologistExaminations.size(), 5);
+	}	
+	
+	@Test
+	public void isDermatologistOnWorkInPharmacy_ReturnTrue() {
 		
-		for( int i = 0; i < dermatologistExaminations.size(); i++) {
-			 assertEquals(dermatologistExaminations.get(i).getExaminationId(), examinations.get(i));
-		 }
-		
+		boolean isOnWork = examinationService.isDermatologistOnWorkInTheParmacy(1L,1L,new DateRange(new Date(2021,02,22,11,30),new Date(2021,02,22,12,0)));
+		assertTrue(isOnWork);
 	}
 	
+	@Test
+	public void isDermatologistOnWorkInPharmacy_ReturnFalse() {
+		
+		boolean isOnWork = examinationService.isDermatologistOnWorkInTheParmacy(1L,2L,new DateRange(new Date(2021,02,22,11,30),new Date(2021,02,22,12,30)));
+		assertFalse(isOnWork);
+	}
+	@Test
+	public void isDermatologistAvailable_ReturnsTrue() {
+		boolean isAvailable = examinationService.isDermatologistAvailable(1L,1L,new Date(2021,02,22,11,30),new Date(2021,02,22,12,0));
+		assertTrue(isAvailable);
+	}
 	
+	@Test
+	public void isDermatologistAvailable_ReturnsFalse() {
+		boolean isAvailable = examinationService.isDermatologistAvailable(1L,1L,new Date(2021,02,22,17,30),new Date(2021,02,22,18,0));
+		assertFalse(isAvailable);
+	}
+	
+	@Test
+	public void isPatientAvailable_ReturnTrue() {
+		boolean isAvailable = examinationService.isPatientAvailable(5L,new Date(2021,02,22,17,30),new Date(2021,02,22,18,0));
+		assertTrue(isAvailable);
+	}
 }

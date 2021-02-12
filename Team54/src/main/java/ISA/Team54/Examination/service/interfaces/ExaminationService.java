@@ -7,6 +7,7 @@ import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
 import ISA.Team54.Examination.dto.ExaminationInformationDTO;
 import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
+import ISA.Team54.shared.model.DateRange;
 import ISA.Team54.users.model.Dermatologist;
 import ISA.Team54.users.enums.UserRole;
 import ISA.Team54.users.model.Pharmacy;
@@ -23,13 +24,16 @@ public interface ExaminationService {
 	void scheduleExamination(long id);
 	boolean canExaminationBeScheduled(Examination examination, Date start,Date end);
 	boolean scheduleExamination(Date start);
+	boolean isDermatologistOnWorkInTheParmacy(Long employeeId, Long pharmacyId, DateRange examinationTime);
 	void cancelExamination(long id) throws Exception;
+	boolean isPatientAvailable(Long patientId, Date start, Date end);
 	boolean saveExamination(Long newExaminationId);
 	List<DermatologistExaminationDTO> getFutureExaminations(ExaminationType type);
 	List<Pharmacy> getFreePharmaciesForInterval(Date term, ExaminationType type);
 	int isPatientAppropriate(Long patientId);
     List<User> getEmployeeWhoExaminedPatient(ExaminationType type);
 	List<ExaminationForCalendarDTO> getExaminaitonForCalendar();
+	boolean isDermatologistAvailable(Long dermatologistId, Long pharmacyId, Date start, Date end);
 	UserRole getCurrentRole();
 	Long getCurrentEmployedId();
 }

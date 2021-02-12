@@ -299,8 +299,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 		return examinationDTOs;
 	}
 
-	private boolean isDermatologistOnWorkInTheParmacy(Long employeeId, Long pharmacyId,
-			DateRange examinationTime) {
+	public boolean isDermatologistOnWorkInTheParmacy(Long employeeId, Long pharmacyId, DateRange examinationTime) {
 		Dermatologist dermatologist = dermatologistRepository.findOneById(employeeId);
 		List<DermatologistWorkSchedule> workingSchedules;
 		if(dermatologist != null) {
@@ -316,17 +315,25 @@ public class ExaminationServiceImpl implements ExaminationService {
 			return false;
 		}else {
 			Pharmacist pharmacist = pharmacistRepository.findOneById(employeeId);
-			if (examinationTime.isInRange(new DateRange(pharmacist.getWorkSchedule().getStartDate(),
-					pharmacist.getWorkSchedule().getEndDate()))) {
-
+			int workingDayEnd = pharmacist.getWorkSchedule().getStartDate().getHours() *60 + pharmacist.getWorkSchedule().getStartDate().getMinutes();
+			int workingDayStart = pharmacist.getWorkSchedule().getEndDate().getHours()*60 +pharmacist.getWorkSchedule().getEndDate().getMinutes() ;
+			int examinationStart = examinationTime.getStartDate().getHours()*60 + examinationTime.getStartDate().getMinutes();
+			int examinationEnd = (int)examinationTime.getEndDate().getHours()*60+(int)examinationTime.getEndDate().getMinutes();
+			
+			if(examinationStart>=workingDayStart && examinationStart < workingDayEnd && examinationEnd>workingDayStart && examinationEnd<=workingDayEnd)
 				return true;
-			}else {
-				return false;
-			}
+			return false;
+//			if (examinationTime.isInRange(new DateRange(pharmacist.getWorkSchedule().getStartDate(),
+//					pharmacist.getWorkSchedule().getEndDate()))) {
+
+//				return true;
+//			}else {
+//				return false;
+//			}
 		}	
 	}
 
-	private boolean isDermatologistAvailable(Long dermatologistId, Long pharmacyId, Date start, Date end) {
+	public boolean isDermatologistAvailable(Long dermatologistId, Long pharmacyId, Date start, Date end) {
 		if (!isDermatologistOnWorkInTheParmacy(dermatologistId, pharmacyId, new DateRange(start, end))) {
 			return false;
 		}
@@ -340,7 +347,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 		return true;
 	}
 
-	private boolean isPatientAvailable(Long patientId, Date start, Date end) {
+	public boolean isPatientAvailable(Long patientId, Date start, Date end) {
 
 		for (Examination examination : examinationRepository.findByPatientId(patientId)) {
 			Term term = examination.getTerm();
