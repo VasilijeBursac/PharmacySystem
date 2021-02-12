@@ -394,7 +394,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 
 		return true;
 	}
-
+	@Transactional(readOnly = false)
 	public boolean saveExamination(Long newExaminationId) {
 		Long currentExaminationId = getCurrentExaminationForEmployee().getId();
 		Examination currentExamination = examinationRepository.findOneById(currentExaminationId);
