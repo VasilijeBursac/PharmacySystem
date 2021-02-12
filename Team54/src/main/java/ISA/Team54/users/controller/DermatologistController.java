@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ISA.Team54.users.dto.DermatologistRequestDTO;
+import ISA.Team54.users.dto.PharmacistRequestDTO;
 import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.mappers.UserInfoMapper;
 import ISA.Team54.users.model.Dermatologist;
@@ -27,5 +30,11 @@ public class DermatologistController {
 		List<UserInfoDTO> userDTOs = new ArrayList<UserInfoDTO>();
 		this.dermatologistService.findAll().forEach(systemAdministrator -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(systemAdministrator)));
 		return userDTOs;
+	}
+	
+	@GetMapping("/byPharmacyId/{pharmacyId}")
+	public List<DermatologistRequestDTO> getAllDermatologistsInPharmacy(@PathVariable Long pharmacyId){
+		//return dermatologistService.getAllDermatologistsInPharmacy(pharmacyId);
+		return null;
 	}
 }

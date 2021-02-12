@@ -1,7 +1,7 @@
 <template>
     <div class="pharmacy-info-card">
         <b-card class="overflow-hidden">
-             <b-row>
+            <b-row>
                 <b-col cols="6">
                     <div class="pharmacy-info">
                         <h5 class="h5 text-left font-weight-bold">{{pharmacy.name}}</h5>

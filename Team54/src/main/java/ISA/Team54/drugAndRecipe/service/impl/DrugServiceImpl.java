@@ -129,19 +129,4 @@ public class DrugServiceImpl implements DrugService {
 		return drugRepository.findById(id).orElse(null);
 	}
 
-	@Override
-	public List<DrugInPharmacyDTO> getAllDrugsInPharmacy(long pharmacyId) {
-		List<DrugInPharmacyDTO> drugsInPharmacyDTOs = new ArrayList<DrugInPharmacyDTO>();
-		List<DrugInPharmacy> drugsInPharmacy = drugsInPharmacyRepository.findByPharmacyId(pharmacyId);
-		
-		for(DrugInPharmacy drugInPharmacy : drugsInPharmacy) {
-			Drug drug = drugRepository.findOneById(drugInPharmacy.getDrugInPharmacyId().getDrugId());
-			
-			DrugInPharmacyDTO drugInPharmacyDTO = DrugInPharmacyMapper.DrugInPharmacyToDrugInPharmacyDTO(drugInPharmacy, drug);
-			drugsInPharmacyDTOs.add(drugInPharmacyDTO);
-		}
-		
-		return drugsInPharmacyDTOs;
-	}
-	
 }

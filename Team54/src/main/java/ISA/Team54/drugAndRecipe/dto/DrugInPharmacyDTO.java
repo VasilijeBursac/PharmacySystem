@@ -9,13 +9,14 @@ public class DrugInPharmacyDTO {
 	private String drugCode;
 	private int loyaltyPoints;
 	private int quantity;
+	private float price;
 	
 	public DrugInPharmacyDTO() {
 		super();
 	}
 
 	public DrugInPharmacyDTO(long pharmacyId, long drugId, String drugName, String drugCode, int loyaltyPoints,
-			int quantity) {
+			int quantity, float price) {
 		super();
 		this.pharmacyId = pharmacyId;
 		this.drugId = drugId;
@@ -23,7 +24,10 @@ public class DrugInPharmacyDTO {
 		this.drugCode = drugCode;
 		this.loyaltyPoints = loyaltyPoints;
 		this.quantity = quantity;
+		this.price = price;
 	}
+
+
 
 	public long getPharmacyId() {
 		return pharmacyId;
@@ -72,8 +76,16 @@ public class DrugInPharmacyDTO {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
 	
-	
-	
+
 	
 }

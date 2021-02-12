@@ -16,5 +16,4 @@ public interface DrugService {
 	DrugSpecification getSpecificationForDrug(Long drugId);
 	List<Drug> getAllDrugs();
 	Drug findById(long id);
-	List<DrugInPharmacyDTO> getAllDrugsInPharmacy(long pharmacyId);
 }

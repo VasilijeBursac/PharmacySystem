@@ -25,12 +25,19 @@
                 <PharmacyInfoCard v-bind:pharmacyId="pharmacyId" />
             </b-col>
         </b-row>
+
+        <b-row>
+             <b-col>
+                <PharmacyTablesCard v-bind:pharmacyId="pharmacyId" />
+            </b-col>
+        </b-row>
         
     </b-container>    
 </template>
 
 <script>
 import PharmacyInfoCard from "@/views/pharmacy/PharmacyInfoCard.vue";
+import PharmacyTablesCard from "@/views/pharmacy/PharmacyTablesCard.vue";
 
 export default {
     data: function() {
@@ -51,7 +58,8 @@ export default {
        
     },
     components:{
-        PharmacyInfoCard
+        PharmacyInfoCard,
+        PharmacyTablesCard
     }
 }
 </script>

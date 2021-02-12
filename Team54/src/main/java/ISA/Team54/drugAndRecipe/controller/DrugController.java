@@ -73,7 +73,7 @@ public class DrugController {
 	
 	@GetMapping("/byPharmacyId/{pharmacyId}")
 	public List<DrugInPharmacyDTO> getAllDrugsInPharmacy(@PathVariable Long pharmacyId){
-		return drugService.getAllDrugsInPharmacy(pharmacyId);
+		return drugInPharmacyService.getAllDrugsInPharmacy(pharmacyId);
 	}
 	
 }

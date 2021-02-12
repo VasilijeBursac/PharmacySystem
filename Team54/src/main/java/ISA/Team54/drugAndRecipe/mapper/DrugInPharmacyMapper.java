@@ -15,6 +15,7 @@ public class DrugInPharmacyMapper {
 				drug.getName(),
 				drug.getCode(),
 				drug.getLoyalityPoints(),
-				drugInPharmacy.getQuantity());
+				drugInPharmacy.getQuantity(),
+				drugInPharmacy.getPricelist().getPrice());
 	}
 }
