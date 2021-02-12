@@ -44,6 +44,13 @@ public class DrugReservation {
 		super();
 	}
 
+	public DrugReservation(long id, Date reservationToDate, ReservationStatus status, Patient patient) {
+		this.id = id;
+		this.reservationToDate = reservationToDate;
+		this.status = status;
+		this.patient = patient;
+	}
+
 	public long getId() {
 		return id;
 	}

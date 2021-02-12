@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import ISA.Team54.drugAndRecipe.service.interfaces.IClock;
 import ISA.Team54.exceptions.DrugOutOfStockException;
 import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.service.interfaces.PenaltyService;
@@ -30,6 +31,7 @@ import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.repository.PatientRepository;
 import ISA.Team54.users.repository.PharmacistRepository;
 import ISA.Team54.users.repository.PharmacyRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,9 +39,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -104,9 +103,10 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 
 	@Override
 	public void cancelDrugReservation(long id) throws Exception {
+		IClock clock = new ClockImpl();
 		DrugReservation drugReservation = drugReservationRepository.findById(id).orElse(null);
 		if (drugReservation != null) {
-			if (drugReservation.getReservationToDate().getTime() - new Date().getTime() > 24 * 60 * 60 * 1000) {
+			if (drugReservation.getReservationToDate().getTime() - clock.getDate().getTime() > 24 * 60 * 60 * 1000) {
 				drugReservation.setStatus(ReservationStatus.Canceled);
 				drugReservationRepository.save(drugReservation);
 			} else throw new InvalidTimeLeft();

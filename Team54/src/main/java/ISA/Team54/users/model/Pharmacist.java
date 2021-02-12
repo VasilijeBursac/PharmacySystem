@@ -24,7 +24,7 @@ import ISA.Team54.vacationAndWorkingTime.model.VacationRequest;
 public class Pharmacist extends User{
 	
 	@JsonManagedReference	
-	@OneToMany(mappedBy = "pharmacist", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "pharmacist", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	private Set<Rating> ratings;
 	
 	@JsonManagedReference

@@ -8,14 +8,18 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import static org.mockito.Mockito.when;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,8 +30,10 @@ import ISA.Team54.Examination.enums.ExaminationStatus;
 import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.model.Term;
+import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.shared.model.DateRange;
+import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacy;
 
 @RunWith(SpringRunner.class)
@@ -48,6 +54,7 @@ public class ExaminationIntegrationTests {
 	
 	@Autowired
 	private ExaminationService examinationService;
+
 	
 	@Test
 	public void getAllExaminaitonsForPharmacy_ReturnsExaminations() {
@@ -95,6 +102,66 @@ public class ExaminationIntegrationTests {
 		boolean isAvailable = examinationService.isDermatologistAvailable(1L,1L,new Date(2021,02,22,11,30),new Date(2021,02,22,12,0));
 		assertTrue(isAvailable);
 	}
+
+	@Autowired
+	private ExaminationRepository examinationRepository;
+
+	/*
+	 * long id, String diagnose, int price, Integer therapyDuration, ExaminationType
+	 * type, ExaminationStatus status, long emplyeedId, Patient patient, Term term,
+	 * Pharmacy pharmacy, List<Drug> drugs
+	 */
+
+	@Test
+	public void testGetFutureExaminations(){
+		Authentication authentication = Mockito.mock(Authentication.class);
+		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(securityContext);
+
+		Patient patient = new Patient();
+		patient.setId(5);
+		patient.setName("Filip");
+		patient.setSurname("Filipovic");
+		when(authentication.getPrincipal()).thenReturn(patient);
+
+		List<DermatologistExaminationDTO> examinations = examinationService.getFutureExaminations(ExaminationType.PharmacistExamination);
+		assertEquals(examinations.size(), 3);
+	}
+
+	@Test
+	public void testScheduleExamination(){
+		Authentication authentication = Mockito.mock(Authentication.class);
+		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(securityContext);
+
+		Patient patient = new Patient();
+		patient.setId(5);
+		patient.setName("Filip");
+		patient.setSurname("Filipovic");
+		when(authentication.getPrincipal()).thenReturn(patient);
+
+		examinationService.scheduleExamination(10L);
+		Examination examination = examinationRepository.findById(10L).orElse(null);
+		assert examination != null;
+		assertEquals(5L,examination.getPatient().getId());
+	}
+
+	/*
+	@Test
+	public void testGetFreePharmaciesForInterval(){
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("CET"));
+		cal.set(Calendar.YEAR, 2021);
+		cal.set(Calendar.MONTH, Calendar.FEBRUARY);
+		cal.set(Calendar.DAY_OF_MONTH, 15);
+		cal.set(Calendar.HOUR_OF_DAY, 9);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+
+		List<Pharmacy> pharmacies = examinationService.getFreePharmaciesForInterval(cal.getTime(),ExaminationType.PharmacistExamination);
+		assertEquals(2L, pharmacies.get(0).getId());
+	}*/
 	
 	@Test
 	public void isDermatologistAvailable_ReturnsFalse() {
