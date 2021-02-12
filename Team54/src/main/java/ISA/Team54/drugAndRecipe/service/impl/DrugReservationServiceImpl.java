@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import ISA.Team54.drugAndRecipe.enums.ReservationStatus;
 import ISA.Team54.drugAndRecipe.model.Drug;
@@ -64,7 +66,6 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 	@Autowired
 	private PenaltyService penaltyService;
 
-	@Override
 	public void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) {
 		DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findOneByDrugInPharmacyId(drugInPharmacyId);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

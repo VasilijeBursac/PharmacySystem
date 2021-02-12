@@ -20,18 +20,18 @@ export default {
       localStorage.removeItem("UserId")
       localStorage.removeItem("JWT")
       this.$router.push("Registration");
-       this.$axios
-        .post("auth/logout")
-        .then()
-        .catch((error) => {
-          this.errorMessage = error.message;
-          this.$notify({
-            type: "error",
-            title: "Error",
-            text: "Doslo je do greske prilikom logout-a!",
-            closeOnClick: true,
-          });
-        });
+      //  this.$axios
+      //   .post("auth/logout")
+      //   .then()
+      //   .catch((error) => {
+      //     this.errorMessage = error.message;
+      //     this.$notify({
+      //       type: "error",
+      //       title: "Error",
+      //       text: "Doslo je do greske prilikom logout-a!",
+      //       closeOnClick: true,
+      //     });
+      //   });
       window.location.reload()
     }
   }

@@ -15,8 +15,8 @@ import ISA.Team54.users.model.User;
 
 public interface ExaminationService {
 	Examination getCurrentExaminationForEmployee();
-	List<Examination> historyOfPatientExamination(Long id);
-	void updateExamination(ExaminationInformationDTO examinationInformationDTO);
+	List<Examination> historyOfPatientExamination(Long id) throws Exception;
+	void updateExamination(ExaminationInformationDTO examinationInformationDTO) throws Exception;
 	List<Examination> getAllExaminatedExaminationsForEmployee();
 	List<Examination> getDefinedExaminations();
 	List<DermatologistExaminationDTO> getAllExaminationsForPharmacy(long id, ExaminationType type);

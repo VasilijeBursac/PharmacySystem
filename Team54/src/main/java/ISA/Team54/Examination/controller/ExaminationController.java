@@ -85,7 +85,8 @@ public class ExaminationController {
 			}
 			return new ResponseEntity<>(new StartExaminationDTO(soonestExaminationDTO, historyExaminations, drugsForPatient),HttpStatus.OK);
 		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.OK);
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -108,8 +109,13 @@ public class ExaminationController {
 		
 		List<ExaminationDTO> historyExaminations = new ArrayList<ExaminationDTO>();
 
-		for (Examination examination : examinationService.historyOfPatientExamination((long) patientId)) {
-			historyExaminations.add(new ExaminationMapper().ExaminationToExaminationDTOHistory(examination, null));
+		try {
+			for (Examination examination : examinationService.historyOfPatientExamination((long) patientId)) {
+				historyExaminations.add(new ExaminationMapper().ExaminationToExaminationDTOHistory(examination, null));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return historyExaminations;
 	}
@@ -179,8 +185,12 @@ public class ExaminationController {
 	@PostMapping("/updateExamination")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
 	public ResponseEntity<String> updateExamination(@RequestBody ExaminationInformationDTO examinationInformationDTO) {
+		try {
 		examinationService.updateExamination(examinationInformationDTO);
 		return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!", HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>("Doslo je do greske, pokusajte ponovo!", HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@PostMapping("/saveExamination/{newExaminationId}")

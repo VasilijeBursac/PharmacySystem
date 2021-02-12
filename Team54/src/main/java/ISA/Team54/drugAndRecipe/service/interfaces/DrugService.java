@@ -11,7 +11,7 @@ public interface DrugService {
 	public List<Drug> getDrugsForPatient(Long id);
 	boolean isDrugAvailable(Long drugId, Examination examination);
 	IsAvalableDrugDTO findOrFindSubstitute(long drugId,long examinationId);
-	void reduceDrugQuantityInPharmacy(long drugId, int pharmacyId,int quantity);
+	void reduceDrugQuantityInPharmacy(long drugId, int pharmacyId,int quantity) throws Exception;
 	DrugSpecification getSpecificationForDrug(Long drugId);
 	List<Drug> getAllDrugs();
 	Drug findById(long id);

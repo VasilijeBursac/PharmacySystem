@@ -10,10 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import ISA.Team54.users.model.Pharmacy;
 
 @Entity
 public class DrugInPharmacy {

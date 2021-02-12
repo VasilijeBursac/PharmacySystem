@@ -5,14 +5,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import ISA.Team54.exceptions.InvalidTimeLeft;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
@@ -29,8 +27,8 @@ import ISA.Team54.drugAndRecipe.dto.DrugDTO;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.exceptions.InvalidTimeLeft;
 import ISA.Team54.shared.model.DateRange;
-import ISA.Team54.shared.model.EmailForm;
 import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.enums.UserRole;
 import ISA.Team54.users.model.Dermatologist;
@@ -87,7 +85,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 			if (pharmacist != null)
 				return UserRole.ROLE_PHARMACIST;
 		} catch (Exception e) {
-
+			return UserRole.ROLE_DERMATOLOGIST;
 		}
 		return UserRole.ROLE_DERMATOLOGIST;
 	}
@@ -160,28 +158,30 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
-	public List<Examination> historyOfPatientExamination(Long id) {
+	public List<Examination> historyOfPatientExamination(Long id) throws Exception {
 		ExaminationType examinaitonType = ExaminationType.DermatologistExamination;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		try {
+		try{
 			Pharmacist pharmacist = pharmacistRepository.findOneById(((Pharmacist) authentication.getPrincipal()).getId());
 		if(pharmacist != null) 
-			examinaitonType = ExaminationType.PharmacistExamination;
+			examinaitonType = ExaminationType.PharmacistExamination;;
 		}catch(Exception e) {
-		
+			examinaitonType = ExaminationType.DermatologistExamination;;
+		}finally{
+			List<Examination> examinationHistories = examinationRepository.getHistoryExaminationsForPatient(id, examinaitonType, ExaminationStatus.Filled);
+			return examinationHistories;
 		}
-		List<Examination> examinationHistories = examinationRepository.getHistoryExaminationsForPatient(id, examinaitonType, ExaminationStatus.Filled);
-		return examinationHistories;
+		
 	}
 
-	@Override
-	public void updateExamination(ExaminationInformationDTO examinationInformationDTO) {
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
+	public void updateExamination(ExaminationInformationDTO examinationInformationDTO) throws Exception {
 		Examination examination = examinationRepository.findOneById((examinationInformationDTO.getId()));
 		List<Drug> drugsForExamination = new ArrayList<Drug>();
 		if (examinationInformationDTO.getDrugs() != null) {
 			for (DrugDTO d : examinationInformationDTO.getDrugs()) {
 				drugsForExamination.add(drugRepository.findOneById(d.getId()));
-				drugService.reduceDrugQuantityInPharmacy(d.getId(), (int) examination.getPharmacy().getId(), 1);
+					drugService.reduceDrugQuantityInPharmacy(d.getId(), (int) examination.getPharmacy().getId(), 1);
 			}
 			;
 			examination.setDrugs(drugsForExamination);
