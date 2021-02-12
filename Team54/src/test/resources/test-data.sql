@@ -338,7 +338,7 @@ insert into examination(diagnose, emplyeed_id, price, status, duration, start, t
 values(null, 18, 1400, 'Unfilled', 30, '2021-02-15 09:00', 0, 'PharmacistExamination', null, 2);
 insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
 values(null, 17, 1400, 'Unfilled', 30, '2021-02-16 09:30', 0, 'PharmacistExamination', null, 1);
- 
+
 insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
 values(null, 10, 1100, 'Unfilled', 30, '2021-05-1 10:30', 30, 'PharmacistExamination', null, 2);
 insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
@@ -394,7 +394,7 @@ values (9, 1300,'2020-12-01 9:00','2021-12-01 9:00',5,2);
   insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id) 
  values ('2021-03-09 10:00',0,7,3,1);
   insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id) 
- values ('2021-02-06 11:00',2,5,4,1);
+ values ('2021-02-25 11:00',2,5,4,1);
 
   insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id) 
  values ('2021-05-07 10:00',0,7,1,2);
