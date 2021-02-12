@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ISA.Team54.users.dto.DermatologistRequestDTO;
+import ISA.Team54.users.dto.PharmacistRequestDTO;
 import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.mappers.UserInfoMapper;
 import ISA.Team54.users.model.Dermatologist;
@@ -34,5 +36,11 @@ public class DermatologistController {
 	@PreAuthorize("hasRole('DERMATOLOGIST')")
 	public Dermatologist loadById(@PathVariable long id){
 		return this.dermatologistService.findOneById(id);
+	}
+	
+	@GetMapping("/byPharmacyId/{pharmacyId}")
+	public List<DermatologistRequestDTO> getAllDermatologistsInPharmacy(@PathVariable Long pharmacyId){
+		//return dermatologistService.getAllDermatologistsInPharmacy(pharmacyId);
+		return null;
 	}
 }

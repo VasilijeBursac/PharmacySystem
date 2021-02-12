@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ISA.Team54.drugAndRecipe.dto.DrugDTO;
+import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.dto.DrugSpecificationDTO;
 import ISA.Team54.drugAndRecipe.dto.DrugWithPharmacyDTO;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
@@ -69,6 +70,11 @@ public class DrugController {
 	@GetMapping("")
 	public List<Drug> getAll(){
 		return drugService.getAllDrugs();
+	}
+	
+	@GetMapping("/byPharmacyId/{pharmacyId}")
+	public List<DrugInPharmacyDTO> getAllDrugsInPharmacy(@PathVariable Long pharmacyId){
+		return drugInPharmacyService.getAllDrugsInPharmacy(pharmacyId);
 	}
 	
 }

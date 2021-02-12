@@ -1,23 +1,31 @@
 package ISA.Team54.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.sql.Time;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 
+import ISA.Team54.Examination.repository.ExaminationRepository;
+import ISA.Team54.users.model.Patient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -52,55 +60,66 @@ public class ExaminationIntegrationTests {
 	
 	@Autowired
 	private ExaminationService examinationService;
-	@Before
-	public void login() {
-		ResponseEntity<UserTokenState> responseEntity = restTemplate.postForEntity("/login",
-				new JwtAuthenticationRequestDTO("marko@gmail.com", "marko"), UserTokenState.class);
-		accessToken = "Bearer " + responseEntity.getBody().getAccessToken();
-	}
 
-	@PostConstruct
-	public void setup() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-	}
+	@Autowired
+	private ExaminationRepository examinationRepository;
 
 	/*
 	 * long id, String diagnose, int price, Integer therapyDuration, ExaminationType
 	 * type, ExaminationStatus status, long emplyeedId, Patient patient, Term term,
 	 * Pharmacy pharmacy, List<Drug> drugs
 	 */
+
 	@Test
-	public void getAllExaminaitonsForPharmacy_ReturnsExaminations() {
-		
-		Pharmacy pharmacy = new Pharmacy(1L);
-		
-		Examination examination1 = new Examination(3L,"",1800,30,ExaminationType.DermatologistExamination,ExaminationStatus.Unfilled,1L,null,
-				new Term(new Date(2020,12,15,12,0,0),30),pharmacy,null);
-		Examination examination2 = new Examination(6L,"",1800,30,ExaminationType.DermatologistExamination,ExaminationStatus.Unfilled,1L,null,
-				new Term(new Date(2020,12,15,12,0,0),30),pharmacy,null);
-		Examination examination3 = new Examination(8L,"",1800,30,ExaminationType.DermatologistExamination,ExaminationStatus.Unfilled,1L,null,
-				new Term(new Date(2020,12,15,12,0,0),30),pharmacy,null);
-		Examination examination4 = new Examination(14L,"",1800,30,ExaminationType.DermatologistExamination,ExaminationStatus.Unfilled,1L,null,
-				new Term(new Date(2020,12,15,12,0,0),30),pharmacy,null);
-		Examination examination5 = new Examination(17L,"",1800,30,ExaminationType.DermatologistExamination,ExaminationStatus.Unfilled,1L,null,
-				new Term(new Date(2020,12,15,12,0,0),30),pharmacy,null);
-		List<Examination> examinations = new ArrayList<Examination>();
-		
-		examinations.add(examination1);
-		examinations.add(examination2);
-		examinations.add(examination3);
-		examinations.add(examination4);
-		examinations.add(examination5);
-		
-		List<DermatologistExaminationDTO> dermatologistExaminations = examinationService.getAllExaminationsForPharmacy(2L,ExaminationType.DermatologistExamination);
-		
-		assertEquals(dermatologistExaminations.size(), 5);
-		
-		for( int i = 0; i < dermatologistExaminations.size(); i++) {
-			 assertEquals(dermatologistExaminations.get(i).getExaminationId(), examinations.get(i));
-		 }
-		
+	public void testGetFutureExaminations(){
+		Authentication authentication = Mockito.mock(Authentication.class);
+		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(securityContext);
+
+		Patient patient = new Patient();
+		patient.setId(5);
+		patient.setName("Filip");
+		patient.setSurname("Filipovic");
+		when(authentication.getPrincipal()).thenReturn(patient);
+
+		List<DermatologistExaminationDTO> examinations = examinationService.getFutureExaminations(ExaminationType.PharmacistExamination);
+		assertEquals(examinations.size(), 2);
 	}
+
+	@Test
+	public void testScheduleExamination(){
+		Authentication authentication = Mockito.mock(Authentication.class);
+		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(securityContext);
+
+		Patient patient = new Patient();
+		patient.setId(5);
+		patient.setName("Filip");
+		patient.setSurname("Filipovic");
+		when(authentication.getPrincipal()).thenReturn(patient);
+
+		examinationService.scheduleExamination(10L);
+		Examination examination = examinationRepository.findById(10L).orElse(null);
+		assert examination != null;
+		assertEquals(5L,examination.getPatient().getId());
+	}
+
+	/*
+	@Test
+	public void testGetFreePharmaciesForInterval(){
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("CET"));
+		cal.set(Calendar.YEAR, 2021);
+		cal.set(Calendar.MONTH, Calendar.FEBRUARY);
+		cal.set(Calendar.DAY_OF_MONTH, 15);
+		cal.set(Calendar.HOUR_OF_DAY, 9);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+
+		List<Pharmacy> pharmacies = examinationService.getFreePharmaciesForInterval(cal.getTime(),ExaminationType.PharmacistExamination);
+		assertEquals(2L, pharmacies.get(0).getId());
+	}*/
 	
 	
 }

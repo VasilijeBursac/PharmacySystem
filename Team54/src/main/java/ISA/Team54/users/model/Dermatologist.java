@@ -23,7 +23,7 @@ public class Dermatologist extends User{
 	private double price;
 	
 	@JsonManagedReference	
-	@OneToMany(mappedBy = "dermatologist", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "dermatologist", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	private Set<Rating> ratings;
 	
 	@OneToMany(mappedBy="dermatologist",cascade = CascadeType.ALL,fetch = FetchType.LAZY)

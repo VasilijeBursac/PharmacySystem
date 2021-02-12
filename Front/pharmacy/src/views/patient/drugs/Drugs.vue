@@ -85,10 +85,6 @@ export default {
                         this.items = data
 
                         this.tableBusy = false
-
-                        if(data.length == 0){
-                            this.toast('Nažalost trenutno ne postoji nijedna apoteka u sistemu.', 'Neuspešno', 'danger')
-                        }
                 }        
             })
             .catch( (error) => {

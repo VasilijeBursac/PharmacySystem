@@ -98,22 +98,24 @@ export default {
                 }
             })
 
-        /*this.$http
-            .get('examination/examinationHistory/' + this.$store.getters.getUserId)
+        this.$http
+            .post('examination/examination-history/',{
+                type: 'PharmacistExamination'
+            })
             .then( res => {
 				let data = []
                 console.log(res.data)
                 res.data.forEach(element => {
 					data.push({ 
 						termin: new Date(element.term).toLocaleString(), 
-						dermatolog: element.dermatologist, 
-						ocena: element.dermatologistRating != 0 ? element.dermatologistRating : 'Nema ocenu',
-						cena: element.price,
+						farmaceut: element.employee, 
+						ocena: element.employeeRating != 0 ? element.employeeRating : 'Nema ocenu',
+						cena: element.price + ' din',
 						id: element.examinationId
 					})
 				});
 				this.pastData = data
-            })*/
+            })
 	},
     components:{
         ScheduleModal
