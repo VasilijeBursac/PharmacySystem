@@ -1,33 +1,44 @@
 <template>
     <b-container class="container mt-4">
         <b-row>
-             <b-col cols="8">
-                 <h5 class="h5 float-left text-left mb-4">Profil apoteke</h5>
-             </b-col>
+            <b-col cols="8">
+                <h5 class="h5 float-left text-left mb-4">Profil apoteke</h5>
+            </b-col>
 
             <b-col>
-                <b-button variant="success" class="float-right mt-n2 mb-3 ml-2"
-                 @click="$router.push({name: 'PharmacyReports', params: { id: pharmacyId }})">
-                    <b-icon-graph-up shift-h="-3"></b-icon-graph-up>
-                    Prikaži izveštaje
-                </b-button>
+                <div class="pharmacy-admin-actions-buttons" v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN'">
+                    <b-button variant="success" class="float-right mt-n2 mb-3 ml-2"
+                        @click="$router.push({name: 'PharmacyReports', params: { id: pharmacyId }})">
+                        <b-icon-graph-up shift-h="-3"></b-icon-graph-up>
+                        Prikaži izveštaje
+                    </b-button>
 
-                <b-button variant="success" class="float-right mt-n2 mb-3" 
-                @click="$router.push({name: 'EditPharmacyInfo', params: { id: pharmacyId }})">
-                    <b-icon-pencil-square shift-h="-3"></b-icon-pencil-square>
-                    Izmeni informacije
-                </b-button>
-             </b-col>
+                    <b-button variant="success" class="float-right mt-n2 mb-3" 
+                        @click="$router.push({name: 'EditPharmacyInfo', params: { id: pharmacyId }})">
+                        <b-icon-pencil-square shift-h="-3"></b-icon-pencil-square>
+                        Izmeni informacije
+                    </b-button>
+                </div>
+
+                <div class="patient-actions-buttons" v-if="loggedUserRole == 'ROLE_PATIENT'">
+                    <b-button variant="success" class="float-right mt-n2 mb-3 ml-2"
+                        @click="$router.push({path: `/pharmacy/${pharmacyId}/dermatologist-examinations`})">
+                        <b-icon-calendar2-week shift-h="-3"></b-icon-calendar2-week>
+                        Termini kod dermatologa 
+                    </b-button>
+                </div>
+                
+            </b-col>
         </b-row>
     
         <b-row>
-             <b-col>
+            <b-col>
                 <PharmacyInfoCard v-bind:pharmacyId="pharmacyId" />
             </b-col>
         </b-row>
 
         <b-row>
-             <b-col>
+            <b-col>
                 <PharmacyTablesCard v-bind:pharmacyId="pharmacyId" />
             </b-col>
         </b-row>
@@ -55,7 +66,7 @@ export default {
             })
     },
     methods:{
-       
+    
     },
     components:{
         PharmacyInfoCard,

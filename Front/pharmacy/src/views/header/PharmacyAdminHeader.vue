@@ -34,7 +34,7 @@ export default {
         localStorage.setItem("UserRole","ROLE_UNREGISTERED")
         localStorage.removeItem("UserId")
         localStorage.removeItem("JWT")
-        this.$router.push("Registration");
+        this.$router.push("/registration");
          this.$axios
         .post("auth/logout")
         .then()

@@ -56,7 +56,6 @@ public class PharmacyController {
 	}
 	
 	@GetMapping("/allPharmacies")
-	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN, PATIENT')")
 	public  List<PharmacyDTO> findAll(){
 		return this.pharmacyService.findAll().stream().map(p -> new PharmacyMapper().PharmacyToPharmacyDTO(p)).collect(Collectors.toList());
 	}
