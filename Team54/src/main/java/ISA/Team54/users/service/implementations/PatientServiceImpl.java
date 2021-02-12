@@ -95,7 +95,6 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	public List<Drug> getPatientAllergies(long id){
 		Patient patient = patientRepository.findById(id);
-		System.out.println(patient.getDrugAllergies());
 		return patient.getDrugAllergies();
 	} 
 

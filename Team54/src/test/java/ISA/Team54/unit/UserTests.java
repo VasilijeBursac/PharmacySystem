@@ -2,6 +2,9 @@ package ISA.Team54.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -125,5 +128,27 @@ public class UserTests{
 		 Mockito.when(patientRepositoryMocked.findAll()).thenReturn(allPatients);
 		 results = patientService.findBySurnameAndName("*");
 		 assertEquals(results.size(), allPatients.size());
+	 }
+
+	 @Test
+	public void testDeletePenaltyPoints(){
+		 Patient patient1 = new Patient();
+		 patient1.setId(1);
+		 patient1.setName("Filip");
+		 patient1.setSurname("Filipovic");
+
+		 Patient patient2 = new Patient();
+		 patient2.setId(2);
+		 patient2.setName("Filip");
+		 patient2.setSurname("Filipovic");
+
+		 List<Patient> patients = new ArrayList<Patient>();
+		 patients.add(patient1);
+		 patients.add(patient2);
+		 Mockito.when(patientRepositoryMocked.findAll()).thenReturn(patients);
+
+		 patientService.deletePenaltyPointsForAll();
+
+		 verify(patientRepositoryMocked, times(2)).save(any(Patient.class));
 	 }
 }
