@@ -97,13 +97,14 @@ export default {
         })
         .then((response) => {
           this.confirmed = response.data.confirmed;
-
+          
             this.$store.commit("setUserRole", response.data.role);
           this.$store.commit("setUserId", response.data.userId);
           this.$store.commit("setJWT", response.data.accessToken);
           localStorage.setItem("UserRole", response.data.role);
           localStorage.setItem("UserId", response.data.userId);
           localStorage.setItem("JWT", response.data.accessToken);
+          localStorage.setItem("Confirmed", response.data.confirmed);
 
           if (response.data.confirmed === false) {
             this.showModal = true;

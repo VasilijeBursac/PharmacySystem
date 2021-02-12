@@ -168,7 +168,7 @@ export default {
   created() {
     // GET request for examination information
     this.$axios
-      .get("http://localhost:9001/examination/examinaitonForCalendar/")
+      .get("examination/examinaitonForCalendar/")
       .then((response) => {
         this.definedExaminations = response.data;
         let examinationsForCalendar = [];
@@ -257,7 +257,7 @@ export default {
     },
     getCurrentExamination() {
       this.$axios
-        .get("http://localhost:9001/examination/soonestExamination/")
+        .get("examination/soonestExamination/")
         .then((response) => {
           this.currentExamination = response.data;
           if (
@@ -275,7 +275,7 @@ export default {
     },
     notHere() {
       this.$axios
-        .post("http://localhost:9001/patient/addPenaltyPoint/" + this.patientId)
+        .post("patient/addPenaltyPoint/" + this.patientId)
         .then((response) => {
           this.message = response.data;
           if (response.status == 200) {

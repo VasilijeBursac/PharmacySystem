@@ -70,7 +70,7 @@ export default {
         endDate = endDate.getTime();
 
         this.$axios
-          .post("http://localhost:9001/vacation/scheduleVacation", {
+          .post("/vacation/scheduleVacation", {
             startDate: startDate,
             endDate: endDate,
           })

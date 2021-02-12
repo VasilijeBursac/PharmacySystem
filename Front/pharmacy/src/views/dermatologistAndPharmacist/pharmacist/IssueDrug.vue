@@ -72,7 +72,7 @@ export default {
       this.reservationIdForSend = this.drugReservation;
       this.$axios
         .get(
-          "http://localhost:9001/reservation/reservedDrugs/" +
+          "reservation/reservedDrugs/" +
             this.drugReservation
         )
         .then((response) => {
@@ -114,7 +114,7 @@ export default {
     sell: function() {
       this.$axios
         .post(
-          "http://localhost:9001/reservation/sellDrug/" +
+          "reservation/sellDrug/" +
             this.reservationIdForSend
         )
 

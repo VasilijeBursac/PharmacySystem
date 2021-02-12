@@ -3,7 +3,7 @@
     <b-table
       primary-key="id"
       :tbody-transition-props="transProps"
-      :items="items"
+      :items="mojiPacijenti"
       :fields="fields"
     ></b-table>
   </div>
@@ -14,11 +14,11 @@ export default {
   data() {
     return {
       fields: [
-        { key: "id", sortable: true },
-        { key: "name", sortable: true },
-        { key: "surname", sortable: true },
-        { key: "term", sortable: true },
+        { key: "ime", sortable: true },
+        { key: "prezime", sortable: true },
+        { key: "pregled", sortable: true },
       ],
+      mojiPacijenti : [],
       transProps: {
         name: "flip-list",
       },
@@ -28,11 +28,17 @@ export default {
   created() {
     // GET request for examination information
     this.$axios
-      .get("http://localhost:9001/patient/examinatedPatients/")
+      .get('patient/examinatedPatients/')
       .then((response) => {
         this.items = response.data;
         for (let i in this.items) {
           this.items[i].term = new Date(response.data[i].term).toLocaleString();
+          this.mojiPacijenti.push({
+              ime : this.items[i].name,
+              prezime : this.items[i].surname,
+              pregled : new Date(response.data[i].term).toLocaleString()
+          })
+         
         }
       })
       .catch((error) => {

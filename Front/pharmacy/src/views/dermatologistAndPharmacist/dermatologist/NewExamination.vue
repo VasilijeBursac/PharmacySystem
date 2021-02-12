@@ -79,7 +79,7 @@ export default {
   created() {
     // GET request for examination information
     this.$axios
-      .get("http://localhost:9001/examination/definedExaminations/" + 4)
+      .get("examination/definedExaminations/" + 4)
       .then((response) => {
         this.definedExaminations = response.data;
         for (let i in this.definedExaminations) {
@@ -100,7 +100,7 @@ export default {
     onRowSelected(items) {
       this.selected = items;
       this.$axios
-        .post("http://localhost:9001/examination/saveExamination/"+  items[0].examinationId)
+        .post("examination/saveExamination/"+  items[0].examinationId)
         .then((response) => {
           this.message = response.data;
           if (response.status == 200) {
@@ -129,7 +129,7 @@ export default {
       startDate.setHours(startTime[0], startTime[1], 0, 0);
       startDate = startDate.getTime();
       this.$axios
-        .post("http://localhost:9001/examination/scheduleExamination", { date: startDate })
+        .post("examination/scheduleExamination", { date: startDate })
         .then((response) => {
           this.message = response.data;
           if (response.status == 200) {

@@ -26,12 +26,17 @@ new Vue({
 	render: h => h(App),
 	created(){
 		axios.defaults.baseURL = 'http://localhost:9001/';
+		var userId = localStorage.getItem("UserId") 
+		
+		if( userId == undefined ){
+			localStorage.setItem("UserRole","ROLE_UNREGISTERED")
+			localStorage.removeItem("UserId")
+			localStorage.removeItem("JWT")
+		}
+
+		axios.defaults.baseURL = 'https://team54-pharmacy-backend.herokuapp.com/';
 		axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getJWT;
 
-		var a = localStorage.getItem("UserId") 
-		console.log(a)
-		if( a == undefined){
-			localStorage.setItem("UserRole","ROLE_UNREGISTERED")
-		}
+		
 	}
 }).$mount("#app");

@@ -70,7 +70,7 @@ public class AuthenticationController {
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(),
 						authenticationRequest.getPassword()));
-
+  
 		// Ubaci korisnika u trenutni security kontekst
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -80,7 +80,7 @@ public class AuthenticationController {
 		int expiresIn = tokenUtils.getExpiredIn();
 
 
-		UserRole userRole = null;	
+		UserRole userRole = null;	 
 		
 		boolean confirmation = user.getConfirmed();
 		
@@ -124,6 +124,13 @@ public class AuthenticationController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/api/user/{userId}").buildAndExpand(user.getId()).toUri()); 
 		return new ResponseEntity<>(user, HttpStatus.CREATED); 
+	} 
+	
+	@PostMapping("/logout")
+	public ResponseEntity<String> logoutUser( ) {
+
+		SecurityContextHolder.getContext().setAuthentication(null);
+		return new ResponseEntity<>(HttpStatus.OK); 
 	} 
 	
 	@PostMapping("/signupSupplierOrSystemAdmin")
