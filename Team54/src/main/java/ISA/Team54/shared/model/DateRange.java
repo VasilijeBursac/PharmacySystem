@@ -18,12 +18,15 @@ public class DateRange {
 		super(); 
 	}
 
-
 	public DateRange(Date startDate, Date endDate) {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}	
 	public boolean isTheDateBetweenDates(Date date) {
+		final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
+
+	    long curTimeInMs = date.getTime();
+	    date = new Date(curTimeInMs + (30 * ONE_MINUTE_IN_MILLIS));
 		boolean a = date.compareTo(this.startDate) >= 0;
 		boolean b = date.compareTo(this.endDate) < 0; 
 		return 	a && b;
@@ -33,8 +36,7 @@ public class DateRange {
 	public Date getStartDate() {
 		return startDate;
 	}
-
-
+	
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}

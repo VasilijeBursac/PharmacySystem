@@ -44,6 +44,7 @@ import ISA.Team54.vacationAndWorkingTime.model.DermatologistWorkSchedule;
 import ISA.Team54.vacationAndWorkingTime.repository.DermatologistWorkScheduleRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class ExaminationServiceImpl implements ExaminationService {
 	final long ONE_MINUTE_IN_MILLIS = 60000;// millisecs
 	@Autowired
@@ -307,11 +308,10 @@ public class ExaminationServiceImpl implements ExaminationService {
 				if (workingSchedule.getPharmacy().getId() == pharmacyId
 						&& examinationTime.isInRange(new DateRange(workingSchedule.getTimePeriod().getStartDate(),
 								workingSchedule.getTimePeriod().getEndDate()))) {
-
 					return true;
 				}
-			}
-			return false;
+			} 
+			return false; 
 		}else {
 			Pharmacist pharmacist = pharmacistRepository.findOneById(employeeId);
 			int workingDayEnd = pharmacist.getWorkSchedule().getStartDate().getHours() *60 + pharmacist.getWorkSchedule().getStartDate().getMinutes();
@@ -366,6 +366,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 		return true;
 	}
 
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean scheduleExamination(Date start) {
 		long curTimeInMs = start.getTime();
 		Date end = new Date(curTimeInMs + (30 * ONE_MINUTE_IN_MILLIS));
