@@ -12,8 +12,21 @@ https://team54-pharmacy-frontend.herokuapp.com/
 - Backend Deployment:  [![Heroku App Status](http://heroku-shields.herokuapp.com/team54-pharmacy-backend)](https://team54-pharmacy-backend.herokuapp.com) <br/>
 https://team54-pharmacy-backend.herokuapp.com/
 
+<hr/>
+
+### Emails and passwords for login (email, password)
+
+- Patient: filip@gmail.com, filip
+- Pharmacist: dimitrije@gmail.com, dimi
+- Dermatologist: pera@gmail.com, pera
+- Supplier: jovan@gmail.com, jovan
+- Pharmacy Administrator: milena@gmail.com, milence
+- System Administrator: dejan@gmail.com, deki
+ 
+ 
 
 <hr/>
+
 
 # PharmacySystem
 
@@ -28,7 +41,6 @@ Projekat iz predmeta **Internet Softverske Arhitekture(ISA)**. <br/>
 | Student 2     | Vasilije Bursać   |
 | Student 3     | Milena Kovačević  |
 | Student 4     | Marko Đurišić     |
-
 
 ## Used Technologies:
 
