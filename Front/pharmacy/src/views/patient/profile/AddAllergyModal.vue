@@ -13,9 +13,18 @@
         <b-form>
             <b-form-select v-model="selected" :options="options" class="mb-3"></b-form-select>
 
-            <b-button @click="addAllergy" block variant="success">
-                Dodaj alergiju
-            </b-button>
+            <b-overlay
+                :show="isBusy"
+                rounded
+                bg-color="white"
+                spinner-small
+                spinner-variant="primary"
+                block
+                class="mb-2">
+                <b-button @click="addAllergy" block variant="success">
+                    Dodaj alergiju
+                </b-button>
+            </b-overlay>
 
             <b-button @click="closeModal" block variant="danger">
                 Otkaži
@@ -30,12 +39,16 @@ export default {
     data(){
         return{
             selected: null,
-            options: []
+            options: [],
+            isBusy: false
         }
     },
     methods: {
         addAllergy: function(){
             if(this.selected != null){
+
+                this.isBusy = true
+
                 this.$http
                     .post('patient/allergies/' + this.selected)
                     .then( () => {
@@ -46,8 +59,10 @@ export default {
                         this.toast('Uspešno ste dodali alergiju!', 'Uspešno', 'success')
                         this.closeModal()
                         this.selected = null
+                        this.isBusy = false
                     })
                     .catch( (error) => {
+                        this.isBusy = false
                         if(error.response.status == 400){
                             this.toast('Ne možete dodati dve iste alergije!', 'Neuspešno', 'danger')
                         }else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  

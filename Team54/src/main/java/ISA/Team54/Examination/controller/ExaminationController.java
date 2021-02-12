@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -131,13 +132,15 @@ public class ExaminationController {
 		examinationService.scheduleExamination(id); 
 	}
 
-	 @PostMapping("/scheduleExamination")
+	@PostMapping("/scheduleExamination")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
-    public ResponseEntity<String> scheduleExamination(@RequestBody ScheduleExaminaitonDTO scheduleExamination) {	
-      if(examinationService.scheduleExamination(scheduleExamination.getDate()))
-    	  return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!",HttpStatus.OK);
-      else
-    	  return new ResponseEntity<>("Nije moguce zakazati pregled u izabranom terminu!",HttpStatus.BAD_REQUEST);  
+    public ResponseEntity<String> scheduleExamination(@RequestBody ScheduleExaminaitonDTO scheduleExamination) {
+		try{
+			examinationService.scheduleExamination(scheduleExamination.getDate());
+			return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!",HttpStatus.OK);
+		}catch (PessimisticLockingFailureException e){
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
     }
 	 
 	 @GetMapping("/examinaitonForCalendar/")
