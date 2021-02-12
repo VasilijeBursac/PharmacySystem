@@ -85,11 +85,14 @@ public class Pharmacy {
 	public Pharmacy() {
 		super();
 	}
-
+	public Pharmacy(long id) {
+		this.id = id;
+	}
 	public Pharmacy(long id, String name, String address, String city, String country,
 			List<PharmacyAdministrator> pharmacyAdministrators, List<Promotion> promotion,
 			List<Patient> subscribedPatients, List<Dermatologist> dermatologists, List<Pharmacist> pharmacists,
 			List<Examination> examinations) {
+	
 		super();
 		this.id = id;
 		this.name = name;

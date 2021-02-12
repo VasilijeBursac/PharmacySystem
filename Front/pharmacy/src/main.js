@@ -34,7 +34,8 @@ new Vue({
 			localStorage.removeItem("JWT")
 		}
 
-		axios.defaults.baseURL = 'https://team54-pharmacy-backend.herokuapp.com/';
+		//axios.defaults.baseURL = 'https://team54-pharmacy-backend.herokuapp.com/';
+		axios.defaults.baseURL = 'http://localhost:9001/';
 		axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getJWT;
 
 		
