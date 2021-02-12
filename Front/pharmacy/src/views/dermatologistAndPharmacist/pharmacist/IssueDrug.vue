@@ -116,9 +116,7 @@ export default {
         .post(
           "reservation/sellDrug/" +
             this.reservationIdForSend
-        )
-
-        .then((response) => {
+        ).then((response) => {
           this.message = response.data;
           this.$notify({
             type: "success",
@@ -127,9 +125,8 @@ export default {
             closeOnClick: true,
           });
 
-          this.forShow = false;
-        })
-        .catch((error) => {
+         
+        }).catch((error) => {
           this.errorMessage = error.message;
           //console.error("There was an error!", error);
           this.$notify({
@@ -139,6 +136,7 @@ export default {
             closeOnClick: true,
           });
         });
+         this.forShow = false;
     },
   },
 };

@@ -171,7 +171,6 @@ public class ExaminationServiceImpl implements ExaminationService {
 			List<Examination> examinationHistories = examinationRepository.getHistoryExaminationsForPatient(id, examinaitonType, ExaminationStatus.Filled);
 			return examinationHistories;
 		}
-		
 	}
 
 	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
