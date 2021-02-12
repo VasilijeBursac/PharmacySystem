@@ -27,4 +27,7 @@ public interface DrugsInPharmacyRepository extends JpaRepository<DrugInPharmacy,
     
 	@Query("select d from DrugInPharmacy d where drug_id = ?1")
 	List<DrugInPharmacy> findByDrugId(long id);
+	
+	@Query("select d from DrugInPharmacy d where pharmaci_id = ?1")
+	List<DrugInPharmacy> findByPharmacyId(long id);
 }

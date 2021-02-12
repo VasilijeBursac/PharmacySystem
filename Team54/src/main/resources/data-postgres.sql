@@ -57,9 +57,10 @@ values (8,'Somborski bulevar 97','Zajecar', true,'Srbija','kristina@gmail.com','
 		'061985622','Krstic', 27, 2);
 
 
-
-insert into pharmacy(id, name, address, city, country, pharmacist_price) values (1,'Apoteka Novi Sad', 'Narodnoog Fronta 12','Novi Sad', 'Srbija', 1100 );
-insert into pharmacy(id, name, address, city, country, pharmacist_price) values (2,'Apoteka Sirmijum', 'Petra Kocica 3','Zrenjanin ', 'Srbija', 900);
+/* --- PHARMACIES --- */
+		
+insert into pharmacy(id, name, address, city, country, pharmacist_price, description) values (1,'Apoteka Novi Sad', 'Narodnog Fronta 12','Novi Sad', 'Srbija', 1100, 'Sjajno snabdevena apoteka, sa vrlo povoljnim cenama. Ljubazno osoblje će Vam pomoći da pronađete sve što Vam treba.');
+insert into pharmacy(id, name, address, city, country, pharmacist_price, description) values (2,'Apoteka Sirmijum', 'Save Tekelije 14','Zrenjanin ', 'Srbija', 900, 'Apoteka u kojoj je zaposlen tim vrhunskih stručnjaka. Pregledi i savetovanja po najpovoljnijim cenama. Veliki asortiman lekova.');
 
 
 /* --- PHARMACISTS --- */
@@ -193,6 +194,7 @@ insert into ingredient values (4,'Vekluri');
 insert into ingredient values (5,'Ibuprofen');
 insert into ingredient values (6,'Piridoksin');
 insert into ingredient values (7,'Benfotiamni');
+
 /* -- INGREDIENTS IN DRUG SPECIFICATION --*/
 insert into ingredient_in_drug_specification(drug_specification_id,ingredient_id) values (1,1);
 insert into ingredient_in_drug_specification(drug_specification_id,ingredient_id) values (1,2);
@@ -204,6 +206,7 @@ insert into ingredient_in_drug_specification(drug_specification_id,ingredient_id
 insert into ingredient_in_drug_specification(drug_specification_id,ingredient_id) values (3,3);
 insert into ingredient_in_drug_specification(drug_specification_id,ingredient_id) values (5,4);
 insert into ingredient_in_drug_specification(drug_specification_id,ingredient_id) values (5,5);
+
 /* -- CONTRAINDICATIONS IN DRUG SPECIFICATION --*/
 insert into contraindications_in_drug_specification(drug_specification_id,contraindication_id) values (1,1);
 insert into contraindications_in_drug_specification(drug_specification_id,contraindication_id) values (1,2);
@@ -364,8 +367,8 @@ insert into examination(diagnose, emplyeed_id, price, status, duration, start, t
 values('Opis 6', 10, 1250, 'Filled', 30, '2021-02-19 12:30', 3, 'PharmacistExamination', 5, 2);
 
  
- 	/* -- DRUG IN PHARMACY --*/
- /* drug_id, pharmacy_id, quantity, pricelist*/
+/* -- DRUG IN PHARMACY --*/
+/* drug_id, pharmacy_id, quantity, pricelist*/
 insert into drug_in_pharmacy values(3,1,30,null);
 insert into drug_in_pharmacy values(4,1,40,null);
 insert into drug_in_pharmacy values(5,1,10,null);
@@ -375,7 +378,7 @@ insert into drug_in_pharmacy values(4,2,20,null);
 insert into drug_in_pharmacy values(5,2,80,null);
 
 
- 	/* -- PRICELIST --*/
+ /* -- PRICELIST --*/
 
 insert into pricelist(id, price,end_date,start_date,drug_in_pharmacy_drug_id, drug_in_pharmacy_pharmaci_id)
 values (3, 1400,'2020-12-01 9:00','2021-12-01 9:00',3,1);
@@ -393,8 +396,19 @@ insert into pricelist(id, price,end_date,start_date,drug_in_pharmacy_drug_id, dr
 values (9, 1300,'2020-12-01 9:00','2021-12-01 9:00',5,2);
  
  
+/* -- UPDATE PRICELIST FOR DRUG IN PHARMACY --*/
+update drug_in_pharmacy set pricelist_id = 3 where drug_id = 3 and pharmaci_id = 1;
+update drug_in_pharmacy set pricelist_id = 4 where drug_id = 4 and pharmaci_id = 1;
+update drug_in_pharmacy set pricelist_id = 5 where drug_id = 5 and pharmaci_id = 1;
+update drug_in_pharmacy set pricelist_id = 6 where drug_id = 1 and pharmaci_id = 2;
+update drug_in_pharmacy set pricelist_id = 7 where drug_id = 2 and pharmaci_id = 2;
+update drug_in_pharmacy set pricelist_id = 8 where drug_id = 4 and pharmaci_id = 2;
+update drug_in_pharmacy set pricelist_id = 9 where drug_id = 5 and pharmaci_id = 2;
+
+
+
+
 	/* -- DRUG RESERVATION --*/
- 
 
  insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
  values ('2021-03-09 10:00',0,7,3,1);

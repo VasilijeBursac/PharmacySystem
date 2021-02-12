@@ -1,10 +1,10 @@
 <template>    
     <ul class="nav navbar-nav">
         <li class="nav-item active"><a href="/my-calendar"  class="nav-link">Moj radni kalendar</a></li>
-         <li class="nav-item"><a  href="/searchedPatients" class="nav-link">Zapocni savetovanje</a></li>
+         <li class="nav-item"><a  href="/searchedPatients" class="nav-link">Započni savetovanje</a></li>
         <li class="nav-item"><a href="/myPatients" class="nav-link">Moji pacijenti</a></li>
-        <li class="nav-item"><a  href="/vacation" class="nav-link">Godisnji odmor i odsustva</a></li>
-        <li class="nav-item"><a href="/issue-drug" class="nav-link">Preporuci lekove</a></li>
+        <li class="nav-item"><a  href="/vacation" class="nav-link">Godišnji odmor i odsustva</a></li>
+        <li class="nav-item"><a href="/issue-drug" class="nav-link">Preporuči lekove</a></li>
        
         <b-nav-item-dropdown text="Profil" right>
           <b-dropdown-item href="/pharmacist-profile">Moj profil<router-link ></router-link></b-dropdown-item>
@@ -20,7 +20,7 @@ export default {
       localStorage.setItem("UserRole","ROLE_UNREGISTERED")
       localStorage.removeItem("UserId")
       localStorage.removeItem("JWT")
-      this.$router.push("Registration");
+      this.$router.push('/registration');
        this.$axios
         .post("auth/logout")
         .then()

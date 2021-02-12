@@ -115,7 +115,7 @@ export default {
                 })
                 .then( res => {
                     if(res.status == 200){
-                        this.toast('Uspešno ste rezervisali lek!', 'Uspešno', 'success')
+                        this.toast('Uspešno ste rezervisali lek! Uskoro ćete primiti email.', 'Uspešno', 'success')
                         this.closeModal();
 
                         this.tableBusy = false

@@ -121,6 +121,23 @@ public class ExaminationController {
 		return historyExaminations;
 	}
 
+	@PostMapping("/examination-history")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<List<DermatologistExaminationDTO>> getPatientExaminationsByType(@RequestBody ExaminationTypeDTO type){
+		try {
+			List<Examination> examinations = examinationService.getPatientExaminationsByType(type.getType());
+			List<DermatologistExaminationDTO> examinationDTOS = new ArrayList<>();
+			for (Examination examination : examinations) {
+				User employee = userSerivce.findById(examination.getEmplyeedId());
+				examinationDTOS.add(new ExaminationMapper().ExaminationToDermatologistExaminationDTO(examination, employee, type.getType()));
+			}
+			return new ResponseEntity<List<DermatologistExaminationDTO>>(examinationDTOS, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@GetMapping("/definedExaminations/{examinationId}")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
 	public List<DefinedExaminationDTO> getDefinedExaminations(@PathVariable Long examinationId){

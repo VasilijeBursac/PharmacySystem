@@ -37,4 +37,7 @@ public interface ExaminationService {
 	boolean isDermatologistAvailable(Long dermatologistId, Long pharmacyId, Date start, Date end);
 	UserRole getCurrentRole();
 	Long getCurrentEmployedId();
+	List<Examination> getPatientExaminationsByType(ExaminationType type);
+
+	List<DermatologistExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type);
 }

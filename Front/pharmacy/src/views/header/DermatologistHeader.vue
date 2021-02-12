@@ -19,6 +19,7 @@ export default {
       localStorage.setItem("UserRole","ROLE_UNREGISTERED")
       localStorage.removeItem("UserId")
       localStorage.removeItem("JWT")
+<<<<<<< HEAD
       this.$router.push("Registration");
       //  this.$axios
       //   .post("auth/logout")
@@ -32,6 +33,21 @@ export default {
       //       closeOnClick: true,
       //     });
       //   });
+=======
+      this.$router.push('/registration');
+       this.$axios
+        .post("auth/logout")
+        .then()
+        .catch((error) => {
+          this.errorMessage = error.message;
+          this.$notify({
+            type: "error",
+            title: "Error",
+            text: "Doslo je do greske prilikom logout-a!",
+            closeOnClick: true,
+          });
+        });
+>>>>>>> develop
       window.location.reload()
     }
   }
