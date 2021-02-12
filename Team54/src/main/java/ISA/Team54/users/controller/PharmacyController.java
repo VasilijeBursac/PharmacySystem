@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +31,9 @@ import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.users.dto.PharmacyDTO;
 import ISA.Team54.users.dto.PharmacyExaminationDTO;
+import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.mappers.PharmacyMapper;
+import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.service.interfaces.PharmacyService;
 
@@ -53,10 +56,21 @@ public class PharmacyController {
 	}
 	
 	@GetMapping("/allPharmacies")
-	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN, PATIENT')")
 	public  List<PharmacyDTO> findAll(){
 		return this.pharmacyService.findAll().stream().map(p -> new PharmacyMapper().PharmacyToPharmacyDTO(p)).collect(Collectors.toList());
 	}
+	
+	@GetMapping("/{id}")
+	public PharmacyDTO loadById(@PathVariable long id){
+		Pharmacy pharmacy =  this.pharmacyService.getPharmacyById(id);
+		return PharmacyMapper.PharmacyToPharmacyDTO(pharmacy);
+	}
+	
+	@PutMapping("")
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN','SYSTEM_ADMIN')")
+	public void updatePharmacyInfo(@RequestBody PharmacyDTO pharmacy){
+		this.pharmacyService.updatePharmacyInfo(pharmacy);
+	} 
 	
 	@PostMapping("/all-examinations")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")

@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.repository.ExaminationRepository;
+import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
+import ISA.Team54.drugAndRecipe.mapper.DrugInPharmacyMapper;
 import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;

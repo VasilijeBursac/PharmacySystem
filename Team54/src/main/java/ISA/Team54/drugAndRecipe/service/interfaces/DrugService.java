@@ -3,6 +3,7 @@ package ISA.Team54.drugAndRecipe.service.interfaces;
 import java.util.List;
 
 import ISA.Team54.Examination.model.Examination;
+import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugSpecification;
