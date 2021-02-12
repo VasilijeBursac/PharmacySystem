@@ -13,9 +13,17 @@
                         <b-form-timepicker v-model="time" placeholder="Izaberite vreme" locale="en"></b-form-timepicker>
                     </b-form-group>
 
-                    <b-button @click="findPharmacies()" block variant="success">
-                        Pretraži apoteke
-                    </b-button>
+                    <b-overlay
+                            :show="searchBusy"
+                            rounded
+                            opacity="0.6"
+                            spinner-small
+                            spinner-variant="primary"
+                            block>
+                            <b-button @click="findPharmacies()" block variant="success">
+                                Pretraži apoteke
+                            </b-button>
+                    </b-overlay>
                 </b-form>
 
                 <b-table striped hover :items="pharmacyItems" :fields="pharmacyFields" class="mt-3">
@@ -34,7 +42,14 @@
                     </b-button>
                     <h6 class="h6 mt-1 ml-2">Slobodni farmaceuti</h6>
                 </div>                
-                <b-table striped hover :items="pharmacistItems" :fields="pharmacistFields" class="mt-3">
+                <b-table striped hover :items="pharmacistItems" :busy="tableBusy" :fields="pharmacistFields" class="mt-3">
+                    <template #table-busy>
+                        <div class="text-center text-danger my-2">
+                            <b-spinner class="align-middle"></b-spinner>
+                            <strong> Zakazivanje...</strong>
+                        </div>
+                    </template>
+
                     <template #cell(akcije)="row">
                         <b-overlay
                             :show="busy"
@@ -72,7 +87,8 @@ export default {
             date: '',
             time: '',
 
-            busy: false
+            searchBusy: false,
+            tableBusy: false
         }
     },
     methods:{
@@ -103,7 +119,7 @@ export default {
 
         },
         scheduleExamination(row){
-            this.busy = true
+            this.tableBusy = true
 
             this.$http
                 .get('examination/schedule/' + row.item.id)
@@ -113,10 +129,17 @@ export default {
                         this.$bvModal.hide('my-modal')
                         this.closeModal(true)
 
+                        this.tableBusy = false
+
                         setTimeout( () => {
                             this.$router.go(0)
                         }, 250)
                     }                        
+                })
+                .catch( (error) => {
+                    if(error.response.status == 403){
+                        this.toast('Nažalost, izabrani termin više nije slobodan. Molimo pokušajte drugi!', 'Neuspešno', 'danger')
+                    }else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
                 })
 		},
         closeModal(close = false){
@@ -135,6 +158,13 @@ export default {
                 this.toast('Niste popunili datum savetovanja! Molimo Vas popunite i datum i vreme.', 'Neuspešno', 'danger')
                 return;
             }
+
+            if(new Date(this.date + ' ' + this.time).getTime() < new Date().getTime()){
+                this.toast('Ne možete zakazati termin za datum koji je već prošao!', 'Neuspešno', 'danger')
+                return;
+            }
+
+            this.searchBusy = true
 
             this.$http
                 .post('pharmacy/search-examinations', {
@@ -155,14 +185,18 @@ export default {
                         });
                         this.pharmacyItems = data
 
+                        this.searchBusy = false
+
                         if(data.length == 0){
-                            this.toast('Nažalost ne postoji nijedan slobodan farmaceut za dati termin. Molimo pokušajte drugi termin.', 'Neuspešno', 'danger')
+                            this.toast('Nažalost, ne postoji nijedna apoteka u sistemu!.', 'Neuspešno', 'danger')
                         }
                     }            
                 })
                 .catch( (error) => {
-                    if(error.response.status != 200)
+                    if(error.response.status != 200){
                         this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+                        this.searchBusy = false
+                    }
                 })
         },
         toast(message, title, variant){

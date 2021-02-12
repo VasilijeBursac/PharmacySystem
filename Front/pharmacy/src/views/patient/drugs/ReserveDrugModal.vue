@@ -15,25 +15,32 @@
                     <b-form-datepicker id="date-input" v-model="date" placeholder="Izaberite datum" class="mb-2"></b-form-datepicker>
                 </b-form-group>
 
-                <b-button @click="searchDrug()" block variant="success">
-                    Pretraži lek
-                </b-button>
+                <b-overlay
+                        :show="searchBusy"
+                        rounded
+                        opacity="0.6"
+                        spinner-small
+                        spinner-variant="primary"
+                        block>
+                        <b-button @click="searchDrug()" block variant="success">
+                            Pretraži lek
+                        </b-button>
+                </b-overlay>
             </b-form>
 
             <h6 class="h6 my-3">Izaberite apoteku</h6>
-            <b-table striped hover :items="items" :fields="fields" class="mt-3">
+            <b-table striped hover :items="items" :busy="tableBusy" :fields="fields" class="mt-3">
+                <template #table-busy>
+                    <div class="text-center text-danger my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Učitavanje...</strong>
+                    </div>
+                </template>
+
                 <template #cell(akcije)="row">
-                    <b-overlay
-                            :show="busy"
-                            rounded
-                            opacity="0.6"
-                            spinner-small
-                            spinner-variant="primary"
-                            class="d-inline-block">
-                            <b-button @click="reserveDrug(row)" block size="sm" >
-                                Rezerviši
-                            </b-button>
-                    </b-overlay>
+                    <b-button @click="reserveDrug(row)" block size="sm" >
+                        Rezerviši
+                    </b-button>
                 </template>
             </b-table>             
         </b-modal>
@@ -51,7 +58,8 @@ export default {
             options: [],            
             date: '',
 
-            busy: false
+            searchBusy: false,
+            tableBusy: false
         }
     },
     methods:{
@@ -67,6 +75,8 @@ export default {
                 return;
             }
 
+            this.searchBusy = true
+
             this.$http
                 .get('reservation/search?drug=' + this.selected)
                 .then( res => {
@@ -81,15 +91,22 @@ export default {
                             })
                         });
                         this.items = data
+
+                        this.searchBusy = false
+
+                        if(data.length == 0){
+                            this.toast('Nažalost trenutno ne postoji nijedna apoteka u sistemu.', 'Neuspešno', 'danger')
+                        }
                     }            
                 })
                 .catch( () => {
+                    this.searchBusy = false
                     this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
                 })
         },
         reserveDrug(row){
 
-            this.busy = true
+            this.tableBusy = true
 
             this.$http
                 .post('reservation/reserve', {
@@ -101,14 +118,18 @@ export default {
                         this.toast('Uspešno ste rezervisali lek!', 'Uspešno', 'success')
                         this.closeModal();
 
+                        this.tableBusy = false
+
                         setTimeout( () => {
                             this.$router.go(0)
                         }, 250)
                     }        
                 })
                 .catch( (error) => {
-                    if(error.response.status != 200)
-                        this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+                    this.tableBusy = false
+                    if(error.response.status != 403)
+                        this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger') 
+                    else this.toast('Nažalost, izabranog leka više nema stanju!','Neuspešno', 'danger') 
                 })
         },
         closeModal(){

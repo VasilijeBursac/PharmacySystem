@@ -11,6 +11,7 @@ import ISA.Team54.users.model.Dermatologist;
 import ISA.Team54.users.enums.UserRole;
 import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.model.User;
+import org.springframework.dao.PessimisticLockingFailureException;
 
 public interface ExaminationService {
 	Examination getCurrentExaminationForEmployee();
@@ -22,7 +23,7 @@ public interface ExaminationService {
 	List<DermatologistExaminationDTO> getExaminationsForPharmacyAndDate(long id, ExaminationType type, Date date);
 	void scheduleExamination(long id);
 	boolean canExaminationBeScheduled(Examination examination, Date start,Date end);
-	boolean scheduleExamination(Date start);
+	boolean scheduleExamination(Date start) throws PessimisticLockingFailureException;
 	void cancelExamination(long id) throws Exception;
 	boolean saveExamination(Long newExaminationId);
 	List<DermatologistExaminationDTO> getFutureExaminations(ExaminationType type);

@@ -79,6 +79,7 @@ public class PharmacyController {
 	@PostMapping("/search-examinations")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
 	public ResponseEntity<List<PharmacyDTO>> getFreePharmaciesForInterval(@RequestBody ExaminationSearchDTO examinationSearchDTO){
+		System.out.println("TU");
 		List<Pharmacy> pharmacies=  examinationService.getFreePharmaciesForInterval(examinationSearchDTO.getDate(), examinationSearchDTO.getType());
 		List<PharmacyDTO> pharmacyDTOs = new ArrayList<PharmacyDTO>();
 		

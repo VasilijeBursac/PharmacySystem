@@ -8,6 +8,7 @@ import java.util.List;
 import ISA.Team54.exceptions.InvalidTimeLeft;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
@@ -44,6 +45,7 @@ import ISA.Team54.users.repository.PharmacistRepository;
 import ISA.Team54.users.repository.UserRepository;
 import ISA.Team54.vacationAndWorkingTime.model.DermatologistWorkSchedule;
 import ISA.Team54.vacationAndWorkingTime.repository.DermatologistWorkScheduleRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ExaminationServiceImpl implements ExaminationService {
@@ -250,8 +252,9 @@ public class ExaminationServiceImpl implements ExaminationService {
 		return examinationDTOs;
 	}
 
+	@Transactional(readOnly = false)
 	@Override
-	public void scheduleExamination(long id) {
+	public void scheduleExamination(long id) throws PessimisticLockingFailureException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
 		Examination examination = examinationRepository.findById(id).orElse(null);
