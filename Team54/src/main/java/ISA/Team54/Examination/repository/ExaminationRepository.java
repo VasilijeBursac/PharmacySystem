@@ -45,6 +45,6 @@ public interface ExaminationRepository extends JpaRepository<Examination, Long> 
 	List<Examination> getFutureExaminations(long id, ExaminationType type, ExaminationStatus status);
 	
 	@Query("select e from Examination e where cast(start as java.util.Date) = ?1 and type = ?2 and status='Unfilled'")
-	public List<Examination> getFreeExaminationsForInterval(Date term, ExaminationType type);
+	List<Examination> getFreeExaminationsForInterval(Date term, ExaminationType type);
 	
 }
