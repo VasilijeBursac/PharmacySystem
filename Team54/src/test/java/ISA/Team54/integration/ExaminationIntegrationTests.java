@@ -1,6 +1,7 @@
 package ISA.Team54.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -9,15 +10,20 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import ISA.Team54.users.model.Patient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -52,17 +58,6 @@ public class ExaminationIntegrationTests {
 	
 	@Autowired
 	private ExaminationService examinationService;
-	@Before
-	public void login() {
-		ResponseEntity<UserTokenState> responseEntity = restTemplate.postForEntity("/login",
-				new JwtAuthenticationRequestDTO("marko@gmail.com", "marko"), UserTokenState.class);
-		accessToken = "Bearer " + responseEntity.getBody().getAccessToken();
-	}
-
-	@PostConstruct
-	public void setup() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-	}
 
 	/*
 	 * long id, String diagnose, int price, Integer therapyDuration, ExaminationType
@@ -100,6 +95,23 @@ public class ExaminationIntegrationTests {
 			 assertEquals(dermatologistExaminations.get(i).getExaminationId(), examinations.get(i));
 		 }
 		
+	}
+
+	@Test
+	public void testGetFutureExaminations(){
+		Authentication authentication = Mockito.mock(Authentication.class);
+		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(securityContext);
+
+		Patient patient = new Patient();
+		patient.setId(1);
+		patient.setName("Filip");
+		patient.setSurname("Filipovic");
+		when(authentication.getPrincipal()).thenReturn(patient);
+
+		List<DermatologistExaminationDTO> examinations = examinationService.getFutureExaminations(ExaminationType.PharmacistExamination);
+		assertEquals(examinations.size(), 1);
 	}
 	
 	
