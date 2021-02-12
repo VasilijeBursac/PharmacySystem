@@ -1,6 +1,13 @@
 <template>
     <div class="pharmacy-table">
-        <b-table ref="pharmacyTable" striped hover :items="items" :fields="fields">
+        <b-table ref="pharmacyTable" striped hover :busy="isBusy" :items="items" :fields="fields">
+			<template #table-busy>
+				<div class="text-center text-danger my-2">
+					<b-spinner class="align-middle"></b-spinner>
+					<strong> Učitavanje...</strong>
+				</div>
+			</template>
+
 			<template #cell(akcije)="">
 				<b-button size="sm" >
 					Prikaži detaljnije
@@ -19,6 +26,8 @@ export default {
 			nameFilter: '',
 			cityFilter: '',
 			ratingFilter: 5,
+
+			isBusy: true
 		}
 	},
 	methods:{
@@ -58,12 +67,16 @@ export default {
                         });
                         this.data = data
 
+						this.isBusy = false
+
                         if(data.length == 0){
                             this.toast('Nažalost trenutno ne postoji nijedna apoteka u sistemu.', 'Neuspešno', 'danger')
                         }
 				}                        
 			})
 			.catch( (error) => {
+				this.isBusy = false
+				
 				if(error.response.status != 200)
 					this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
 			})

@@ -1,5 +1,12 @@
 <template>
     <div class="loyalty">
+         <b-overlay
+                :show="isBusy"
+                rounded
+                bg-color="white"
+                spinner-small
+                spinner-variant="primary"
+                block>
         <b-row>
             <b-col class="text-left">
                 <h6 class="h6">Loyalty program</h6>
@@ -27,6 +34,7 @@
                 </div>
             </b-col>
         </b-row>
+         </b-overlay>
     </div>
 </template>
 
@@ -37,7 +45,9 @@ export default {
             loyalty_points: 0,
             penalty_points: 0,
             discount: 0,
-            loyalty_category: ''
+            loyalty_category: '',
+
+            isBusy: true
         }
     },
     methods:{
@@ -57,6 +67,11 @@ export default {
                 this.loyalty_points = res.data.loyaltyPoints
                 this.penalty_points = res.data.penaltyPoints
                 this.fillCategory()
+
+                this.isBusy = false
+            })
+            .catch(() => {
+                this.isBusy = false
             })
     },
     filters:{

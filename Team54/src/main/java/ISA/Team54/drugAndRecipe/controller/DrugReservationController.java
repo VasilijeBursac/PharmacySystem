@@ -54,8 +54,13 @@ public class DrugReservationController {
 
     @PostMapping("/reserve")
     @PreAuthorize("hasRole('PATIENT')")
-    public void reserveDrug(@RequestBody DrugReservationRequestDTO drugReservationRequestDTO){
-        drugReservationService.reserveDrug(drugReservationRequestDTO.getDrugInPharmacyId(), drugReservationRequestDTO.getDeadline());
+    public ResponseEntity<String> reserveDrug(@RequestBody DrugReservationRequestDTO drugReservationRequestDTO){
+        try{
+            drugReservationService.reserveDrug(drugReservationRequestDTO.getDrugInPharmacyId(), drugReservationRequestDTO.getDeadline());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @GetMapping("/all")

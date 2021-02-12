@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface DrugReservationService {
-    void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline);
+    void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) throws Exception;
     List<DrugReservation> getReservationsForPatient();
     void cancelDrugReservation(long id) throws Exception;
     Drug isDrugReservationAvailable(long reservationId) throws InvalidTimeLeft;

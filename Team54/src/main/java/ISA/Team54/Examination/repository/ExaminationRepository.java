@@ -14,13 +14,20 @@ import org.springframework.data.jpa.repository.QueryHints;
 import ISA.Team54.Examination.enums.ExaminationStatus;
 import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
+import org.springframework.data.jpa.repository.QueryHints;
+
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 
 public interface ExaminationRepository extends JpaRepository<Examination, Long> {
 	public List<Examination> findAll();
 	public List<Examination> findByPatientId(Long patientId);
 	public List<Examination> findByEmplyeedIdAndStatus(Long id,ExaminationStatus es);
-	
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@QueryHints({@QueryHint(name="javax.persistence.lock.timeout", value="0")})
 	public Examination findById(int id);
+
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "0")})
 	public Examination findOneById(Long id);
