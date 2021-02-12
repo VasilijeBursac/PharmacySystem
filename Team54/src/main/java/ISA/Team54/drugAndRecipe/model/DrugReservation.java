@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import ISA.Team54.drugAndRecipe.enums.ReservationStatus;
 import ISA.Team54.users.model.Patient;
+import org.springframework.data.annotation.Version;
 
 @Entity
 public class DrugReservation {
@@ -35,6 +36,9 @@ public class DrugReservation {
 	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private DrugInPharmacy reservedDrug;
+
+	@Version
+	private Long version;
 	
 	public DrugReservation() {
 		super();
@@ -79,5 +83,12 @@ public class DrugReservation {
 	public void setReservedDrug(DrugInPharmacy reservedDrug) {
 		this.reservedDrug = reservedDrug;
 	}
-	
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
 }

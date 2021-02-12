@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <h4 class="h4 align-middle my-4">Profil korisnika</h4>
-        <div class="profile-main">
+        <div class="profile-main mb-5">
             <b-card no-body>
                 <b-tabs pills card align="center" lazy>
                     <b-tab title="Lične informacije" active>

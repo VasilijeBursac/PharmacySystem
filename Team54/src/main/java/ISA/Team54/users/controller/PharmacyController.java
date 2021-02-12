@@ -3,6 +3,7 @@ package ISA.Team54.users.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.stream.Collectors;
 
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugReservationService;
 import ISA.Team54.rating.model.Rating;
@@ -55,9 +56,9 @@ public class PharmacyController {
 	}
 	
 	@GetMapping("/allPharmacies")
-	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-	public  List<Pharmacy> findAll(){
-		return this.pharmacyService.findAll();
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN, PATIENT')")
+	public  List<PharmacyDTO> findAll(){
+		return this.pharmacyService.findAll().stream().map(p -> new PharmacyMapper().PharmacyToPharmacyDTO(p)).collect(Collectors.toList());
 	}
 	
 	@GetMapping("/{id}")
@@ -93,6 +94,7 @@ public class PharmacyController {
 	@PostMapping("/search-examinations")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
 	public ResponseEntity<List<PharmacyDTO>> getFreePharmaciesForInterval(@RequestBody ExaminationSearchDTO examinationSearchDTO){
+		System.out.println("TU");
 		List<Pharmacy> pharmacies=  examinationService.getFreePharmaciesForInterval(examinationSearchDTO.getDate(), examinationSearchDTO.getType());
 		List<PharmacyDTO> pharmacyDTOs = new ArrayList<PharmacyDTO>();
 		

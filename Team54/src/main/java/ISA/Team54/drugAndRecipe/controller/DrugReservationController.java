@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,8 +54,13 @@ public class DrugReservationController {
 
     @PostMapping("/reserve")
     @PreAuthorize("hasRole('PATIENT')")
-    public void reserveDrug(@RequestBody DrugReservationRequestDTO drugReservationRequestDTO){
-        drugReservationService.reserveDrug(drugReservationRequestDTO.getDrugInPharmacyId(), drugReservationRequestDTO.getDeadline());
+    public ResponseEntity<String> reserveDrug(@RequestBody DrugReservationRequestDTO drugReservationRequestDTO){
+        try{
+            drugReservationService.reserveDrug(drugReservationRequestDTO.getDrugInPharmacyId(), drugReservationRequestDTO.getDeadline());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @GetMapping("/all")
@@ -127,6 +133,11 @@ public class DrugReservationController {
             return new ResponseEntity<>("Doslo je do greske!", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!", HttpStatus.OK);
+    }
+
+    @Scheduled(cron = "${reservation.check}")
+    public void penalIfDeadlineOver(){
+        drugReservationService.penalIfDeadlineOver();
     }
 
 }

@@ -34,5 +34,4 @@ public class DermatologistServiceImpl implements DermatologistService {
 		List<Dermatologist> dermatologistsInPharmacy = pharmacyRepository.findById(pharmacyId).getDermatologists();
 		return null;
 	}	
-
 }

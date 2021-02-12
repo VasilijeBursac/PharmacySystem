@@ -1,6 +1,6 @@
 <template>
     <div class="pharmacy-wrapper">
-        <h5 class="h5 text-left mb-4">Sve apoteke u sistemu</h5>
+        <h5 class="h5 text-left mb-4">Apoteke</h5>
 
         <div class="pharmacy-filters">        
             <b-card>

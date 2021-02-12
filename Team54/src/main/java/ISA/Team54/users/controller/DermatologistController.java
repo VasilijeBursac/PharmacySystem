@@ -32,6 +32,12 @@ public class DermatologistController {
 		return userDTOs;
 	}
 	
+	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('DERMATOLOGIST')")
+	public Dermatologist loadById(@PathVariable long id){
+		return this.dermatologistService.findOneById(id);
+	}
+	
 	@GetMapping("/byPharmacyId/{pharmacyId}")
 	public List<DermatologistRequestDTO> getAllDermatologistsInPharmacy(@PathVariable Long pharmacyId){
 		//return dermatologistService.getAllDermatologistsInPharmacy(pharmacyId);

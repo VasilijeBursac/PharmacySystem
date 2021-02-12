@@ -88,11 +88,15 @@ public class Pharmacy {
 	public Pharmacy() {
 		super();
 	}
+
+	public Pharmacy(long id) {
+		this.id = id;
+	}
 	
 	public Pharmacy(long id, String name, String address, String city, String country, String description,
-			List<PharmacyAdministrator> pharmacyAdministrators, List<Promotion> promotion,
+			double pharmacistPrice, List<PharmacyAdministrator> pharmacyAdministrators, List<Promotion> promotion,
 			List<Patient> subscribedPatients, List<Dermatologist> dermatologists, List<Pharmacist> pharmacists,
-			List<Examination> examinations) {
+			List<Examination> examinations, Set<Rating> ratings) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -100,14 +104,17 @@ public class Pharmacy {
 		this.city = city;
 		this.country = country;
 		this.description = description;
+		this.pharmacistPrice = pharmacistPrice;
 		this.pharmacyAdministrators = pharmacyAdministrators;
 		this.promotion = promotion;
 		this.subscribedPatients = subscribedPatients;
 		this.dermatologists = dermatologists;
 		this.pharmacists = pharmacists;
 		this.examinations = examinations;
+		this.ratings = ratings;
 	}
 
+	
 	public String getCity() {
 		return city;
 	}
@@ -227,5 +234,6 @@ public class Pharmacy {
 	public void setPharmacistPrice(double pharmacistPrice) {
 		this.pharmacistPrice = pharmacistPrice;
 	}
+
 	
 }

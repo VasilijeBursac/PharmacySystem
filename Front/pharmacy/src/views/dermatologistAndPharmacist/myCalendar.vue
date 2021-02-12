@@ -11,28 +11,38 @@
       </FullCalendar>
     </div>
     <div>
-      <b-modal ref="my-modal" hide-footer title="Informacije o pregledu">
-        <b-row>
-          <h4>_______________{{ this.pharmacyName }}_______________</h4>
+      <b-modal ref="my-modal"  hide-footer title= "INFORMACIJE">
+        <b-row text-align-center>
+          <b-col sm="3"> </b-col>
+          <b-col>
+            <h4
+              text-align-center
+              v-bind:style="{ align: 'center', justify: 'center' }"
+            >
+              {{ this.pharmacyName }}
+            </h4>
+          </b-col>
         </b-row>
         <b-row>
           <b-col>
             <b-form inline>
-              <b-form-input v-if="isCurrentExamination"
+              <b-form-input
+                v-if="isAvailable"
                 v-model="name"
                 id="inline-form-input-name"
                 class="mb-2 mr-sm-2 mb-sm-0"
-                placeholder="Jane Doe"
+                placeholder="Nema pacijenta"
               ></b-form-input>
             </b-form>
           </b-col>
           <b-col>
             <b-form inline>
-              <b-form-input v-if="isCurrentExamination"
+              <b-form-input
+                v-if="isAvailable"
                 v-model="surname"
                 id="inline-form-input-name"
                 class="mb-2 mr-sm-2 mb-sm-0"
-                placeholder="Jane Doe"
+                placeholder="Nema pacijenta"
               ></b-form-input>
             </b-form>
           </b-col>
@@ -67,23 +77,31 @@
               >Nazad</b-button
             >
           </b-col>
-        
+
           <b-col v-if="isCurrentExamination">
             <b-button
               class="mt-3"
               variant="outline-danger"
               block
               @click="notHere"
-              visible = false>Nema korisnika</b-button
+              visible="false"
+              >Nema korisnika</b-button
             >
           </b-col>
           <b-col v-if="isCurrentExamination">
-            <b-button
+            <b-button v-if="userRole == 'ROLE_DERMATOLOGIST'"
               class="mt-3"
               variant="success"
               block
               @click="startExamination"
               >Pregledaj</b-button
+            >
+             <b-button v-if="userRole == 'ROLE_PHARMACIST'"
+              class="mt-3"
+              variant="success"
+              block
+              @click="startExamination"
+              >Savetuj</b-button
             >
           </b-col>
         </b-row>
@@ -132,6 +150,7 @@ export default {
         eventRemove:
         */
       },
+      isAvailable: true,
       examinations: [],
       currentEvents: [],
       name: "",
@@ -140,22 +159,22 @@ export default {
       startDate: "",
       endDate: "",
       patientId: "",
-      examinationId :"",
-      currentExamination :"",
-      isCurrentExamination : false,
+      examinationId: "",
+      currentExamination: "",
+      isCurrentExamination: false,
       definedExaminations: [],
     };
   },
   created() {
     // GET request for examination information
     this.$axios
-      .get("http://localhost:9001/examination/examinaitonForCalendar/")
+      .get("examination/examinaitonForCalendar/")
       .then((response) => {
         this.definedExaminations = response.data;
         let examinationsForCalendar = [];
         for (let i in response.data) {
           let ex = response.data[i];
-          let startDate = new Date(ex.start)
+          let startDate = new Date(ex.start);
           let endDate = new Date(startDate.getTime() + 30 * 60000);
           let newEvent = {
             id: ex.id,
@@ -163,8 +182,6 @@ export default {
             start: new Date(ex.start),
             end: endDate,
             backgroundColor: "#ff0000",
-            startStr: ex.name,
-            endStr: ex.surname,
           };
           examinationsForCalendar.push(newEvent);
         }
@@ -173,7 +190,7 @@ export default {
       })
       .catch((error) => {
         this.errorMessage = error.message;
-        console.error("There was an error!", error);
+        //console.error("There was an error!", error);
         this.$notify({
           type: "success",
           title: "Success",
@@ -181,6 +198,8 @@ export default {
           closeOnClick: true,
         });
       });
+  }, mounted() {
+    this.userRole = localStorage.getItem("UserRole");
   },
 
   methods: {
@@ -207,47 +226,56 @@ export default {
 
     handleEventClick(clickInfo) {
       this.$refs["my-modal"].show();
-      console.log(clickInfo);
+      //console.log(clickInfo);
       let exam = this.definedExaminations.filter((obj) => {
         return obj.id == clickInfo.event.id;
       });
       this.pharmacyName = exam[0].pharmacyName;
       this.name = exam[0].patientName;
       this.surname = exam[0].patientSurname;
-      this.startDate = new Date(exam[0].start)
+      this.startDate = new Date(exam[0].start);
       this.endDate = new Date(this.startDate.getTime() + 30 * 60000);
-      this.startDate = this.startDate.toLocaleString()
-      this.endDate = this.endDate.toLocaleString()
+      this.startDate = this.startDate.toLocaleString();
+      this.endDate = this.endDate.toLocaleString();
       this.patientId = exam[0].patientId;
-      this.examinationId = exam[0].id
-      this.getCurrentExamination()
+      this.examinationId = exam[0].id;
+      if (this.name === "") {
+        this.isAvailable = false;
+      } else {
+        this.isAvailable = true;
+      }
+      this.getCurrentExamination();
     },
     hideModal() {
       this.$refs["my-modal"].hide();
     },
     startExamination() {
-        this.$router.push("examination");
+      this.$router.push("examination");
     },
     handleEvents(events) {
       this.currentEvents = events;
-    },getCurrentExamination(){
-       this.$axios.get("http://localhost:9001/examination/soonestExamination/")
-            .then(response => {this.currentExamination = response.data
-                                if(this.currentExamination.soonestExamination.id == this.examinationId ){
-                                  this.isCurrentExamination = true
-                                }else{
-                                  this.isCurrentExamination = false
-                                }
-                                })
-            .catch(error => {
-            this.errorMessage = error.message;
-            console.error("There was an error!", error);});
+    },
+    getCurrentExamination() {
+      this.$axios
+        .get("examination/soonestExamination/")
+        .then((response) => {
+          this.currentExamination = response.data;
+          if (
+            this.currentExamination.soonestExamination.id == this.examinationId
+          ) {
+            this.isCurrentExamination = true;
+          } else {
+            this.isCurrentExamination = false;
+          }
+        })
+        .catch((error) => {
+          this.errorMessage = error.message;
+          //console.error("There was an error!", error);
+        });
     },
     notHere() {
       this.$axios
-        .post(
-          "http://localhost:9001/patient/addPenaltyPoint/" + this.patientId
-        )
+        .post("patient/addPenaltyPoint/" + this.patientId)
         .then((response) => {
           this.message = response.data;
           if (response.status == 200) {
@@ -258,11 +286,11 @@ export default {
               closeOnClick: true,
             });
           }
-          window.location.reload()
+          window.location.reload();
         })
         .catch((error) => {
           this.errorMessage = error.message;
-          console.error("There was an error!", error);
+          //console.error("There was an error!", error);
           this.$notify({
             type: "error",
             title: "Error",

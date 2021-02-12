@@ -27,7 +27,7 @@ public class PharmacyDTO {
 	}
 	
 	
-	public PharmacyDTO(long id, String name, String address, String city, String country, double rating,
+public PharmacyDTO(long id, String name, String address, String city, String country, double rating,
 			double pharmacistPrice, String description) {
 		super();
 		this.id = id;

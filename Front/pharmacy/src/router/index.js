@@ -4,6 +4,8 @@ import Home from "../views/Home.vue";
 import PatientProfile from "../views/patient/profile/Profile.vue";
 import Registration from "../views/registration/Registration.vue";
 import PharmacyAdminProfile from  "../views/pharmacyAdmin/profile/PharmacyAdminProfile.vue";
+import DermatologistProfile from  "../views/dermatologistAndPharmacist/dermatologist/DermatologistProfile.vue";
+import PharmacistProfile from  "../views/dermatologistAndPharmacist/pharmacist/PharmacistProfile.vue";
 import Examination from "../views/dermatologistAndPharmacist/dermatologist/StartExamination.vue"
 import IssueDrug from "../views/dermatologistAndPharmacist/pharmacist/IssueDrug.vue"
 import SystemAdminsPage from "../views/systemAdmin/users/SystemAdminsPage.vue"
@@ -132,6 +134,16 @@ const routes = [
     path: "/pharmacy-admin-profile",
     name: "Pharmacy Admin Profile",
     component: PharmacyAdminProfile
+  },
+  {
+    path: "/dermatologist-profile",
+    name: "Dermatologist Profile",
+    component: DermatologistProfile
+  },
+  {
+    path: "/pharmacist-profile",
+    name: "Pharmacist Profile",
+    component: PharmacistProfile
   },
   {
     path: "/mydrugs",

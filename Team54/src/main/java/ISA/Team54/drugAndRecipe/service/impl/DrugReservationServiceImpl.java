@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import ISA.Team54.exceptions.DrugOutOfStockException;
+import ISA.Team54.shared.service.interfaces.EmailService;
+import ISA.Team54.users.service.interfaces.PenaltyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,8 +60,15 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 	@Autowired
 	private PharmacyRepository pharmacyRepository;
 
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private PenaltyService penaltyService;
+
+	@Transactional(readOnly = false, rollbackFor = DrugOutOfStockException.class)
 	@Override
-	public void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) {
+	public void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) throws Exception {
 		DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findOneByDrugInPharmacyId(drugInPharmacyId);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
@@ -68,9 +79,14 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 		reservation.setPatient(patient);
 		reservation.setStatus(ReservationStatus.Reserved);
 
-		drugReservationRepository.save(reservation);
+		DrugReservation drugReservation =  drugReservationRepository.save(reservation);
+		if(drugInPharmacy.getQuantity() == 0)
+			throw new DrugOutOfStockException();
 		drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - 1);
 		drugInPharmacyRepository.save(drugInPharmacy);
+
+		emailService.sendEmail("tim54isa@gmail.com","Zakazana rezervacija leka","Uspesno ste rezervisali lek." +
+				" Broj Vaše rezervacije s kojim ćete preuzeti lek je: " + drugReservation.getId());
 	}
 
 	@Override
@@ -127,6 +143,16 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 		}
 
 		return pharmacies;
+	}
+
+	@Override
+	public void penalIfDeadlineOver() {
+		List<DrugReservation> reservations = drugReservationRepository.getPassedReservations(ReservationStatus.Reserved);
+		for (DrugReservation reservation : reservations) {
+			reservation.setStatus(ReservationStatus.NotTaken);
+			drugReservationRepository.save(reservation);
+			penaltyService.penalPatient(reservation.getPatient());
+		}
 	}
 
 	public Drug isDrugReservationAvailable(long reservationId) throws InvalidTimeLeft {
