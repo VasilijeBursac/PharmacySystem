@@ -81,6 +81,7 @@ export default {
         email: "",
         password: "",
       },
+      a : 0,
       confirmed: true,
       showModal: false,
       show: true,
@@ -97,7 +98,6 @@ export default {
         })
         .then((response) => {
           this.confirmed = response.data.confirmed;
-          
             this.$store.commit("setUserRole", response.data.role);
           this.$store.commit("setUserId", response.data.userId);
           this.$store.commit("setJWT", response.data.accessToken);
@@ -105,12 +105,12 @@ export default {
           localStorage.setItem("UserId", response.data.userId);
           localStorage.setItem("JWT", response.data.accessToken);
           localStorage.setItem("Confirmed", response.data.confirmed);
-
+          
           if (response.data.confirmed === false) {
-            this.showModal = true;
+            this.showModal = true;            
             return;
           }
-
+         
           this.toast();
         
 

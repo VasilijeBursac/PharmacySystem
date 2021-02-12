@@ -311,8 +311,8 @@ public class ExaminationServiceImpl implements ExaminationService {
 					return true;
 				}
 			} 
-			return false; 
-		}else {
+			return false;
+		}else { 
 			Pharmacist pharmacist = pharmacistRepository.findOneById(employeeId);
 			int workingDayEnd = pharmacist.getWorkSchedule().getStartDate().getHours() *60 + pharmacist.getWorkSchedule().getStartDate().getMinutes();
 			int workingDayStart = pharmacist.getWorkSchedule().getEndDate().getHours()*60 +pharmacist.getWorkSchedule().getEndDate().getMinutes() ;
