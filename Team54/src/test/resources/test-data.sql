@@ -279,6 +279,7 @@ insert into examination(diagnose, emplyeed_id, price, status, duration, start, t
 values(null, 1, 1500, 'Filled', 30, '2021-02-01 12:00', -1, 'DermatologistExamination', 5, 1);
 insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
 values(null, 1, 1500, 'Filled', 30, '2021-02-10 12:00', -1, 'DermatologistExamination', 5, 1);
+
 insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
 values(null, 1, 1500, 'Unfilled', 30, '2021-02-11 12:30', -1, 'DermatologistExamination', null, 1);
 insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)

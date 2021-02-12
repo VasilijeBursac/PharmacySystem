@@ -89,7 +89,7 @@ public class ExaminationController {
 		}
 	}
 	
-	@GetMapping("/isPatientAppropriate/{patientId}")
+	@GetMapping("/isPatientAppropriate/{patientId}") 
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST', 'PATIENT')")
 	public  ResponseEntity<String> IsPatientAppropriate(@PathVariable Long patientId) {
 		int isPatientAppropriate = examinationService.isPatientAppropriate(patientId);
@@ -183,12 +183,12 @@ public class ExaminationController {
 		return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!", HttpStatus.OK);
 	}
 	
-	@PostMapping("/saveExamination")
+	@PostMapping("/saveExamination/{newExaminationId}")
     @PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
 	public ResponseEntity<String> saveExamination(@PathVariable Long newExaminationId) {
 		boolean success = examinationService.saveExamination(newExaminationId);
 		return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!", HttpStatus.OK);
-	}
+	}  
 
 	@GetMapping("/patient-employees")
 	@PreAuthorize("hasRole('PATIENT')")

@@ -92,7 +92,7 @@ export default {
         this.$http
             .get('/patient/' + this.$store.getters.getUserId)
             .then( res => {
-                console.log(res)
+               // console.log(res)
                 this.form = JSON.parse(JSON.stringify(res.data))
                 this.backup = JSON.parse(JSON.stringify(res.data))
             })

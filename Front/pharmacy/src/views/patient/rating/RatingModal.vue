@@ -119,7 +119,7 @@ export default {
             this.$http
                 .get('examination/patient-employees?type=DermatologistExamination')
                 .then( (res) => {
-                    console.log(res.data)
+                    //console.log(res.data)
                     if(res.status == 200){
                         this.dermatologists = []
                         this.dermatologists.push({

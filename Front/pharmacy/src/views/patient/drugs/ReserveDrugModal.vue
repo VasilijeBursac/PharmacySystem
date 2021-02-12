@@ -130,7 +130,7 @@ export default {
         this.$http
             .get('drugs')
             .then( (res) => {
-                console.log(res.data)
+                //console.log(res.data)
                 if(res.status == 200){
                     this.options = []
                     this.options.push({

@@ -85,6 +85,26 @@ export default {
                         if(res.status == 200){
                             this.toast('success', 'Uspešno!', `Uspešno ste izmenili svoju lozinku!`)
                             this.closeModal();
+
+                            if ( localStorage.getItem("UserRole") === "ROLE_PATIENT") {
+                                this.$router.push("patient-profile");
+                            }
+                            if (localStorage.getItem("UserRole") === "ROLE_SYSTEM_ADMIN") {
+                                this.$router.push("systemAdminsPage");
+                            }
+                            if (localStorage.getItem("UserRole") === "ROLE_PHARMACY_ADMIN") {
+                                this.$router.push("patient-profile");
+                            }
+                            if (localStorage.getItem("UserRole") === "ROLE_DERMATOLOGIST") {
+                                this.$router.push("dermatologist-profile");
+                            }
+                            if (localStorage.getItem("UserRole") === "ROLE_PHARMACIST") {
+                                this.$router.push("pharmacist-profile");
+                            }
+                            if (localStorage.getItem("UserRole") === "ROLE_SUPPLIER") {
+                                this.$router.push("patient-profile");
+                            }
+
                         } else {
                             this.toast('danger', 'Neuspešno!', 'Greška pri izmeni lozinke!')
                         }
@@ -104,7 +124,7 @@ export default {
             })
             scroll(0,0)
         },
-
+        
         closeModal(){
             this.$bvModal.hide('change-password')
             this.resetInputFields()
