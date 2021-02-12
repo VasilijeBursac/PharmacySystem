@@ -1,6 +1,6 @@
 <template>    
     <ul class="nav navbar-nav">      
-        <li class="nav-item active"><a href="#" class="nav-link"><router-link to="/pharmacies">Profil apoteke</router-link></a></li>
+        <li class="nav-item active"><a href="#" class="nav-link"><router-link v-bind:to = "'/pharmacy/' + pharmacyAdmin.pharmacyId">Profil apoteke</router-link></a></li>
         <li class="nav-item"><a href="#" class="nav-link">Lekovi</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Narudžbenice</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Akcije</a></li>
@@ -34,7 +34,7 @@ export default {
         localStorage.setItem("UserRole","ROLE_UNREGISTERED")
         localStorage.removeItem("UserId")
         localStorage.removeItem("JWT")
-        this.$router.push("Registration");
+        this.$router.push("/registration");
          this.$axios
         .post("auth/logout")
         .then()

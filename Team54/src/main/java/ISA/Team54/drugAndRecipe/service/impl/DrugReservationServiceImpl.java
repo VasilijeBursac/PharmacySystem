@@ -84,8 +84,10 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 		drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - 1);
 		drugInPharmacyRepository.save(drugInPharmacy);
 
-		emailService.sendEmail("tim54isa@gmail.com","Zakazana rezervacija leka","Uspesno ste rezervisali lek." +
-				" Broj Vaše rezervacije s kojim ćete preuzeti lek je: " + drugReservation.getId());
+		new Thread(() -> {
+			emailService.sendEmail("tim54isa@gmail.com","Zakazana rezervacija leka","Uspesno ste rezervisali lek." +
+					" Broj Vaše rezervacije s kojim ćete preuzeti lek je: " + drugReservation.getId());
+		}).start();
 	}
 
 	@Override

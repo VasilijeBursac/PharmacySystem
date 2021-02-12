@@ -33,4 +33,7 @@ public interface ExaminationService {
 	List<ExaminationForCalendarDTO> getExaminaitonForCalendar();
 	UserRole getCurrentRole();
 	Long getCurrentEmployedId();
+	List<Examination> getPatientExaminationsByType(ExaminationType type);
+
+	List<DermatologistExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type);
 }

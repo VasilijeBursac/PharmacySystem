@@ -8,8 +8,8 @@
 				</div>
 			</template>
 
-			<template #cell(akcije)="">
-				<b-button size="sm" >
+			<template #cell(akcije)="row">
+				<b-button size="sm" @click="displayPharmacyProfile(row)">
 					Prikaži detaljnije
 				</b-button>
 			</template>
@@ -37,7 +37,11 @@ export default {
                 variant: variant,
                 autoHideDelay: 5000
             })
-        }
+        },
+
+		displayPharmacyProfile(row){
+			this.$router.push({name: 'PharmacyProfile', params: { id: row.item.id }});
+		}
 	},
 	computed:{
 		items(){
@@ -55,7 +59,7 @@ export default {
 			.then( res => {
 				if(res.status == 200){
 					let data = []
-                         res.data.forEach(element => {
+                        res.data.forEach(element => {
                             data.push({ 
                                 ime: element.name, 
                                 grad: element.city,

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.users.dto.PatientDTO;
+import ISA.Team54.users.dto.PharmacyAdministratorDTO;
 import ISA.Team54.users.mapper.PatientMapper;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.PharmacyAdministrator;
@@ -27,6 +28,7 @@ import ISA.Team54.users.service.interfaces.PharmacyAdministratorService;
 
 
 import ISA.Team54.users.dto.UserInfoDTO;
+import ISA.Team54.users.mappers.PharmacyAdministratorMapper;
 import ISA.Team54.users.mappers.UserInfoMapper;
 
 
@@ -38,9 +40,11 @@ public class PharmacyAdministratorController {
 	
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('PHARMACY_ADMIN')")
-	public PharmacyAdministrator loadById(@PathVariable long id){
+	public PharmacyAdministratorDTO loadById(@PathVariable long id){
 		System.out.println(id);
-		return this.pharmacyAdministratorService.findById(id);
+		//return this.pharmacyAdministratorService.findById(id);
+		PharmacyAdministrator pharmacyAdmin = this.pharmacyAdministratorService.findById(id);
+		return PharmacyAdministratorMapper.pharmacyAdministratorToPharmacyAdministratorDTO(pharmacyAdmin);
 	}
 	
 	@GetMapping("/allPharmacyAdmins")
