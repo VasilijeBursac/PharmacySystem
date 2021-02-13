@@ -48,7 +48,7 @@ The frontend is a Vue.js application, and can be found in the ***Front/pharmacy*
      - <code>npm install</code> and then 
      - <code>npm run serve</code> in the mentioned folder. <br/>
 - Further installation details can be found in README.md in ***Front/pharmacy***. <br/>
-
+- *In *main.js* file in *pharmacy/src* folder (*Front/pharmacy/src/main.js*) </br> uncomment line *"axios.defaults.baseURL = 'http://localhost:9001/';"* <br/> and comment line  *"axios.defaults.baseURL = 'https://team54-pharmacy-backend.herokuapp.com/';"** , <br/> so that requests from the Frontend are directed to a Backend that is launched locally and not to one that was deployed on Heroku.
 
 <hr/>
 
