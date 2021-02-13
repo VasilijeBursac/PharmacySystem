@@ -28,6 +28,26 @@ https://team54-pharmacy-backend.herokuapp.com/
 <hr/>
 
 
+### Instructions for Running Project Locally
+#### Backend:
+The backend is a Maven SpringBoot application, and can be found in the ***Team54*** folder. <br/>
+- It can be started normally as a Java project in Eclipse or IntelliJ (run *Team54/src/main/java/ISA/Team54/Main.java* as Java Application). 
+- **Java 11 was used.**
+- PostgreSQL is needed for the Backend. 
+- Local database connection settings can be found in the ***application.properties*** file (*Team54/src/main/resources/application.properties*):
+     - **Uncomment next 4 Lines after "#LOCAL POSTGRES CREDENTIALS" and comment next 4 Lines after "#HEROKU DEPLOYMENT POSTGRES CREDENTIALS"**
+  
+#### Frontend:
+The frontend is a Vue.js application, and can be found in the ***Front/pharmacy*** folder. <br/>
+- It can be started by running:
+     - <code>npm install</code> and then 
+     - <code>npm run serve</code> in the mentioned folder. <br/>
+- Further installation details can be found in README.md in ***Front/pharmacy***. <br/>
+
+
+<hr/>
+
+
 # PharmacySystem
 
 ## About Project:
