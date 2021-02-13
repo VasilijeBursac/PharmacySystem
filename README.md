@@ -1,6 +1,6 @@
 ### SonarCloud Quality Checks and Travis CI
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=5de154d3bdc4e7502cfd1b44d7d3443519b57739&metric=alert_status)](https://sonarcloud.io/dashboard?id=5de154d3bdc4e7502cfd1b44d7d3443519b57739)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VasilijeBursac_PharmacySystem&metric=alert_status)](https://sonarcloud.io/dashboard?id=VasilijeBursac_PharmacySystem)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=5de154d3bdc4e7502cfd1b44d7d3443519b57739&metric=security_rating)](https://sonarcloud.io/dashboard?id=5de154d3bdc4e7502cfd1b44d7d3443519b57739)
 [![Build Status](https://travis-ci.com/VasilijeBursac/PharmacySystem.svg?branch=develop)](https://travis-ci.com/VasilijeBursac/PharmacySystem)
 
