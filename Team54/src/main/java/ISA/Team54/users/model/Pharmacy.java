@@ -41,6 +41,9 @@ public class Pharmacy {
 	@Column(unique = false, nullable = false)
 	private String country;
 	
+	@Column(unique = false, nullable = false)
+	private String description;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<DermatologistWorkSchedule> dermatologistWorkingSchedules;
 
@@ -86,23 +89,29 @@ public class Pharmacy {
 		super();
 	}
 
-	public Pharmacy(long id, String name, String address, String city, String country,
-			List<PharmacyAdministrator> pharmacyAdministrators, List<Promotion> promotion,
+	public Pharmacy(long id) {
+		this.id = id;
+	}
+	
+	public Pharmacy(long id, String name, String address, String city, String country, String description,
+			double pharmacistPrice, List<PharmacyAdministrator> pharmacyAdministrators, List<Promotion> promotion,
 			List<Patient> subscribedPatients, List<Dermatologist> dermatologists, List<Pharmacist> pharmacists,
-			List<Examination> examinations) {
+			List<Examination> examinations, Set<Rating> ratings) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.city = city;
 		this.country = country;
+		this.description = description;
+		this.pharmacistPrice = pharmacistPrice;
 		this.pharmacyAdministrators = pharmacyAdministrators;
-
 		this.promotion = promotion;
 		this.subscribedPatients = subscribedPatients;
 		this.dermatologists = dermatologists;
 		this.pharmacists = pharmacists;
 		this.examinations = examinations;
+		this.ratings = ratings;
 	}
 
 	
@@ -146,6 +155,15 @@ public class Pharmacy {
 		this.address = address;
 	}
 
+	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public List<PharmacyAdministrator> getPharmacyAdministrators() {
 		return pharmacyAdministrators;
@@ -216,5 +234,6 @@ public class Pharmacy {
 	public void setPharmacistPrice(double pharmacistPrice) {
 		this.pharmacistPrice = pharmacistPrice;
 	}
+
 	
 }

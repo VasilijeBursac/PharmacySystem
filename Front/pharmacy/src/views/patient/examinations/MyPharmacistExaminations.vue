@@ -4,11 +4,18 @@
 
         <ScheduleModal class="float-right mt-n2 mb-3"/>
 
-        <b-table ref="future" striped hover :items="futureData" :fields="fields">
+        <b-table ref="future" striped hover :busy="isBusy" :items="futureData" :fields="fields">
+            <template #table-busy>
+				<div class="text-center text-danger my-2">
+					<b-spinner class="align-middle"></b-spinner>
+					<strong> Učitavanje...</strong>
+				</div>
+			</template>
+
             <template #cell(akcije)="row">
                 <b-button @click="cancel(row)" size="sm" variant="danger" >
                     <b-icon-x></b-icon-x>
-                    Otkaži pregled
+                    Otkaži savetovanje
                 </b-button>
             </template>
         </b-table>
@@ -33,10 +40,15 @@ export default {
 			futureData: [],
 			pastData: [],
 			fields:['termin', 'farmaceut', {key:'ocena', sortable:true}, {key:'cena', sortable:true}, 'akcije'],
+
+            isBusy: true
 		}
 	},
     methods:{
 		cancel(row){
+
+            this.isBusy = true
+
 			this.$http
                 .get('examination/cancel/' + row.item.id)
                 .then( res => {
@@ -44,9 +56,12 @@ export default {
                         this.toast('Uspešno ste otkazali savetovanje!', 'Uspešno', 'success')
                         this.futureData.splice(row.index, 1)
                         this.$refs.future.refresh()
+                        this.isBusy = false
                     }            
                 })
                 .catch( (error) => {
+                    this.isBusy = false
+                    
                     if(error.response.status == 400){
                         this.toast('Ne možete otkazati savetovanje do kojeg je ostalo manje od 24h!', 'Neuspešno', 'danger')
                     }else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
@@ -75,24 +90,32 @@ export default {
 					})
 				});
 				this.futureData = data
+
+                this.isBusy = false
+
+                if(data.length == 0){
+                    this.toast('Nažalost trenutno ne postoji nijedna apoteka u sistemu.', 'Neuspešno', 'danger')
+                }
             })
 
-        /*this.$http
-            .get('examination/examinationHistory/' + this.$store.getters.getUserId)
+        this.$http
+            .post('examination/examination-history/',{
+                type: 'PharmacistExamination'
+            })
             .then( res => {
 				let data = []
                 console.log(res.data)
                 res.data.forEach(element => {
 					data.push({ 
 						termin: new Date(element.term).toLocaleString(), 
-						dermatolog: element.dermatologist, 
-						ocena: element.dermatologistRating != 0 ? element.dermatologistRating : 'Nema ocenu',
-						cena: element.price,
+						farmaceut: element.employee, 
+						ocena: element.employeeRating != 0 ? element.employeeRating : 'Nema ocenu',
+						cena: element.price + ' din',
 						id: element.examinationId
 					})
 				});
 				this.pastData = data
-            })*/
+            })
 	},
     components:{
         ScheduleModal

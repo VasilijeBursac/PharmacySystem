@@ -68,9 +68,9 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public List<User> findAllByRole() throws AccessDeniedException {
-		List<User> result = userRepository.findAllByRole(UserRole userRole);
+		List<User> result = userRepository.findAllByRole(UserRole userRole); 
 		return result;
-	} */
+	} */    
 
 	public List<User> findByName(String name) throws AccessDeniedException {
 		List<User> result = userRepository.findByName(name);
@@ -89,11 +89,11 @@ public class UserServiceImpl implements UserService {
 		
 		if (authenticationManager != null) {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(currentUser.getEmail(), oldPassword));
-		} else {
+		} else {  
 			return;
 		}
 		
-		
+		currentUser.setConfirmed(true);
 		currentUser.setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(currentUser);
 	}

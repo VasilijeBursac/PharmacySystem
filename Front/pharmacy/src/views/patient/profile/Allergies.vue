@@ -57,7 +57,7 @@ export default {
             })
 
         this.$root.$on('add-allergy', (allergy) => {
-            console.log(allergy)
+            //console.log(allergy)
             this.allergies.push(allergy)
         })
     },

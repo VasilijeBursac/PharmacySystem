@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -85,11 +86,12 @@ public class ExaminationController {
 			}
 			return new ResponseEntity<>(new StartExaminationDTO(soonestExaminationDTO, historyExaminations, drugsForPatient),HttpStatus.OK);
 		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.OK);
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@GetMapping("/isPatientAppropriate/{patientId}")
+	@GetMapping("/isPatientAppropriate/{patientId}") 
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST', 'PATIENT')")
 	public  ResponseEntity<String> IsPatientAppropriate(@PathVariable Long patientId) {
 		int isPatientAppropriate = examinationService.isPatientAppropriate(patientId);
@@ -108,10 +110,32 @@ public class ExaminationController {
 		
 		List<ExaminationDTO> historyExaminations = new ArrayList<ExaminationDTO>();
 
-		for (Examination examination : examinationService.historyOfPatientExamination((long) patientId)) {
-			historyExaminations.add(new ExaminationMapper().ExaminationToExaminationDTOHistory(examination, null));
+		try {
+			for (Examination examination : examinationService.historyOfPatientExamination((long) patientId)) {
+				historyExaminations.add(new ExaminationMapper().ExaminationToExaminationDTOHistory(examination, null));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return historyExaminations;
+	}
+
+	@PostMapping("/examination-history")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<List<DermatologistExaminationDTO>> getPatientExaminationsByType(@RequestBody ExaminationTypeDTO type){
+		try {
+			List<Examination> examinations = examinationService.getPatientExaminationsByType(type.getType());
+			List<DermatologistExaminationDTO> examinationDTOS = new ArrayList<>();
+			for (Examination examination : examinations) {
+				User employee = userSerivce.findById(examination.getEmplyeedId());
+				examinationDTOS.add(new ExaminationMapper().ExaminationToDermatologistExaminationDTO(examination, employee, type.getType()));
+			}
+			return new ResponseEntity<List<DermatologistExaminationDTO>>(examinationDTOS, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GetMapping("/definedExaminations/{examinationId}")
@@ -131,13 +155,15 @@ public class ExaminationController {
 		examinationService.scheduleExamination(id); 
 	}
 
-	 @PostMapping("/scheduleExamination")
+	@PostMapping("/scheduleExamination")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
-    public ResponseEntity<String> scheduleExamination(@RequestBody ScheduleExaminaitonDTO scheduleExamination) {	
-      if(examinationService.scheduleExamination(scheduleExamination.getDate()))
-    	  return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!",HttpStatus.OK);
-      else
-    	  return new ResponseEntity<>("Nije moguce zakazati pregled u izabranom terminu!",HttpStatus.BAD_REQUEST);  
+    public ResponseEntity<String> scheduleExamination(@RequestBody ScheduleExaminaitonDTO scheduleExamination) {
+		try{
+			examinationService.scheduleExamination(scheduleExamination.getDate());
+			return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!",HttpStatus.OK);
+		}catch (PessimisticLockingFailureException e){
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
     }
 	 
 	 @GetMapping("/examinaitonForCalendar/")
@@ -179,16 +205,20 @@ public class ExaminationController {
 	@PostMapping("/updateExamination")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
 	public ResponseEntity<String> updateExamination(@RequestBody ExaminationInformationDTO examinationInformationDTO) {
+		try {
 		examinationService.updateExamination(examinationInformationDTO);
 		return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!", HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>("Doslo je do greske, pokusajte ponovo!", HttpStatus.BAD_REQUEST);
+		}
 	}
 	
-	@PostMapping("/saveExamination")
+	@PostMapping("/saveExamination/{newExaminationId}")
     @PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
 	public ResponseEntity<String> saveExamination(@PathVariable Long newExaminationId) {
 		boolean success = examinationService.saveExamination(newExaminationId);
 		return new ResponseEntity<>("Uspjesno sacuvane infomracije o pregledu!", HttpStatus.OK);
-	}
+	}  
 
 	@GetMapping("/patient-employees")
 	@PreAuthorize("hasRole('PATIENT')")

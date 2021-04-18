@@ -3,6 +3,7 @@ package ISA.Team54.users.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.stream.Collectors;
 
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugReservationService;
 import ISA.Team54.rating.model.Rating;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +31,9 @@ import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.users.dto.PharmacyDTO;
 import ISA.Team54.users.dto.PharmacyExaminationDTO;
+import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.mappers.PharmacyMapper;
+import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.service.interfaces.PharmacyService;
 
@@ -52,10 +56,21 @@ public class PharmacyController {
 	}
 	
 	@GetMapping("/allPharmacies")
-	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-	public  List<Pharmacy> findAll(){
-		return this.pharmacyService.findAll();
+	public  List<PharmacyDTO> findAll(){
+		return this.pharmacyService.findAll().stream().map(p -> new PharmacyMapper().PharmacyToPharmacyDTO(p)).collect(Collectors.toList());
 	}
+	
+	@GetMapping("/{id}")
+	public PharmacyDTO loadById(@PathVariable long id){
+		Pharmacy pharmacy =  this.pharmacyService.getPharmacyById(id);
+		return PharmacyMapper.PharmacyToPharmacyDTO(pharmacy);
+	}
+	
+	@PutMapping("")
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN','SYSTEM_ADMIN')")
+	public void updatePharmacyInfo(@RequestBody PharmacyDTO pharmacy){
+		this.pharmacyService.updatePharmacyInfo(pharmacy);
+	} 
 	
 	@PostMapping("/all-examinations")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
@@ -78,6 +93,7 @@ public class PharmacyController {
 	@PostMapping("/search-examinations")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
 	public ResponseEntity<List<PharmacyDTO>> getFreePharmaciesForInterval(@RequestBody ExaminationSearchDTO examinationSearchDTO){
+		System.out.println("TU");
 		List<Pharmacy> pharmacies=  examinationService.getFreePharmaciesForInterval(examinationSearchDTO.getDate(), examinationSearchDTO.getType());
 		List<PharmacyDTO> pharmacyDTOs = new ArrayList<PharmacyDTO>();
 		
@@ -112,6 +128,12 @@ public class PharmacyController {
 		);
 
 		return distinctPharmacies;
+	}
+
+	@PostMapping("{id}/dermatologist-examinations")
+	@PreAuthorize("hasRole('ROLE_PATIENT')")
+	public  ResponseEntity<List<DermatologistExaminationDTO>> getFreeDermatologistExaminationsForPharmacy(@PathVariable long id, @RequestBody ExaminationTypeDTO type){
+		return new ResponseEntity<List<DermatologistExaminationDTO>>(examinationService.getExaminationsForPharmacy(id, type.getType()), HttpStatus.OK);
 	}
 
 	private boolean CheckIfPharmacyUnique(Pharmacy pharmacy, List<Pharmacy> pharmacies) {

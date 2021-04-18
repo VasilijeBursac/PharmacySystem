@@ -4,7 +4,14 @@
 
         <ReserveDrugModal class="float-right mt-n2 mb-3"/>
 
-        <b-table ref="drug" striped hover :items="items" :fields="fields">
+        <b-table ref="drug" striped hover :busy="tableBusy" :items="items" :fields="fields">
+            <template #table-busy>
+                <div class="text-center text-danger my-2">
+                <b-spinner class="align-middle"></b-spinner>
+                    <strong> Učitavanje...</strong>
+                </div>
+            </template>
+
             <template #cell(akcije)="row">
                 <b-button v-if="row.item.action != 'ACTION_NONE'" @click="cancel(row)" size="sm" variant="danger" >
                     <b-icon-x></b-icon-x>
@@ -22,20 +29,29 @@ export default {
         return {
             items: [],
 			fields:['lek', 'apoteka', 'rok za preuzimanje', 'status', 'akcije'],
+
+            tableBusy: true
         }
     },
     methods:{
         cancel(row){
+            this.tableBusy = true
+
             this.$http
                 .get('reservation/cancel/' + row.item.id)
                 .then( res => {
                     if(res.status == 200){
                         this.toast('Uspešno ste otkazali rezervaciju leka!', 'Uspešno', 'success')
-                        this.items.splice(row.index, 1)
-                        this.$refs.drugs.refresh()
+                        
+                        this.tableBusy = false
+                        
+                        setTimeout( () => {
+                            this.$router.go(0)
+                        }, 250)                        
                     }
                 })
                 .catch( (error) => {
+                    this.tableBusy = false
                     if(error.response.status == 400){
                         this.toast('Ne možete otkazati rezervaciju leka do čijeg roka za preuzimanje je ostalo manje od 24h!', 'Neuspešno', 'danger')
                     }else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
@@ -67,9 +83,13 @@ export default {
                             })
                         });
                         this.items = data
+
+                        this.tableBusy = false
                 }        
             })
             .catch( (error) => {
+                this.tableBusy = false
+
                 if(error.response.status != 200)
                     this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
             })

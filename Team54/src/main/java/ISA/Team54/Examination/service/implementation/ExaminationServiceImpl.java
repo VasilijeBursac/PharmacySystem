@@ -5,14 +5,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import ISA.Team54.exceptions.InvalidTimeLeft;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
@@ -29,8 +31,8 @@ import ISA.Team54.drugAndRecipe.dto.DrugDTO;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.exceptions.InvalidTimeLeft;
 import ISA.Team54.shared.model.DateRange;
-import ISA.Team54.shared.model.EmailForm;
 import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.enums.UserRole;
 import ISA.Team54.users.model.Dermatologist;
@@ -44,8 +46,10 @@ import ISA.Team54.users.repository.PharmacistRepository;
 import ISA.Team54.users.repository.UserRepository;
 import ISA.Team54.vacationAndWorkingTime.model.DermatologistWorkSchedule;
 import ISA.Team54.vacationAndWorkingTime.repository.DermatologistWorkScheduleRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ExaminationServiceImpl implements ExaminationService {
 	final long ONE_MINUTE_IN_MILLIS = 60000;// millisecs
 	@Autowired
@@ -87,7 +91,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 			if (pharmacist != null)
 				return UserRole.ROLE_PHARMACIST;
 		} catch (Exception e) {
-
+			return UserRole.ROLE_DERMATOLOGIST;
 		}
 		return UserRole.ROLE_DERMATOLOGIST;
 	}
@@ -160,28 +164,39 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
-	public List<Examination> historyOfPatientExamination(Long id) {
-		ExaminationType examinaitonType = ExaminationType.DermatologistExamination;
+	public List<Examination> getPatientExaminationsByType(ExaminationType type){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		try {
-			Pharmacist pharmacist = pharmacistRepository.findOneById(((Pharmacist) authentication.getPrincipal()).getId());
-		if(pharmacist != null) 
-			examinaitonType = ExaminationType.PharmacistExamination;
-		}catch(Exception e) {
-		
-		}
-		List<Examination> examinationHistories = examinationRepository.getHistoryExaminationsForPatient(id, examinaitonType, ExaminationStatus.Filled);
-		return examinationHistories;
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+
+		List<Examination> examinations =  examinationRepository.getHistoryExaminationsForPatient(patient.getId(), type, ExaminationStatus.Filled);
+		return examinations;
 	}
 
 	@Override
-	public void updateExamination(ExaminationInformationDTO examinationInformationDTO) {
+	public List<Examination> historyOfPatientExamination(Long id) {
+
+		ExaminationType examinaitonType = ExaminationType.DermatologistExamination;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		try{
+			Pharmacist pharmacist = pharmacistRepository.findOneById(((Pharmacist) authentication.getPrincipal()).getId());
+		if(pharmacist != null) 
+			examinaitonType = ExaminationType.PharmacistExamination;;
+		}catch(Exception e) {
+			examinaitonType = ExaminationType.DermatologistExamination;;
+		}finally{
+			List<Examination> examinationHistories = examinationRepository.getHistoryExaminationsForPatient(id, examinaitonType, ExaminationStatus.Filled);
+			return examinationHistories;
+		}
+	}
+
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
+	public void updateExamination(ExaminationInformationDTO examinationInformationDTO) throws Exception {
 		Examination examination = examinationRepository.findOneById((examinationInformationDTO.getId()));
 		List<Drug> drugsForExamination = new ArrayList<Drug>();
 		if (examinationInformationDTO.getDrugs() != null) {
 			for (DrugDTO d : examinationInformationDTO.getDrugs()) {
 				drugsForExamination.add(drugRepository.findOneById(d.getId()));
-				drugService.reduceDrugQuantityInPharmacy(d.getId(), (int) examination.getPharmacy().getId(), 1);
+					drugService.reduceDrugQuantityInPharmacy(d.getId(), (int) examination.getPharmacy().getId(), 1);
 			}
 			;
 			examination.setDrugs(drugsForExamination);
@@ -250,8 +265,9 @@ public class ExaminationServiceImpl implements ExaminationService {
 		return examinationDTOs;
 	}
 
+	@Transactional(readOnly = false)
 	@Override
-	public void scheduleExamination(long id) {
+	public void scheduleExamination(long id) throws PessimisticLockingFailureException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
 		Examination examination = examinationRepository.findById(id).orElse(null);
@@ -260,6 +276,10 @@ public class ExaminationServiceImpl implements ExaminationService {
 			examination.setPatient(patient);
 
 			examinationRepository.save(examination);
+			new Thread(() -> {
+				emailService.sendEmail("tim54isa@gmail.com", "Zakazan pregled", "Uspesno ste zakazali pregled!");
+
+			}).start();
 		}
 	}
 
@@ -298,23 +318,40 @@ public class ExaminationServiceImpl implements ExaminationService {
 		return examinationDTOs;
 	}
 
-	private boolean isDermatologistOnWorkInTheParmacy(Long dermatologistId, Long pharmacyId,
-			DateRange examinationTime) {
-		Dermatologist dermatologist = dermatologistRepository.findOneById(dermatologistId);
-		List<DermatologistWorkSchedule> workingSchedules = dermatologistWorkScheduleRepository
-				.findByDermatologistIdAndPharmacyId(dermatologistId, pharmacyId);
-		for (DermatologistWorkSchedule workingSchedule : workingSchedules) {
-			if (workingSchedule.getPharmacy().getId() == pharmacyId
-					&& examinationTime.isInRange(new DateRange(workingSchedule.getTimePeriod().getStartDate(),
-							workingSchedule.getTimePeriod().getEndDate()))) {
-
+	public boolean isDermatologistOnWorkInTheParmacy(Long employeeId, Long pharmacyId, DateRange examinationTime) {
+		Dermatologist dermatologist = dermatologistRepository.findOneById(employeeId);
+		List<DermatologistWorkSchedule> workingSchedules;
+		if(dermatologist != null) {
+			workingSchedules= dermatologistWorkScheduleRepository.findByDermatologistIdAndPharmacyId(employeeId, pharmacyId);
+			for (DermatologistWorkSchedule workingSchedule : workingSchedules) {
+				if (workingSchedule.getPharmacy().getId() == pharmacyId
+						&& examinationTime.isInRange(new DateRange(workingSchedule.getTimePeriod().getStartDate(),
+								workingSchedule.getTimePeriod().getEndDate()))) {
+					return true;
+				}
+			} 
+			return false;
+		}else { 
+			Pharmacist pharmacist = pharmacistRepository.findOneById(employeeId);
+			int workingDayEnd = pharmacist.getWorkSchedule().getStartDate().getHours() *60 + pharmacist.getWorkSchedule().getStartDate().getMinutes();
+			int workingDayStart = pharmacist.getWorkSchedule().getEndDate().getHours()*60 +pharmacist.getWorkSchedule().getEndDate().getMinutes() ;
+			int examinationStart = examinationTime.getStartDate().getHours()*60 + examinationTime.getStartDate().getMinutes();
+			int examinationEnd = (int)examinationTime.getEndDate().getHours()*60+(int)examinationTime.getEndDate().getMinutes();
+			
+			if(examinationStart>=workingDayStart && examinationStart < workingDayEnd && examinationEnd>workingDayStart && examinationEnd<=workingDayEnd)
 				return true;
-			}
-		}
-		return false;
+			return false;
+//			if (examinationTime.isInRange(new DateRange(pharmacist.getWorkSchedule().getStartDate(),
+//					pharmacist.getWorkSchedule().getEndDate()))) {
+
+//				return true;
+//			}else {
+//				return false;
+//			}
+		}	
 	}
 
-	private boolean isDermatologistAvailable(Long dermatologistId, Long pharmacyId, Date start, Date end) {
+	public boolean isDermatologistAvailable(Long dermatologistId, Long pharmacyId, Date start, Date end) {
 		if (!isDermatologistOnWorkInTheParmacy(dermatologistId, pharmacyId, new DateRange(start, end))) {
 			return false;
 		}
@@ -328,7 +365,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 		return true;
 	}
 
-	private boolean isPatientAvailable(Long patientId, Date start, Date end) {
+	public boolean isPatientAvailable(Long patientId, Date start, Date end) {
 
 		for (Examination examination : examinationRepository.findByPatientId(patientId)) {
 			Term term = examination.getTerm();
@@ -346,6 +383,24 @@ public class ExaminationServiceImpl implements ExaminationService {
 			return false;
 		}
 		return true;
+	}
+
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	@Override
+	public List<DermatologistExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type) {
+		List<Examination> examinations = examinationRepository.getAllFutureExaminationsForPharmacy(id, type, ExaminationStatus.Unfilled);
+		List<User> employees = new ArrayList<User>();
+		examinations.forEach(
+				e -> employees.add(userRepository.findById(e.getEmplyeedId()).orElse(null))
+		);
+
+		List<DermatologistExaminationDTO> examinationDTOs = new ArrayList<DermatologistExaminationDTO>();
+		ExaminationMapper mapper = new ExaminationMapper();
+		for(int i = 0; i < examinations.size(); i++) {
+			examinationDTOs.add(mapper.ExaminationToDermatologistExaminationDTO(examinations.get(i), employees.get(i), type));
+		}
+
+		return examinationDTOs;
 	}
 
 	public boolean scheduleExamination(Date start) {
@@ -369,7 +424,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 
 		return true;
 	}
-
+	@Transactional(readOnly = false)
 	public boolean saveExamination(Long newExaminationId) {
 		Long currentExaminationId = getCurrentExaminationForEmployee().getId();
 		Examination currentExamination = examinationRepository.findOneById(currentExaminationId);

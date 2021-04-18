@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ISA.Team54.drugAndRecipe.dto.DrugDTO;
+import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.dto.DrugSpecificationDTO;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
@@ -87,4 +88,11 @@ public class DrugController {
 		//newDrug.setSubstituteDrugs(drugDTO.getSubstituteDrugs());
 		return new ResponseEntity<>(drugService.addDrug(d), HttpStatus.OK);	
 	} 
+
+	@GetMapping("/byPharmacyId/{pharmacyId}")
+	public List<DrugInPharmacyDTO> getAllDrugsInPharmacy(@PathVariable Long pharmacyId){
+		return drugInPharmacyService.getAllDrugsInPharmacy(pharmacyId);
+	}
+	
+
 }

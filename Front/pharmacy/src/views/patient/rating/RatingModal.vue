@@ -81,6 +81,12 @@ export default {
     },
     methods:{
         rate(){
+
+            if(this.dermatologistSelected == null && this.pharmacySelected == null && this.drugSelected == null && this.pharmacySelected == null){
+                this.toast('Niste odabrali nijedan predmet ocenjivanja.', 'Neuspešno', 'danger')
+                return 
+            }
+
              this.$http
                 .post('rating/rate',{
                     'dermatologistId': this.dermatologistSelected,
@@ -119,7 +125,7 @@ export default {
             this.$http
                 .get('examination/patient-employees?type=DermatologistExamination')
                 .then( (res) => {
-                    console.log(res.data)
+                    //console.log(res.data)
                     if(res.status == 200){
                         this.dermatologists = []
                         this.dermatologists.push({

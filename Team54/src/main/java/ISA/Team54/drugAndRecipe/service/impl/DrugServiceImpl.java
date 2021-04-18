@@ -5,10 +5,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.repository.ExaminationRepository;
+import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
+import ISA.Team54.drugAndRecipe.mapper.DrugInPharmacyMapper;
 import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
@@ -23,6 +27,7 @@ import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.repository.PatientRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class DrugServiceImpl implements DrugService {
 
 	@Autowired
@@ -55,7 +60,7 @@ public class DrugServiceImpl implements DrugService {
 		return drugsForPatient;
 	}
 	
-	private boolean isPatientAlergicOnDrug(Long patientId, Long drugId) {
+	public boolean isPatientAlergicOnDrug(Long patientId, Long drugId) {
 		Drug drug = drugRepository.findOneById(drugId);
 		Patient patient = patientRepository.findOneById(patientId);
 		for(Drug allergyDrug : patient.getDrugAllergies()) {
@@ -66,7 +71,7 @@ public class DrugServiceImpl implements DrugService {
 		return true;
 	}
 
-	@Override
+   @Transactional(readOnly = false)
 	public boolean isDrugAvailable(Long drugId, Examination examination) {
 		
 		DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findOneByDrugInPharmacyId(new DrugInPharmacyId(examination.getPharmacy().getId(),drugId));
@@ -76,7 +81,7 @@ public class DrugServiceImpl implements DrugService {
 		}
 		return false;
 	}
-	
+	@Transactional(readOnly = false)
 	public IsAvalableDrugDTO findOrFindSubstitute(long drugId, long examinationId) {
 		Examination examination = examinationRepository.findOneById(examinationId);
 		Patient patient = examination.getPatient();
@@ -102,11 +107,16 @@ public class DrugServiceImpl implements DrugService {
 		}
 		return availableDTO;
 	}
-
-	public void reduceDrugQuantityInPharmacy(long drugId, int pharmacyId,int quantity) {
-		DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findOneByDrugInPharmacyId(new DrugInPharmacyId(pharmacyId,drugId));
-		drugInPharmacy.setQuantity(drugInPharmacy.getQuantity()-quantity);
-		drugsInPharmacyRepository.save(drugInPharmacy);
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void reduceDrugQuantityInPharmacy(long drugId, int pharmacyId,int quantity) throws Exception {
+		try {
+		DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findDrugInPharmacyById(drugId,pharmacyId);
+			drugInPharmacy.setQuantity(drugInPharmacy.getQuantity()-quantity);
+				drugsInPharmacyRepository.save(drugInPharmacy);
+		}catch(Exception e) {
+			throw new Exception();
+		}
 	}
 
 	@Override

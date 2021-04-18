@@ -3,19 +3,33 @@ package ISA.Team54.Examination.repository;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 
 import ISA.Team54.Examination.enums.ExaminationStatus;
 import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
+import org.springframework.data.jpa.repository.QueryHints;
+
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 
 public interface ExaminationRepository extends JpaRepository<Examination, Long> {
 	public List<Examination> findAll();
 	public List<Examination> findByPatientId(Long patientId);
 	public List<Examination> findByEmplyeedIdAndStatus(Long id,ExaminationStatus es);
-	
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@QueryHints({@QueryHint(name="javax.persistence.lock.timeout", value="0")})
 	public Examination findById(int id);
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "0")})
 	public Examination findOneById(Long id);
 	public List<Examination> findByEmplyeedId(Long id);
 	public List<Examination> findByEmplyeedIdAndPharmacyId(Long emplyeedId,Long pharmacyId);
@@ -38,5 +52,7 @@ public interface ExaminationRepository extends JpaRepository<Examination, Long> 
 	
 	@Query("select e from Examination e where cast(start as java.util.Date) = ?1 and type = ?2 and status='Unfilled'")
 	public List<Examination> getFreeExaminationsForInterval(Date term, ExaminationType type);
-	
+
+	@Query("SELECT e FROM Examination e where pharmacy_id = ?1 and type = ?2 and status = ?3 and start > CURRENT_TIMESTAMP ")
+	List<Examination> getAllFutureExaminationsForPharmacy(long id, ExaminationType type, ExaminationStatus status);
 }

@@ -166,6 +166,24 @@ const routes = [
 
   },
   {
+    path: "/pharmacy/:id",
+    name: "PharmacyProfile",
+    component: () =>
+      import("../views/pharmacy/PharmacyProfile.vue")
+  },
+  {
+    path: "/edit-pharmacy/:id",
+    name: "EditPharmacyInfo",
+    component: () =>
+      import("../views/pharmacy/EditPharmacyInfo.vue")
+  },
+  {
+    path: "/reports-for-pharmacy/:id",
+    name: "PharmacyReports",
+    component: () =>
+      import("../views/pharmacy/PharmacyReports.vue")
+  },
+  {
     path: "/ratings",
     name: "Rating",
     component: () =>

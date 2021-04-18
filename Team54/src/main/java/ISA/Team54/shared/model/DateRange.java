@@ -18,23 +18,25 @@ public class DateRange {
 		super(); 
 	}
 
-
 	public DateRange(Date startDate, Date endDate) {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}	
 	public boolean isTheDateBetweenDates(Date date) {
+		final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
+
+	    long curTimeInMs = date.getTime();
+	    date = new Date(curTimeInMs + (30 * ONE_MINUTE_IN_MILLIS));
 		boolean a = date.compareTo(this.startDate) >= 0;
 		boolean b = date.compareTo(this.endDate) < 0; 
-	return 	a && b;
+		return 	a && b;
 	}
 	
 	
 	public Date getStartDate() {
 		return startDate;
 	}
-
-
+	
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
@@ -59,6 +61,16 @@ public class DateRange {
 			return true;
 		return false;
 	}
+//	public boolean isInRange(DateRange workingTime) {
+//		int workingDayEnd = workingTime.getStartDate().getHours() *60 + workingTime.getStartDate().getMinutes();
+//		int workingDayStart = workingTime.getEndDate().getHours()*60 +workingTime.getEndDate().getMinutes() ;
+//		int examinationStart = this.startDate.getHours()*60 + this.startDate.getMinutes();
+//		int examinationEnd = (int)this.endDate.getHours()*60+(int)this.endDate.getMinutes();
+//		
+//		if(workingTime.getStartDate().getTime()>=workingDayStart && examinationStart < workingDayEnd && examinationEnd>workingDayStart && examinationEnd<=workingDayEnd)
+//			return true;
+//		return false;
+//	}
 	
 	public boolean areOverlapping(DateRange time) {
 		if(isTheDateBetweenDates(time.getStartDate()) || isTheDateBetweenDates(time.getEndDate()))

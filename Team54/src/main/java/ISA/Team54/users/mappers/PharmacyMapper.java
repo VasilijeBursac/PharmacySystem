@@ -9,19 +9,32 @@ public class PharmacyMapper {
 		
 	public static Pharmacy PharmacyDTOToPharmacy(PharmacyDTO pharmacyDTO) {
 		Pharmacy pharmacy = new Pharmacy();
+		pharmacy.setId(pharmacyDTO.getId());
 		pharmacy.setName(pharmacyDTO.getName());	
 		pharmacy.setAddress(pharmacyDTO.getAddress());
 		pharmacy.setCity(pharmacyDTO.getCity());
 		pharmacy.setCountry(pharmacyDTO.getCountry());
+		pharmacy.setDescription(pharmacyDTO.getDescription());
 		return pharmacy;						
 	}
 	
-	public PharmacyDTO PharmacyToPharmacyDTO(Pharmacy pharmacy) {
+	public static PharmacyDTO PharmacyToPharmacyDTO(Pharmacy pharmacy) {
 		return new PharmacyDTO(
 				pharmacy.getId(),
 				pharmacy.getName(),
 				pharmacy.getAddress(),
+				pharmacy.getCity(),
+				pharmacy.getCountry(),
 				pharmacy.getRatings(),
-				pharmacy.getPharmacistPrice());
+				pharmacy.getPharmacistPrice(),
+				pharmacy.getDescription());
+	}
+	
+	public static void PharmacyDTOToPharmacyUpdateInfo(PharmacyDTO pharmacyDTO, Pharmacy pharmacy) {
+		pharmacy.setName(pharmacyDTO.getName());
+		pharmacy.setDescription(pharmacyDTO.getDescription());
+		pharmacy.setAddress(pharmacyDTO.getAddress());
+		pharmacy.setCity(pharmacyDTO.getCity());
+		pharmacy.setCountry(pharmacyDTO.getCountry());
 	}
 }

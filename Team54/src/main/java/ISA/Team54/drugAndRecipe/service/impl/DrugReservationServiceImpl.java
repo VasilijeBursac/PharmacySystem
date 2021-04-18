@@ -4,10 +4,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import ISA.Team54.drugAndRecipe.service.interfaces.IClock;
+import ISA.Team54.exceptions.DrugOutOfStockException;
+import ISA.Team54.shared.service.interfaces.EmailService;
+import ISA.Team54.users.service.interfaces.PenaltyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import ISA.Team54.drugAndRecipe.enums.ReservationStatus;
 import ISA.Team54.drugAndRecipe.model.Drug;
@@ -25,17 +31,17 @@ import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.repository.PatientRepository;
 import ISA.Team54.users.repository.PharmacistRepository;
 import ISA.Team54.users.repository.PharmacyRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class DrugReservationServiceImpl implements DrugReservationService {
 
 	@Autowired
@@ -56,8 +62,15 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 	@Autowired
 	private PharmacyRepository pharmacyRepository;
 
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private PenaltyService penaltyService;
+
+	@Transactional(readOnly = false, rollbackFor = DrugOutOfStockException.class)
 	@Override
-	public void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) {
+	public void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) throws Exception {
 		DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findOneByDrugInPharmacyId(drugInPharmacyId);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
@@ -68,9 +81,16 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 		reservation.setPatient(patient);
 		reservation.setStatus(ReservationStatus.Reserved);
 
-		drugReservationRepository.save(reservation);
+		DrugReservation drugReservation =  drugReservationRepository.save(reservation);
+		if(drugInPharmacy.getQuantity() == 0)
+			throw new DrugOutOfStockException();
 		drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - 1);
 		drugInPharmacyRepository.save(drugInPharmacy);
+
+		new Thread(() -> {
+			emailService.sendEmail("tim54isa@gmail.com","Zakazana rezervacija leka","Uspesno ste rezervisali lek." +
+					" Broj Vaše rezervacije s kojim ćete preuzeti lek je: " + drugReservation.getId());
+		}).start();
 	}
 
 	@Override
@@ -83,9 +103,10 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 
 	@Override
 	public void cancelDrugReservation(long id) throws Exception {
+		IClock clock = new ClockImpl();
 		DrugReservation drugReservation = drugReservationRepository.findById(id).orElse(null);
 		if (drugReservation != null) {
-			if (drugReservation.getReservationToDate().getTime() - new Date().getTime() > 24 * 60 * 60 * 1000) {
+			if (drugReservation.getReservationToDate().getTime() - clock.getDate().getTime() > 24 * 60 * 60 * 1000) {
 				drugReservation.setStatus(ReservationStatus.Canceled);
 				drugReservationRepository.save(drugReservation);
 			} else throw new InvalidTimeLeft();
@@ -102,12 +123,26 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 		return false;
 	}
 
-	public void sellDrug(long drugReservationId) {
-		DrugReservation drugReservation = drugReservationRepository.findOneById(drugReservationId);
-		DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findOneByDrugInPharmacyId(drugReservation.getReservedDrug().getDrugInPharmacyId());
-		drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - 1);
-		drugReservation.setStatus(ReservationStatus.Sold);
-		drugReservationRepository.save(drugReservation);
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void sellDrug(long drugReservationId) throws Exception {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) { 
+			// TODO Auto-generated catch block 
+			e.printStackTrace();
+		}
+		try {
+			DrugReservation drugReservation = drugReservationRepository.findOneById(drugReservationId);
+			if(drugReservation.getStatus() == ReservationStatus.Sold) {
+				throw new Exception();
+			}
+			DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findDrugInPharmacyById(drugReservation.getReservedDrug().getDrugInPharmacyId().getDrugId(),drugReservation.getReservedDrug().getDrugInPharmacyId().getPharmaciId());
+			drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - 1);
+			drugReservation.setStatus(ReservationStatus.Sold);
+			drugReservationRepository.save(drugReservation);
+		}catch(Exception e) {
+			throw new Exception();
+		}
 	}
 
 	private List<DrugReservation> getSoldReservationsForPatient(){
@@ -127,6 +162,16 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 		}
 
 		return pharmacies;
+	}
+
+	@Override
+	public void penalIfDeadlineOver() {
+		List<DrugReservation> reservations = drugReservationRepository.getPassedReservations(ReservationStatus.Reserved);
+		for (DrugReservation reservation : reservations) {
+			reservation.setStatus(ReservationStatus.NotTaken);
+			drugReservationRepository.save(reservation);
+			penaltyService.penalPatient(reservation.getPatient());
+		}
 	}
 
 	public Drug isDrugReservationAvailable(long reservationId) throws InvalidTimeLeft {

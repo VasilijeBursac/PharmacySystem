@@ -7,6 +7,7 @@ public class PharmacyDTO {
 	private String address;
 	private String city;
 	private String country;
+	private String description;
 	private double rating;
 	private double pharmacistPrice;	
 
@@ -24,15 +25,22 @@ public class PharmacyDTO {
 		this.city = city;
 		this.country = country;
 	}
-	public PharmacyDTO(long id, String name, String address, double rating, double pharmacistPrice) {
+	
+	
+public PharmacyDTO(long id, String name, String address, String city, String country, double rating,
+			double pharmacistPrice, String description) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
+		this.city = city;
+		this.country = country;
 		this.rating = rating;
 		this.pharmacistPrice = pharmacistPrice;
+		this.description = description;
 	}
-	
+
+
 	public long getId() {
 		return id;
 	}
@@ -89,4 +97,15 @@ public class PharmacyDTO {
 		this.country = country;
 	}
 
+
+	public String getDescription() {
+		return description;
+	}
+
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	
 }
