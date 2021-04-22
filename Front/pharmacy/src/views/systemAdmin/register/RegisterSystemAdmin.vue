@@ -97,7 +97,7 @@
             <div class="buttons text-center">                        
                 <b-button type="submit" variant="success" class="mr-2">
                     <b-icon-check></b-icon-check>
-                    Registruj se</b-button>
+                    Registruj </b-button>
                 <b-button type="reset" variant="danger">
                     <b-icon-x></b-icon-x>
                     Otkaži
@@ -150,20 +150,19 @@ export default {
                     role : 'ROLE_SYSTEM_ADMIN'
             })
             .then( () => {
-                  this.toast()  
+                  this.toast('Uspešno ste registrovali novog administratora sistema!','Uspešno!','success')  
                    
                 })                    
-                .catch(function (error) {
+                .catch(error => {
                     if(error.response.status === 500) {
-                    alert('Vec postoji korisnik sa unetim imejlom');               
+                        this.toast('Vec postoji korisnik sa unetim imejlom','Neuspešno', 'danger');               
                     }
                 });    
             }     
-        },
-        toast(){
-            this.$bvToast.toast(`Uspešno ste registrovali novog administratora sistema!`, {
-                title: 'Uspešno!',
-                variant: 'success',
+        },toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
                 autoHideDelay: 5000
             })
         },

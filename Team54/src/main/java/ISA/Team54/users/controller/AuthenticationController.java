@@ -1,5 +1,6 @@
 package ISA.Team54.users.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import ISA.Team54.drugAndRecipe.model.Drug;
+import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.exceptions.ResourceConflictException;
 import ISA.Team54.security.TokenUtils;
 import ISA.Team54.security.UserTokenState;
@@ -59,6 +62,7 @@ public class AuthenticationController {
 	
 	@Autowired
 	private PharmacyService pharmacyService;
+	
 
 	// Prvi endpoint koji pogadja korisnik kada se loguje.
 	// Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
@@ -78,9 +82,9 @@ public class AuthenticationController {
 		User user = (User) authentication.getPrincipal();
 		String jwt = tokenUtils.generateToken(user.getUsername());
 		int expiresIn = tokenUtils.getExpiredIn();
-
-
-		UserRole userRole = null;	 
+				
+			
+		UserRole userRole;	 
 		
 		boolean confirmation = user.getConfirmed();
 		
@@ -99,12 +103,11 @@ public class AuthenticationController {
 		} else if (authentication.getAuthorities().stream()
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_DERMATOLOGIST"))) {
 			userRole = UserRole.ROLE_DERMATOLOGIST;
-		} else if (authentication.getAuthorities().stream()
-		          .anyMatch(r -> r.getAuthority().equals("ROLE_PHARMACIST"))) {
+		} else {
 			userRole = UserRole.ROLE_PHARMACIST;
 		}
 		
-	
+		
 		// Vrati token kao odgovor na uspesnu autentifikaciju
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getId(), userRole, confirmation));
 	}
@@ -121,8 +124,8 @@ public class AuthenticationController {
 		
 		User user = this.pharmacyService.addPatient(userRequest);;			
 	
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/api/user/{userId}").buildAndExpand(user.getId()).toUri()); 
+	//	HttpHeaders headers = new HttpHeaders();
+	//	headers.setLocation(ucBuilder.path("/api/user/{userId}").buildAndExpand(user.getId()).toUri()); 
 		return new ResponseEntity<>(user, HttpStatus.CREATED); 
 	} 
 	
@@ -150,6 +153,7 @@ public class AuthenticationController {
 				user = this.pharmacyService.addSystemAdministrator(userRequest);	
 				break;
 		}
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/api/user/{userId}").buildAndExpand(user.getId()).toUri()); 
 		return new ResponseEntity<>(user, HttpStatus.CREATED); 

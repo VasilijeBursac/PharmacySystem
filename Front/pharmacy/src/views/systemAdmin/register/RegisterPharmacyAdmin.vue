@@ -92,17 +92,15 @@
                     placeholder="Unesite broj telefona "
                     required>
                 </b-form-input>
-            </b-form-group>          
-            <b-form-group id="pharmacies-group" label="Apoteka:" label-for="pharmacy-input" class="text-center">
-                 <b-select v-model="selected" >
-                    <option v-for="pharmacy in pharmacies" v-bind:key = "pharmacy" v-bind:value="pharmacy.id">{{pharmacy.name}}</option>
-                </b-select>
             </b-form-group>
+            <b-form-group id="pharmacies-group" label="Apoteka:" label-for="pharmacy-input">
+                    <b-form-select v-model="selected" :options="pharmacies"></b-form-select>
+            </b-form-group>          
 
             <div class="buttons text-center">                        
                 <b-button type="submit" variant="success" class="mr-2">
                     <b-icon-check></b-icon-check>
-                    Registruj se</b-button>
+                    Registruj </b-button>
                 <b-button type="reset" variant="danger">
                     <b-icon-x></b-icon-x>
                     Otkaži
@@ -131,7 +129,7 @@ export default {
             
             },
             pharmacies : [],
-            selected: '',
+            selected: null,
             passwordError : false,
             show: true,
          
@@ -144,6 +142,11 @@ export default {
             if(this.user.passwordCheck !== this.user.password){
                 this.passwordError = true;
             }
+            if( this.selected == null){
+                this.toast('Morate izabrati apoteku cijeg admina zelite da dodate!', 'Neuspešno', 'danger')
+                return;
+            }
+
             if(!this.passwordError){
                 this.$http
                 .post("auth/signupPharmacyAdmin",{
@@ -155,23 +158,22 @@ export default {
                     city : this.user.city,
                     country : this.user.country,
                     phoneNumber : this.user.phone,
-                    pharmacyId : this.selected.value
+                    pharmacyId : this.selected
             })
             .then( () => {
-                  this.toast()  
+                   this.toast('Uspešno ste registrovali novog administratora apoteke!','Uspešno!','success')  
     
                 })                    
-                .catch(function (error) {
+                .catch(error => {
                     if(error.response.status === 500) {
-                    alert('Vec postoji korisnik sa unetim imejlom');               
+                        this.toast('Vec postoji korisnik sa unetim imejlom','Neuspešno', 'danger');              
                     }
-                });    
+                });   
             }     
-        },
-        toast(){
-            this.$bvToast.toast(`Uspešno ste registrovali novog administratora apoteke!`, {
-                title: 'Uspešno!',
-                variant: 'success',
+        },toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
                 autoHideDelay: 5000
             })
         },
@@ -187,6 +189,7 @@ export default {
             this.user.city = ''
             this.user.phone = ''
             this.passwordError = false
+            this.selected = null
             // Trick to reset/clear native browser form validation state
          
             this.$nextTick(() => {
@@ -201,7 +204,17 @@ export default {
          this.$http
                 .get("pharmacy/allPharmacies")
                 .then( res => {   
-                        this.pharmacies = res.data        		
+                        this.pharmacies = []
+                        this.pharmacies.push({
+                            value: null,
+                            text: 'Izaberite apoteku'
+                        })
+                        res.data.forEach(pharmacy => {
+                        this.pharmacies.push({
+                            value: pharmacy.id,
+                            text: pharmacy.name
+                        })
+                    });      		
                 })       
     }
 }

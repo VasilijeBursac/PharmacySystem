@@ -159,18 +159,18 @@ insert into user_authority( user_id, authority_id) values (14,3);
 insert into user_authority( user_id, authority_id) values (15,6);
 insert into user_authority( user_id, authority_id) values (16,6);
 insert into user_authority( user_id, authority_id) values (19,6);		
-		
-insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points) values (1, 'Aspirin','231432', 'antibiotik', 'prasak', 'Jugoremedija', 'Uzimati dva puta dnevno', 5);
-insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points) values (2, 'Bensedin','125697','antibiotik', 'kapsula', 'Hemofarm', 'Uzimati jednom dnevno',3);
-insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points) values (3, 'Bisoprolol','365895', 'anestetik', 'mast', 'Jugoremedija', 'Uzimati tri puta dnevno',4);
-insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points) values (4, 'Brufen','023547', 'anetetik', 'gel', 'Hemofarm', 'Cuvati na hladnom', 5);
-insert into drug(id, name, code, type, shape, manifacturer, additional_Info, loyalty_points) values (5, 'Probiotic','785493', 'anestetik', 'sirup', 'Jugoremedija', 'Uzimati jendom denvo',5);
 
-insert into drug_specification(id, suggested_dose, drug_id) values (1, '20mg', 1);
-insert into drug_specification(id, suggested_dose, drug_id) values (2, '300mg', 2);
-insert into drug_specification(id, suggested_dose, drug_id) values (3, '1g', 3);
-insert into drug_specification(id, suggested_dose, drug_id) values (4, '10mg', 4);
-insert into drug_specification(id, suggested_dose, drug_id) values (5, '5mg', 5);
+insert into drug_specification(id, suggested_dose) values (1, '20mg');
+insert into drug_specification(id, suggested_dose) values (2, '300mg');
+insert into drug_specification(id, suggested_dose) values (3, '1g');
+insert into drug_specification(id, suggested_dose) values (4, '10mg');
+insert into drug_specification(id, suggested_dose) values (5, '5mg');
+		
+insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points, drug_specification_id) values (1, 'Aspirin','231432', 'antibiotik', 'prasak', 'Jugoremedija', 'Uzimati dva puta dnevno', 5, 1);
+insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points, drug_specification_id) values (2, 'Bensedin','125697','antibiotik', 'kapsula', 'Hemofarm', 'Uzimati jednom dnevno', 3, 2);
+insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points, drug_specification_id) values (3, 'Bisoprolol','365895', 'anestetik', 'mast', 'Jugoremedija', 'Uzimati tri puta dnevno', 4, 3);
+insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points, drug_specification_id) values (4, 'Brufen','023547', 'anetetik', 'gel', 'Hemofarm', 'Cuvati na hladnom', 5, 4);
+insert into drug(id, name, code, type, shape, manifacturer, additional_Info, loyalty_points, drug_specification_id) values (5, 'Probiotic','785493', 'anestetik', 'sirup', 'Jugoremedija', 'Uzimati jendom denvo', 5, 5);
 
 insert into substitute_drugs(substitute_drug_id,main_drug_id) values(2,1);
 insert into substitute_drugs(substitute_drug_id,main_drug_id) values(3,1);

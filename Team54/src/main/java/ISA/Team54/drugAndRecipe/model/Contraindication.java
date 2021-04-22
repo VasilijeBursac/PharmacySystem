@@ -1,9 +1,13 @@
 package ISA.Team54.drugAndRecipe.model;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,8 +30,8 @@ public class Contraindication {
 	private String name;
 	
 	@JsonBackReference(value="clinci_movement")
-	@ManyToMany(mappedBy = "contraindications")
-	private Set<DrugSpecification> drugSpecifications = new HashSet<DrugSpecification>();
+	@ManyToMany(mappedBy = "contraindications",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private List<DrugSpecification> drugSpecifications = new ArrayList<DrugSpecification>();
 	
 	public Contraindication() {
 		super();
@@ -37,8 +41,6 @@ public class Contraindication {
 		super();
 		this.name = name;
 	}
-
-
 
 	public long getId() {
 		return id;
@@ -56,11 +58,11 @@ public class Contraindication {
 		this.name = name;
 	}
 
-	public Set<DrugSpecification> getDrugSpecifications() {
+	public List<DrugSpecification> getDrugSpecifications() {
 		return drugSpecifications;
 	}
 
-	public void setDrugSpecifications(Set<DrugSpecification> drugSpecifications) {
+	public void setDrugSpecifications(List<DrugSpecification> drugSpecifications) {
 		this.drugSpecifications = drugSpecifications;
 	}
 	

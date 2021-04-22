@@ -1,12 +1,16 @@
 package ISA.Team54.users.service.implementations;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.drugAndRecipe.model.DrugReservation;
+import ISA.Team54.rating.model.Rating;
 import ISA.Team54.users.model.*;
+
+import org.hibernate.mapping.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
@@ -83,7 +87,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 		SystemAdministrator systemAdministrator = new SystemAdministrator();
 		UserMapper.UserRequestDTOToUser(userRequest,systemAdministrator);
 		systemAdministrator.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-		List<Authority> auth = authService.findByname("ROLE_SISTEM_ADMIN");
+		List<Authority> auth = authService.findByname("ROLE_SYSTEM_ADMIN");
 		systemAdministrator.setAuthorities(auth);
 		return systemAdministratorRepository.save(systemAdministrator);			
 	}
@@ -103,7 +107,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 		PharmacyAdministratorRequestDTO pharmacyAdministratorRequestDTO) {
 		PharmacyAdministrator pharmacyAdministrator = UserMapper.PharmacyAdministratorRequestDTOToPharmacist(pharmacyAdministratorRequestDTO);
 		pharmacyAdministrator.setPassword(passwordEncoder.encode(pharmacyAdministratorRequestDTO.getPassword()));
-		List<Authority> auth = authService.findByname("ROLE_ADMIN");
+		List<Authority> auth = authService.findByname("ROLE_PHARMACY_ADMIN");
 		pharmacyAdministrator.setAuthorities(auth);
 		pharmacyAdministrator.setPharmacy(pharmacyRepository.findById(pharmacyAdministratorRequestDTO.getPharmacyId()));
 		return pharmacyAdministratorRepository.save(pharmacyAdministrator);			

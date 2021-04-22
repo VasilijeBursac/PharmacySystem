@@ -71,7 +71,7 @@ export default {
             }
 
             if (this.form.newPassword != this.form.repeatedNewPassword){
-                this.toast('danger', 'Neuspešno!', 'Greška pri izmeni lozinke! Nove lozinke se ne poklapa!')
+                this.toast('danger', 'Neuspešno!', 'Greška pri izmeni lozinke! Nove lozinke se ne poklapaju!')
                 return
             }
             else{
@@ -109,9 +109,10 @@ export default {
                             this.toast('danger', 'Neuspešno!', 'Greška pri izmeni lozinke!')
                         }
                     })
-                    .catch(() => 
+                    .catch((error) => {
+                        alert(error.response.status)
                         this.toast('danger', 'Neuspešno!', 'Greška pri izmeni lozinke! Niste uneli ispravnu staru lozinku!')
-                    )
+                    })
 
             }
         },

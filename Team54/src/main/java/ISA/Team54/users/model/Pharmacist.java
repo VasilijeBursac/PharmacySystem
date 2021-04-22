@@ -41,7 +41,6 @@ public class Pharmacist extends User{
 		super();
 	}
 	
-
 	public Pharmacy getPharmacy() {
 		return pharmacy;
 	}
@@ -61,9 +60,11 @@ public class Pharmacist extends User{
 	public double getRatings() {
 		double rating = 0;
 		int count = 0;
-		for (Rating r : ratings) {
-			rating += r.getRating();
-			count++;
+		if(ratings != null) {
+			for (Rating r : ratings) {
+				rating += r.getRating();
+				count++;
+			}
 		}
 		return count != 0 ? (double)rating/count : 0;
 	}

@@ -14,7 +14,11 @@ public class ContraindicationDTO {
 		this.id = id;
 		this.name = name;
 	}
-
+	
+	public ContraindicationDTO(String name) {
+		super();
+		this.name = name;
+	}
 
 	public long getId() {
 		return id;

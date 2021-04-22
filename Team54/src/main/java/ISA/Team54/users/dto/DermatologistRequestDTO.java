@@ -20,6 +20,24 @@ public class DermatologistRequestDTO {
 	private double price;
 	
 
+	public DermatologistRequestDTO() {
+		super();
+	}
+
+	public DermatologistRequestDTO(String email, String password, String firstName, String lastName, String address,
+			String city, String country, String phoneNumber, double price) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.city = city;
+		this.country = country;
+		this.phoneNumber = phoneNumber;
+		this.price = price;
+	}
+
 	public double getPrice() {
 		return price;
 	}

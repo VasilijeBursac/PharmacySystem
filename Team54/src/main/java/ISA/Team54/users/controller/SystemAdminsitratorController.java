@@ -21,7 +21,7 @@ public class SystemAdminsitratorController {
 	private SystemAdministratorService systemAdministratorService;
 	
 	@GetMapping("/allSystemAdmins")
-	//@PreAuthorize("hasRole('SYSTEM_ADMIN')")
+	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public List<UserInfoDTO> findAll(){
 		List<UserInfoDTO> userDTOs = new ArrayList<UserInfoDTO>();
 		this.systemAdministratorService.findAll().forEach(systemAdministrator -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(systemAdministrator)));

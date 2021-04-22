@@ -10,7 +10,7 @@ import ISA.Team54.drugAndRecipe.model.Drug;
 
 public interface DrugRepository extends JpaRepository<Drug, Long> {
 	public List<Drug> findAll();
-	public Drug findOneById(Long id);
+	public Drug findOneById(long id);
 	
 	public List<Drug> findByNameContainingIgnoreCase(String pattern);
 }

@@ -8,10 +8,10 @@ export default {
   data() {
     return {
       fields: [   
-        { key: "name", sortable: true },
-        { key: "address", sortable: true },
-        { key: "city", sortable: true },
-        { key: "country", sortable: true },
+        { label: "Ime", key: "name", sortable: true },
+        { label: "Adresa", key: "address", sortable: true },
+        { label: "Grad", key: "city", sortable: true },
+        { label: "Drzava", key: "country", sortable: true },
       ],
       transProps: {
         name: "flip-list"
@@ -21,8 +21,7 @@ export default {
   },created() {
             // GET request for examination information
             this.$axios.get("pharmacy/allPharmacies")
-            .then(response => { 
-               
+            .then(response => {              
                 this.items = response.data;
             
             })

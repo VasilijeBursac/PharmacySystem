@@ -21,6 +21,11 @@ public class DrugSpecificationImpl implements DrugSpecificationService{
 	public DrugSpecification addDrugSpecification(DrugSpecification drugSpecification) {
 		return drugSpecificationRepository.save(drugSpecification);
 	}
+
+	@Override
+	public DrugSpecification findOneById(int id) {
+		return drugSpecificationRepository.findById((long)id);
+	}
 	
 
 }

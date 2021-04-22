@@ -3,6 +3,7 @@ package ISA.Team54.drugAndRecipe.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,12 +29,12 @@ public class DrugSpecification {
 	private long id;
 	
 	@JsonManagedReference(value="clinci_movement")
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinTable(name = "contraindicationsInDrugSpecification",joinColumns= @JoinColumn(name = "drugSpecification_id", referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(name = "contraindication_id",referencedColumnName= "id"))
 	private List<Contraindication> contraindications = new ArrayList<Contraindication>();
 	
 	@JsonManagedReference(value="ingredient_clinci_movement")
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinTable(name = "ingredientInDrugSpecification",joinColumns= @JoinColumn(name = "drugSpecification_id", referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(name = "ingredient_id",referencedColumnName= "id"))	
 	private List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
@@ -41,9 +42,6 @@ public class DrugSpecification {
 	@Column(unique = false,nullable = false)
 	private String suggestedDose;	
 
-	@OneToOne(fetch = FetchType.LAZY)
-	private Drug drug;
-	
 	public DrugSpecification() {
 		super();
 	}
@@ -54,19 +52,20 @@ public class DrugSpecification {
 		this.id = id;
 		this.suggestedDose = suggestedDose;
 	}
-
-
+	
+	public DrugSpecification(String suggestedDose) {
+		super();
+		this.suggestedDose = suggestedDose;
+	}
+	
 	public DrugSpecification(List<Contraindication> contraindications, List<Ingredient> ingredients,
-			String suggestedDose,Drug drug) {
+			String suggestedDose) {
 		super();
 		this.contraindications = contraindications;
 		this.ingredients = ingredients;
 		this.suggestedDose = suggestedDose;
-		this.drug = drug;
+
 	}
-
-
-	
 
 	public long getId() {
 		return id;
@@ -105,4 +104,6 @@ public class DrugSpecification {
 		this.suggestedDose = suggestedDose;
 	}
 
+
+	
 }

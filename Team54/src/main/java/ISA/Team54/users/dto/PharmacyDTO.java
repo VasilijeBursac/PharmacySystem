@@ -17,13 +17,13 @@ public class PharmacyDTO {
 	}
 	
 
-	public PharmacyDTO(String name, String address,String city,String country) {
-		super();
-		
+	public PharmacyDTO(String name, String address,String city,String country,double pharmacistPrice) {
+		super();		
 		this.name = name;
 		this.address = address;
 		this.city = city;
 		this.country = country;
+		this.pharmacistPrice = pharmacistPrice;
 	}
 	
 	

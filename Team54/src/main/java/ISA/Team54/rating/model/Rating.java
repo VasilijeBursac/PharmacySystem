@@ -1,7 +1,9 @@
 package ISA.Team54.rating.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,31 +28,39 @@ public class Rating {
 	private Long id;
 	
 	@JsonBackReference
-	@ManyToOne
-	@Nullable
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Dermatologist dermatologist;
 	
 	@JsonBackReference
-	@ManyToOne
-	@Nullable
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Pharmacist pharmacist;
 	
 	@JsonBackReference
-	@ManyToOne
-	@Nullable
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Pharmacy pharmacy;
 
 	@OneToOne
 	private Patient patient;
 	
 	@JsonBackReference
-	@ManyToOne
-	@Null
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Drug drug;
 	
 	@Column(unique = false,nullable = false)
 	private double rating;
 	
+	public Rating(Long id, Dermatologist dermatologist, Pharmacist pharmacist, Pharmacy pharmacy, Patient patient,
+			Drug drug, double rating) {
+		super();
+		this.id = id;
+		this.dermatologist = dermatologist;
+		this.pharmacist = pharmacist;
+		this.pharmacy = pharmacy;
+		this.patient = patient;
+		this.drug = drug;
+		this.rating = rating;
+	}
+
 	public Rating() {
 		super();
 	}

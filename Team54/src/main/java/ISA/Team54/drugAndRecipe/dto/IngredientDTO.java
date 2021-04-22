@@ -3,17 +3,23 @@ package ISA.Team54.drugAndRecipe.dto;
 public class IngredientDTO {
 	
 	private long id;
-	private String ingredient;
+	private String name;
 	
 	public IngredientDTO() {
 		super();
 	}
 	
-	public IngredientDTO(long id, String ingredient) {
+	public IngredientDTO(long id, String name) {
 		super();
 		this.id = id;
-		this.ingredient = ingredient;
+		this.name = name;
 	}
+	
+	public IngredientDTO(String name) {
+		super();
+		this.name = name;
+	}
+	
 
 	/**
 	 * @return the id
@@ -32,15 +38,15 @@ public class IngredientDTO {
 	/**
 	 * @return the ingredient
 	 */
-	public String getIngredient() {
-		return ingredient;
+	public String getName() {
+		return name;
 	}
 
 	/**
 	 * @param ingredient the ingredient to set
 	 */
-	public void setIngredient(String ingredient) {
-		this.ingredient = ingredient;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	

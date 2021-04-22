@@ -1,7 +1,7 @@
 
 <template>
     <div class="register">
-        <b-form id = "form" v-if="show">
+        <b-form id = "form" v-if="show" @submit="onSubmit" @reset="onReset">
             <b-row>
                 <b-col>
                 <b-form-group id="name-group" label="Naziv:" label-for="name-input" class="text-center">
@@ -24,7 +24,7 @@
                     </b-form-input>
                 </b-form-group>
 
-                <b-form-group id="type-group" label="Tip leka:" label-for="typa-input" class="text-center">
+                <b-form-group id="type-group" label="Tip leka:" label-for="type-input" class="text-center">
                     <b-form-input
                         class="text-center"
                         id="type-input"
@@ -72,7 +72,7 @@
                     type = "number"
                     min = "0"
                     id="loyaltyPoints-input"
-                    v-model="drug.loyaltyPoints"
+                    v-model="drug.loyalityPoints"
                     placeholder="Unesite broj lojalti poena"
                     required>
                 </b-form-input>
@@ -100,7 +100,7 @@
                             id="contraindication-input"
                             v-model="drug.contraindication"
                             placeholder="Unesite nezeljeno dejstvo"
-                            required>
+                            >
                         </b-form-input>
                     
                     </b-form-group>
@@ -109,9 +109,8 @@
                     </b-button>
                 </div>
                 <div id="contraindications-table">
-                    <b-table id = "contraindicationsTable" striped  :tbody-transition-props="transProps" :items="drug.contraindications" :fields="Contraindicationfields">
-                           <template #cell(Ukloni)="row">
-                                {{row.value}}
+                    <b-table id = "contraindicationsTable" striped :items="drug.contraindications" :fields="Contraindicationfields">
+                           <template #cell(Ukloni)="row">                             
                                 <b-button @click="deleteContraindication(row.item)">
                                     <b-icon-x></b-icon-x>                               
                                 </b-button>
@@ -127,7 +126,7 @@
                             id="ingredient-input"
                             v-model="drug.ingredient"
                             placeholder="Unesite sastojak"
-                            required>
+                            >
                         </b-form-input>
                     
                     </b-form-group>
@@ -136,7 +135,7 @@
                     </b-button>
                 </div>
                 <div id="ingredients-table">
-                    <b-table id = "ingredientsTable" striped  :tbody-transition-props="transProps" :items="drug.ingredients" :fields="Ingredientfields">
+                    <b-table id = "ingredientsTable" striped :items="drug.ingredients" :fields="Ingredientfields">
                         <template #cell(Ukloni)="row">
                             <b-button @click="deleteIngredient(row.item)" >
                                  <b-icon-x></b-icon-x>                               
@@ -148,10 +147,8 @@
         </b-row>
         <b-row>
             <b-col>
-                 <b-form-group id="substituteDrugs-group" label="Izaberi zamenski lek:" label-for="substituteDrugs-input" class="text-center">
-                    <b-select v-model="selected" >
-                        <option v-for="sdrug in allDrugs" v-bind:key = "sdrug" v-bind:value="sdrug">{{sdrug.name}}</option>
-                    </b-select>
+                <b-form-group id="substituteDrugs-group" label="Izaberi zamenski lek:" label-for="substituteDrugs-input">
+                    <b-form-select v-model="selected" :options="allDrugs"></b-form-select>
                 </b-form-group>
                 <b-button  @click="addSubstituteDrug()" class="mr-2">
                         Dodaj zamenski lek
@@ -159,7 +156,7 @@
             </b-col>
              <b-col>
                  <div id="substituteDrugs-table">
-                    <b-table id = "substituteDrugsTable" striped  :tbody-transition-props="transProps" :items="drug.substituteDrugs" :fields="SubDrugfields">
+                    <b-table id = "substituteDrugsTable" striped :items="drug.substituteDrugs" :fields="SubDrugfields">
                         <template #cell(Ukloni)="row">
                             <b-button @click="deleteSubstitueDrug(row.item)" >
                                  <b-icon-x></b-icon-x>                               
@@ -169,16 +166,16 @@
                 </div>
             </b-col>
         </b-row>
-        </b-form>
         <div class="buttons text-center">                        
-                <b-button @click="onSubmit()" variant="success" class="mr-2">
+                <b-button type = "submit" variant="success" class="mr-2">
                     <b-icon-check></b-icon-check>
                     Dodaj lek</b-button>
-                <b-button @click="onReset()" variant="danger">
+                <b-button type = "reset" variant="danger">
                     <b-icon-x></b-icon-x>
                     Otkaži
                 </b-button>
             </div>
+        </b-form>
     </div>
 </template>
 
@@ -195,16 +192,18 @@ export default {
                 shape: '',
                 manifacturer: '',
                 additionalInfo: '',
-                loyaltyPoints: '',
+                loyalityPoints: '',
                 suggestedDose: '' ,
                 contraindication: '',
                 contraindications: [],
                 ingredient: '',
                 ingredients: [],
-                substituteDrugs: []
+                substituteDrugs: [],
+                substituteDrugsIds: []
             },
             allDrugs: [],
-            selected: '',
+            selected: null,
+            drugSpecification: null,
             Contraindicationfields: [{
                 key: 'name',
                 label: 'Uneta nezeljena dejstva',
@@ -226,7 +225,6 @@ export default {
                  this.drug.contraindications.push({ name : this.drug.contraindication}); 
                  this.drug.contraindication = '';              
             }
-           
         },
         addIngredient(){
             if(this.drug.ingredient !== ""){
@@ -235,62 +233,90 @@ export default {
             }
            
         },
-         deleteContraindication(deletedContraindication){
-          var newArray = this.drug.contraindications.filter(function (contraindication) {
+        deleteContraindication(deletedContraindication){
+          var newArray = this.drug.contraindications.filter(contraindication => {
           return contraindication !== deletedContraindication;
         });
           this.drug.contraindications = newArray
         },
-         deleteIngredient(deletedIngredient){
-          var newArray = this.drug.ingredients.filter(function (ingredient) {
+        deleteIngredient(deletedIngredient){
+          var newArray = this.drug.ingredients.filter(ingredient => {
           return ingredient !== deletedIngredient;
         });
           this.drug.ingredients = newArray
         },
-         addSubstituteDrug(){
-          if(this.selected !== "" && !this.drug.substituteDrugs.includes(this.selected)){
-                 this.drug.substituteDrugs.push(this.selected); 
-                 this.selected = '';              
+        addSubstituteDrug(){
+          if(this.selected !== null && !this.drug.substituteDrugs.includes(this.selected)){
+                 this.drug.substituteDrugs.push(this.selected);
+                 this.drug.substituteDrugsIds.push(this.selected.id) 
+                 this.selected = null;              
             }
         },
         deleteSubstitueDrug(deletedSubstitueDrug){
-          var newArray = this.drug.substituteDrugs.filter(function (substituteDrug) {
-          return substituteDrug !== deletedSubstitueDrug;
+            var newArray = this.drug.substituteDrugs.filter(substituteDrug => {
+            return substituteDrug !== deletedSubstitueDrug;
         });
           this.drug.substituteDrugs = newArray
+
+        var newAIdsArray = this.drug.substituteDrugsIds.filter(sdId => {
+            return sdId !== deletedSubstitueDrug.id;
+        });
+          this.drug.substituteDrugsIds = newAIdsArray
+
         },
-            onSubmit() {
-                alert(JSON.stringify(this.drug));
-                this.$http
+        onSubmit(event) {  
+            event.preventDefault() 
+            this.addDrugSpecification()      
+             
+        },
+        addDrugSpecification(){
+            this.$http
+                .post("drugSpecification/addDrugSpecification",{
+                    contraindications : this.drug.contraindications,
+                    ingredients : this.drug.ingredients,
+                    suggestedDose : this.drug.suggestedDose            
+            })
+            .then( res => {               
+                       this.drugSpecification = res.data.id;
+                       this.addDrug() 
+                })                    
+                .catch(error => {
+                    if(error.response.status === 500) {
+                        this.toast('Greska na serverskoj strani!','Neuspešno', 'danger');                
+                    }
+                });       
+        },
+        addDrug(){
+             this.$http
                 .post("drugs/addDrug",{
                     code : this.drug.code,
-                    loyalityPoints : this.drug.loyaltyPoints,
+                    loyalityPoints : this.drug.loyalityPoints,
                     name : this.drug.name,
                     type : this.drug.type,
                     shape : this.drug.shape,
                     manifacturer: this.drug.manifacturer,
                     additionalInfo : this.drug.additionalInfo,
-                    substituteDrugs : this.drug.substituteDrugs,
+                    substituteDrugs : this.drug.substituteDrugsIds,
+                    drugSpecification : this.drugSpecification   
             })
-            .then( () => {
-                  this.toast()  
-                   
+            .then(() => {
+                    this.toast('Uspešno ste dodali novi lek!','Uspešno!','success')     
                 })                    
-                .catch(function (error) {
+                .catch(error => {
                     if(error.response.status === 500) {
-                    alert('Error');               
+                        this.toast('Greska na serverskoj strani!','Neuspešno', 'danger');                
                     }
                 });       
         },
-        toast(){
-            this.$bvToast.toast(`Uspešno ste dodali novi lek!`, {
-                title: 'Uspešno!',
-                variant: 'success',
+         toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
                 autoHideDelay: 5000
             })
         },
-        onReset() {
-         
+        onReset(event) {
+            event.preventDefault() 
             // Reset our form values
             this.drug.name = ''
             this.drug.code = ''
@@ -305,7 +331,9 @@ export default {
             this.drug.loyaltyPoints = ''
             this.drug.suggestedDose = ''
             this.drug.substituteDrugs = []
-            this.selected = ''
+            this.drug.substituteDrugsIds = []
+            this.drugSpecification = null
+            this.selected = null
           
             // Trick to reset/clear native browser form validation state
             this.show = false
@@ -323,9 +351,19 @@ export default {
          this.$http
                 .get("drugs/")
                 .then( res => {   
-                        this.allDrugs= res.data        		
+                        this.allDrugs = []
+                        this.allDrugs.push({
+                            value: null,
+                            text: 'Bez zamenskih lekova'
+                        })
+                        res.data.forEach(sDrug => {
+                        this.allDrugs.push({
+                            value: sDrug,
+                            text: sDrug.name
+                        })
+                    });      	        		
                 })       
-    }
+    } 
 }
 </script>
 <style scoped>

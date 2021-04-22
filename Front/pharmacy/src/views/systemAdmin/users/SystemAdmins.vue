@@ -9,12 +9,12 @@ export default {
     return {
       fields: [   
         { key: "email", sortable: true },
-        { key: "firstName", sortable: true },
-        { key: "lastName", sortable: true },
-        { key: "address", sortable: true },
-        { key: "city", sortable: true },
-        { key: "country", sortable: true },
-         { key: "phoneNumber", sortable: true }
+        { label: "Ime", key: "name", sortable: true },
+        { label: "Prezime", key: "surname", sortable: true },
+        { label: "Adresa", key: "address", sortable: true },
+        { label: "Grad", key: "city", sortable: true },
+        { label: "Drzava", key: "country", sortable: true },
+         { label: "Telefon", key: "phoneNumber", sortable: true }
       ],
       transProps: {
         name: "flip-list"
@@ -24,10 +24,8 @@ export default {
   },created() {
             // GET request for examination information
             this.$axios.get("http://localhost:9001/systemAdmin/allSystemAdmins")
-            .then(response => { 
-                
-                this.items = response.data;
-            
+            .then(response => {               
+                this.items = response.data;           
             })
             .catch(error => {
             this.errorMessage = error.message;

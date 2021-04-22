@@ -7,7 +7,12 @@ public class ContraindicationMapper {
 	
 	public static Contraindication ContraindicationDTOToContraindication(ContraindicationDTO contraindicationDTO) {
 		Contraindication contraindication = new Contraindication(contraindicationDTO.getName());
-		contraindication.setId(contraindicationDTO.getId());
 		return contraindication;
 	}
+	
+	public static ContraindicationDTO ContraindicationToContraindicationDTO(Contraindication contraindication) {
+		ContraindicationDTO contraindicationDTO = new ContraindicationDTO(contraindication.getName());
+		return contraindicationDTO;
+	}
+	
 }

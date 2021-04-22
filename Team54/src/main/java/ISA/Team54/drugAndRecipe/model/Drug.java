@@ -1,4 +1,4 @@
-package ISA.Team54.drugAndRecipe.model;
+ package ISA.Team54.drugAndRecipe.model;
 
 import java.util.List;
 import java.util.Set;
@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 public class Drug {
 	@Id
-	@SequenceGenerator(name = "DrugSG", sequenceName = "DrugSeq",initialValue = 6,allocationSize = 1)
+	@SequenceGenerator(name = "DrugSG", sequenceName = "DrugSeq1",initialValue = 6,allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DrugSG")
 	private long id;
 	@Column(unique = false,nullable = false)
@@ -51,23 +51,24 @@ public class Drug {
 	@ManyToMany(mappedBy="drugs")
 	private Set<ERecipe> erecipes;
 
-	@OneToOne(mappedBy = "drug",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+
+	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private DrugSpecification drugSpecification;
 
 	@JsonManagedReference	
 	@OneToMany(mappedBy = "drug", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Set<Rating> ratings;
 	
-	@JsonManagedReference
-	@ManyToMany
+	@JsonBackReference
+	@ManyToMany( cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinTable(name="substituteDrugs",
 	 joinColumns=@JoinColumn(name="mainDrugId"),
 	 inverseJoinColumns=@JoinColumn(name="substituteDrugId")
 	)
 	private List<Drug> substituteDrugs;
 
-	@JsonBackReference
-	@ManyToMany
+	@JsonManagedReference
+	@ManyToMany( cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinTable(name="substituteDrugs",
 	 joinColumns=@JoinColumn(name="substituteDrugId"),
 	 inverseJoinColumns=@JoinColumn(name="mainDrugId")
@@ -78,7 +79,15 @@ public class Drug {
 		super();
 	}
 
-	public Drug(String name, String code, String type, String shape, String manifacturer, String additionalInfo,int loyaltyPoints, List<Drug> substituteDrugs) {
+	public Drug(long id, String name, String code, int loyaltyPoints) {
+		this.id = id;
+		this.name = name;
+		this.code = code;
+		this.loyaltyPoints = loyaltyPoints;
+	}
+	
+	public Drug(String name, String code, String type, String shape, String manifacturer, String additionalInfo,
+			int loyaltyPoints) {
 		super();
 		this.name = name;
 		this.code = code;
@@ -87,7 +96,6 @@ public class Drug {
 		this.manifacturer = manifacturer;
 		this.additionalInfo = additionalInfo;		
 		this.loyaltyPoints = loyaltyPoints;
-		this.substituteDrugs = substituteDrugs;
 	}
 	
 	public long getId() {
@@ -200,6 +208,23 @@ public class Drug {
 
 	public void setLoyaltyPoints(int loyaltyPoints) {
 		this.loyaltyPoints = loyaltyPoints;
+	}
+
+	public double getRatings() {
+		double rating = 0;
+		int count = 0;
+		if(ratings != null) {
+			for (Rating r : ratings) {
+				rating += r.getRating();
+				count++;
+			}
+		}
+		
+		return count != 0 ? (double)rating/count : 0;
+	}
+
+	public void setRatings(Set<Rating> ratings) {
+		this.ratings = ratings;
 	}
 
 	

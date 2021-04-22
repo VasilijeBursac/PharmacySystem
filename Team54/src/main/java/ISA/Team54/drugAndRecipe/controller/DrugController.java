@@ -3,6 +3,7 @@ package ISA.Team54.drugAndRecipe.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.internal.runners.model.EachTestNotifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,12 +16,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import ISA.Team54.drugAndRecipe.dto.DrugDTO;
 import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.dto.DrugSpecificationDTO;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
 import ISA.Team54.drugAndRecipe.mapper.DrugSpecificationMapper;
+import ISA.Team54.drugAndRecipe.model.Contraindication;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugSpecification;
 import ISA.Team54.drugAndRecipe.repository.ContraindicationRepository;
@@ -28,6 +32,8 @@ import ISA.Team54.drugAndRecipe.repository.IngredientRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugSpecificationService;
+import ISA.Team54.users.dto.UserInfoDTO;
+import ISA.Team54.users.mappers.UserInfoMapper;
 import ISA.Team54.users.service.interfaces.PharmacyService;
 
 @RestController
@@ -76,17 +82,19 @@ public class DrugController {
 	}
 	
 	@GetMapping("")
-	public List<Drug> getAll(){
-		return drugService.getAllDrugs();
+	public List<DrugDTO> getAll(){
+		List<DrugDTO> drugDTOs = new ArrayList<DrugDTO>();
+		this.drugService.getAllDrugs().forEach(drug -> drugDTOs.add(DrugMapper.DrugIntoDrugDTOForTable(drug)));
+		return drugDTOs;
 	}
 	
 	@PostMapping("/addDrug")
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public  ResponseEntity<Drug> addDrug(@RequestBody DrugDTO drugDTO){
-		Drug d = new Drug(drugDTO.getName(),drugDTO.getCode(),drugDTO.getType(),drugDTO.getShape(),drugDTO.getManifacturer(),drugDTO.getAdditionalInfo(),drugDTO.getLoyalityPoints(),drugDTO.getSubstituteDrugs());	
-		//Drug newDrug = drugService.addDrug(DrugMapper.DrugDTOIntoDrug(drugDTO));
-		//newDrug.setSubstituteDrugs(drugDTO.getSubstituteDrugs());
-		return new ResponseEntity<>(drugService.addDrug(d), HttpStatus.OK);	
+		Drug newDrug = DrugMapper.DrugDTOIntoDrug(drugDTO);
+		newDrug.setDrugSpecification(drugSpecificationService.findOneById(drugDTO.getDrugSpecification()));
+		newDrug.setSubstituteDrugs(drugService.getSubstituteDrugsForNewDrug(drugDTO.getSubstituteDrugs()));		
+		return new ResponseEntity<>(drugService.addDrug(newDrug), HttpStatus.OK);	
 	} 
 
 	@GetMapping("/byPharmacyId/{pharmacyId}")
