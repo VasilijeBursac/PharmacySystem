@@ -153,25 +153,30 @@ export default {
                             email : this.user.email,
                             password : this.user.password
                         })
-                    .then( (response) => {
-                        this.toast()                                                   
-                        this.$store.commit('setUserRole',response.data.role);
-                        this.$store.commit('setUserId',response.data.userId);
-                        this.$store.commit('setJWT',response.data.accessToken);
-                        this.$router.push('patient-profile');   
-                    }); 
+                        .then( (response) => {
+                                                                     
+                            this.$store.commit("setUserRole", response.data.role);
+                            this.$store.commit("setUserId", response.data.userId);
+                            this.$store.commit("setJWT", response.data.accessToken);
+                            localStorage.setItem("UserRole", response.data.role);
+                            localStorage.setItem("UserId", response.data.userId);
+                            localStorage.setItem("JWT", response.data.accessToken);
+                            localStorage.setItem("Confirmed", response.data.confirmed);
+                            this.$router.push('patient-profile');   
+                            window.location.reload();
+                        }); 
                 })                    
-                .catch(function (error) {
-                    if(error.response.status === 500) {
-                    alert('Vec postoji korisnik sa unetim imejlom');               
+                .catch((error) => {
+                    if(error.response.status === 500) {                 
+                        this.toast('Vec postoji korisnik sa unetim imejlom!', 'Neuspešno', 'danger')  
                     }
                 });    
             }     
         },
-        toast(){
-            this.$bvToast.toast(`Uspešno ste se ulogovali!`, {
-                title: 'Uspešno!',
-                variant: 'success',
+         toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
                 autoHideDelay: 5000
             })
         },

@@ -16,6 +16,9 @@ public interface DrugService {
 	DrugSpecification getSpecificationForDrug(Long drugId);
 	List<Drug> getAllDrugs();
 	Drug findById(long id);
+	Drug addDrug(Drug drug);
 	public boolean isPatientAlergicOnDrug(Long patientId, Long drugId);
 	public List<Drug> getSubstituteForDrug(Long drugId);
+	public List<Drug> getSubstituteDrugsForNewDrug(List<Integer> substituteDrugsIds);
+
 }

@@ -156,6 +156,14 @@ const routes = [
     name: "Pharmacies",
     component: () =>
       import("../views/systemAdmin/PharmacyPage.vue")
+
+  }, 
+  {
+    path: "/drugsPage",
+    name: "Drugs",
+    component: () =>
+      import("../views/systemAdmin/DrugsPage.vue")
+
   },
   {
     path: "/pharmacy/:id",
@@ -180,6 +188,7 @@ const routes = [
     name: "Rating",
     component: () =>
       import("../views/patient/rating/Rating.vue")
+
   }
 ];
 

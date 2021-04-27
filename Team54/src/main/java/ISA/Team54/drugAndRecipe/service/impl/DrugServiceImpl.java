@@ -27,7 +27,7 @@ import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.repository.PatientRepository;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 public class DrugServiceImpl implements DrugService {
 
 	@Autowired
@@ -141,6 +141,18 @@ public class DrugServiceImpl implements DrugService {
 	public List<Drug> getSubstituteForDrug(Long drugId) {
 		Drug mainDrug = drugRepository.findOneById((long)drugId);
 		 return mainDrug.getMainDrugs();
+	}
+
+	@Override
+	public Drug addDrug(Drug drug) {
+		return drugRepository.save(drug);
+	}
+
+	@Override
+	public List<Drug> getSubstituteDrugsForNewDrug(List<Integer> substituteDrugsIds) {
+		List<Drug> substituteDrugs = new ArrayList<>();
+		substituteDrugsIds.forEach(subDrugId -> substituteDrugs.add(drugRepository.findOneById((long)subDrugId)));
+		return substituteDrugs;
 	}
 	
 }

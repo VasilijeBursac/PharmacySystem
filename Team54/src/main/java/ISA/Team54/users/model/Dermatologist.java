@@ -23,13 +23,12 @@ public class Dermatologist extends User{
 	private double price;
 	
 	@JsonManagedReference	
-	@OneToMany(mappedBy = "dermatologist", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "dermatologist", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Set<Rating> ratings;
 	
 	@OneToMany(mappedBy="dermatologist",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<DermatologistWorkSchedule> workSchedules;
-	
-	
+		
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Pharmacy> pharmacys;
 	
@@ -51,10 +50,13 @@ public class Dermatologist extends User{
 	public double getRatings() {
 		double rating = 0;
 		int count = 0;
-		for (Rating r : ratings) {
-			rating += r.getRating();
-			count++;
+		if(ratings != null) {
+			for (Rating r : ratings) {
+				rating += r.getRating();
+				count++;
+			}
 		}
+		
 		return count != 0 ? (double)rating/count : 0;
 	}
 

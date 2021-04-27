@@ -97,8 +97,8 @@ export default {
           password: this.form.password,
         })
         .then((response) => {
-          this.confirmed = response.data.confirmed;
-            this.$store.commit("setUserRole", response.data.role);
+          
+          this.$store.commit("setUserRole", response.data.role);
           this.$store.commit("setUserId", response.data.userId);
           this.$store.commit("setJWT", response.data.accessToken);
           localStorage.setItem("UserRole", response.data.role);
@@ -106,13 +106,12 @@ export default {
           localStorage.setItem("JWT", response.data.accessToken);
           localStorage.setItem("Confirmed", response.data.confirmed);
           
+          this.confirmed = response.data.confirmed;
+
           if (response.data.confirmed === false) {
             this.showModal = true;            
             return;
-          }
-         
-          this.toast();
-        
+          }      
 
           if (response.data.role === "ROLE_PATIENT") {
                 this.$router.push("patient-profile");
@@ -136,18 +135,18 @@ export default {
 
           window.location.reload();
         })
-        .catch(function(error) {
-          if (error.response.status === 401) {
-            alert("Ne postoji korisnik sa unetim podacima");
-          }
-        });
+        .catch( (error) => {
+                     if (error.response.status == 401) {
+                      this.toast('Ne postoji korisinik sa unetim podacima!', 'Neuspešno', 'danger')
+                      }
+                 });
     },
-    toast() {
-      this.$bvToast.toast(`Uspešno ste se ulogovali!`, {
-        title: "Uspešno!",
-        variant: "success",
-        autoHideDelay: 5000,
-      });
+    toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
+                autoHideDelay: 5000
+            })
     },
     closeModal() {
       this.$bvModal.hide("change-password");

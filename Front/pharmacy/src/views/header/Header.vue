@@ -42,6 +42,9 @@ export default {
     },
     mounted(){
         this.userRole = localStorage.getItem("UserRole");
+        if(localStorage.getItem("UserRole") == null){
+            localStorage.setItem("UserRole", "ROLE_UNREGISTERED")
+        }
     }
 };
 </script>

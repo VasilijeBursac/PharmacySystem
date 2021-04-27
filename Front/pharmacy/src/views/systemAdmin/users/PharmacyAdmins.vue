@@ -9,13 +9,13 @@ export default {
   data() {
     return {
       fields: [   
-        { key: "email", sortable: true },
-        { key: "firstName", sortable: true },
-        { key: "lastName", sortable: true },
-        { key: "address", sortable: true },
-        { key: "city", sortable: true },
-        { key: "country", sortable: true },
-         { key: "phoneNumber", sortable: true }
+         { key: "email", sortable: true },
+        { label: "Ime", key: "name", sortable: true },
+        { label: "Prezime", key: "surname", sortable: true },
+        { label: "Adresa", key: "address", sortable: true },
+        { label: "Grad", key: "city", sortable: true },
+        { label: "Drzava", key: "country", sortable: true },
+         { label: "Telefon", key: "phoneNumber", sortable: true }
       ],
       transProps: {
         name: "flip-list"
