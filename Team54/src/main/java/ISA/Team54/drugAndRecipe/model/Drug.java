@@ -51,7 +51,6 @@ public class Drug {
 	@ManyToMany(mappedBy="drugs")
 	private Set<ERecipe> erecipes;
 
-
 	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private DrugSpecification drugSpecification;
 
@@ -147,7 +146,10 @@ public class Drug {
 	}
 
 	public DrugSpecification getDrugSpecification() {
-		return drugSpecification;
+		if(drugSpecification != null) {
+			return drugSpecification;
+		}
+		return new DrugSpecification();
 	}
 
 	public void setDrugSpecification(DrugSpecification drugSpecification) {

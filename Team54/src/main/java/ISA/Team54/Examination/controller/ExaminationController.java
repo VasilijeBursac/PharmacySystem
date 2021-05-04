@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ISA.Team54.Examination.dto.DefinedExaminationDTO;
-import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
+import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
 import ISA.Team54.Examination.dto.ExaminationInformationDTO;
@@ -123,15 +123,15 @@ public class ExaminationController {
 
 	@PostMapping("/examination-history")
 	@PreAuthorize("hasRole('PATIENT')")
-	public ResponseEntity<List<DermatologistExaminationDTO>> getPatientExaminationsByType(@RequestBody ExaminationTypeDTO type){
+	public ResponseEntity<List<EmployeeExaminationDTO>> getPatientExaminationsByType(@RequestBody ExaminationTypeDTO type){
 		try {
 			List<Examination> examinations = examinationService.getPatientExaminationsByType(type.getType());
-			List<DermatologistExaminationDTO> examinationDTOS = new ArrayList<>();
+			List<EmployeeExaminationDTO> examinationDTOS = new ArrayList<>();
 			for (Examination examination : examinations) {
 				User employee = userSerivce.findById(examination.getEmplyeedId());
-				examinationDTOS.add(new ExaminationMapper().ExaminationToDermatologistExaminationDTO(examination, employee, type.getType()));
+				examinationDTOS.add(new ExaminationMapper().ExaminationToEmployeeExaminationDTO(examination, employee, type.getType()));
 			}
-			return new ResponseEntity<List<DermatologistExaminationDTO>>(examinationDTOS, HttpStatus.OK);
+			return new ResponseEntity<List<EmployeeExaminationDTO>>(examinationDTOS, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -193,10 +193,10 @@ public class ExaminationController {
 
 	@PostMapping("/future")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
-	public ResponseEntity<List<DermatologistExaminationDTO>> getFutureExamination(@RequestBody ExaminationTypeDTO type) {
+	public ResponseEntity<List<EmployeeExaminationDTO>> getFutureExamination(@RequestBody ExaminationTypeDTO type) {
 		try {
-			List<DermatologistExaminationDTO> examinations = examinationService.getFutureExaminations(type.getType());
-			return new ResponseEntity<List<DermatologistExaminationDTO>>(examinations, HttpStatus.OK);
+			List<EmployeeExaminationDTO> examinations = examinationService.getFutureExaminations(type.getType());
+			return new ResponseEntity<List<EmployeeExaminationDTO>>(examinations, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

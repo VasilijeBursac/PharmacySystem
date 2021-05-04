@@ -5,24 +5,26 @@ import java.util.Date;
 
 import ISA.Team54.Examination.model.Term;
 
-public class DermatologistExaminationDTO {
+public class EmployeeExaminationDTO {
 	private long examinationId;
 	private Date term;
 	private String employee;
+	private long employeeId;
 	private double employeeRating;
 	private double price;
 	
-	public DermatologistExaminationDTO(long examinationId, Term term, String employee, double employeeRating,
+	public EmployeeExaminationDTO(long examinationId, Term term, String employee, long employeeId, double employeeRating,
 			double price) {
 		super();
 		this.examinationId = examinationId;
 		this.term = term.getStart();
 		this.employee = employee;
+		this.employeeId = employeeId;
 		this.employeeRating = employeeRating;
 		this.price = price;
 	}
 
-	public DermatologistExaminationDTO() {
+	public EmployeeExaminationDTO() {
 		super();
 	}
 
@@ -66,4 +68,14 @@ public class DermatologistExaminationDTO {
 		this.price = price;
 	}
 
+	public long getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(long employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	
+	
 }

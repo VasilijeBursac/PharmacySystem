@@ -23,10 +23,10 @@ public class SupplierController {
 	private SupplierService supplierService;
 	
 	@GetMapping("/allSuppliers")
-	//@PreAuthorize("hasRole('SYSTEM_ADMIN')")
+	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public  List<UserInfoDTO> findAll(){
 		List<UserInfoDTO> userDTOs = new ArrayList<UserInfoDTO>();
-		this.supplierService.findAll().forEach(systemAdministrator -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(systemAdministrator)));
+		this.supplierService.findAll().forEach(supplier -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(supplier)));
 		return userDTOs;
 	}
 }

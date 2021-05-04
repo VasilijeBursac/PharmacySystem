@@ -102,12 +102,12 @@ export default {
         onSubmit(event) {
             event.preventDefault()
             this.$http
-                .put('/patient/', 
+                 .put('api/user/', 
                     {
                         name: this.form.name, 
                         surname: this.form.surname, 
-                        city: this.form.city, 
                         address: this.form.address, 
+                        city: this.form.city, 
                         country: this.form.country, 
                         phoneNumber: this.form.phoneNumber, 
                     })

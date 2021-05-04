@@ -18,4 +18,5 @@ public interface DrugReservationService {
     void sellDrug(long reservationId) throws Exception;
     List<Pharmacy> getPatientPharmacies();
     void penalIfDeadlineOver();
+    Boolean isAnyDrugFromChoosenPharmacySoldToPatient(long patientId, long pharmacyId);
 }

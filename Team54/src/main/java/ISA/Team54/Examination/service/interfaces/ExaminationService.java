@@ -2,7 +2,7 @@ package ISA.Team54.Examination.service.interfaces;
 import java.util.Date;
 import java.util.List;
 
-import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
+import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
 import ISA.Team54.Examination.dto.ExaminationInformationDTO;
 import ISA.Team54.Examination.enums.ExaminationType;
@@ -20,8 +20,8 @@ public interface ExaminationService {
 	void updateExamination(ExaminationInformationDTO examinationInformationDTO) throws Exception;
 	List<Examination> getAllExaminatedExaminationsForEmployee();
 	List<Examination> getDefinedExaminations();
-	List<DermatologistExaminationDTO> getAllExaminationsForPharmacy(long id, ExaminationType type);
-	List<DermatologistExaminationDTO> getExaminationsForPharmacyAndDate(long id, ExaminationType type, Date date);
+	List<EmployeeExaminationDTO> getAllExaminationsForPharmacy(long id, ExaminationType type);
+	List<EmployeeExaminationDTO> getExaminationsForPharmacyAndDate(long id, ExaminationType type, Date date);
 	void scheduleExamination(long id);
 	boolean canExaminationBeScheduled(Examination examination, Date start,Date end);
 	boolean isDermatologistOnWorkInTheParmacy(Long employeeId, Long pharmacyId, DateRange examinationTime);
@@ -29,7 +29,7 @@ public interface ExaminationService {
 	void cancelExamination(long id) throws Exception;
 	boolean isPatientAvailable(Long patientId, Date start, Date end);
 	boolean saveExamination(Long newExaminationId);
-	List<DermatologistExaminationDTO> getFutureExaminations(ExaminationType type);
+	List<EmployeeExaminationDTO> getFutureExaminations(ExaminationType type);
 	List<Pharmacy> getFreePharmaciesForInterval(Date term, ExaminationType type);
 	int isPatientAppropriate(Long patientId);
     List<User> getEmployeeWhoExaminedPatient(ExaminationType type);
@@ -39,5 +39,5 @@ public interface ExaminationService {
 	Long getCurrentEmployedId();
 	List<Examination> getPatientExaminationsByType(ExaminationType type);
 
-	List<DermatologistExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type);
+	List<EmployeeExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type);
 }

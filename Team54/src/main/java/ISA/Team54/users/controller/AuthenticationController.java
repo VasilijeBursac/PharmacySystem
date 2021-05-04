@@ -124,8 +124,8 @@ public class AuthenticationController {
 		
 		User user = this.pharmacyService.addPatient(userRequest);;			
 	
-	//	HttpHeaders headers = new HttpHeaders();
-	//	headers.setLocation(ucBuilder.path("/api/user/{userId}").buildAndExpand(user.getId()).toUri()); 
+		HttpHeaders headers = new HttpHeaders();
+		headers.setLocation(ucBuilder.path("/api/user/{userId}").buildAndExpand(user.getId()).toUri()); 
 		return new ResponseEntity<>(user, HttpStatus.CREATED); 
 	} 
 	

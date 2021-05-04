@@ -78,7 +78,7 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public Optional<Patient> findById(Long id) {
-		return patientRepository.findById(id);
+		return Optional.of(patientRepository.findById(id).orElse(null));
 	}	
 	
 	public Patient findById(long id) {

@@ -28,7 +28,7 @@ public class Ingredient {
 	@Column(unique = false,nullable = true)
 	private String ingredient;
 	
-	@JsonBackReference()
+	@JsonBackReference(value="ingredient_clinci_movement")
 	@ManyToMany(mappedBy = "ingredients",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<DrugSpecification> drugSpecifications = new ArrayList<DrugSpecification>();
 	

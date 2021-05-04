@@ -16,7 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
+
+import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
 import ISA.Team54.Examination.dto.ExaminationInformationDTO;
 import ISA.Team54.Examination.enums.ExaminationStatus;
@@ -233,15 +234,15 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
-	public List<DermatologistExaminationDTO> getAllExaminationsForPharmacy(long id, ExaminationType type) {
+	public List<EmployeeExaminationDTO> getAllExaminationsForPharmacy(long id, ExaminationType type) {
 		List<Examination> examinations = examinationRepository.getAllExaminationsForPharmacy(id, type,
 				ExaminationStatus.Unfilled);
 		List<User> employees = new ArrayList<User>();
 		examinations.forEach(e -> employees.add(userRepository.findOneById(e.getEmplyeedId())));
 
-		List<DermatologistExaminationDTO> examinationDTOs = new ArrayList<DermatologistExaminationDTO>();
+		List<EmployeeExaminationDTO> examinationDTOs = new ArrayList<EmployeeExaminationDTO>();
 		for (int i = 0; i < examinations.size(); i++) {
-			examinationDTOs.add(new ExaminationMapper().ExaminationToDermatologistExaminationDTO(examinations.get(i),
+			examinationDTOs.add(new ExaminationMapper().ExaminationToEmployeeExaminationDTO(examinations.get(i),
 					employees.get(i), type));
 		}
 
@@ -249,16 +250,16 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
-	public List<DermatologistExaminationDTO> getExaminationsForPharmacyAndDate(long id, ExaminationType type,
+	public List<EmployeeExaminationDTO> getExaminationsForPharmacyAndDate(long id, ExaminationType type,
 			Date date) {
 		List<Examination> examinations = examinationRepository.getExaminationsForPharmacyForDate(id, type,
 				ExaminationStatus.Unfilled, date);
 		List<User> employees = new ArrayList<User>();
 		examinations.forEach(e -> employees.add(userRepository.findById(e.getEmplyeedId()).orElse(null)));
 
-		List<DermatologistExaminationDTO> examinationDTOs = new ArrayList<DermatologistExaminationDTO>();
+		List<EmployeeExaminationDTO> examinationDTOs = new ArrayList<EmployeeExaminationDTO>();
 		for (int i = 0; i < examinations.size(); i++) {
-			examinationDTOs.add(new ExaminationMapper().ExaminationToDermatologistExaminationDTO(examinations.get(i),
+			examinationDTOs.add(new ExaminationMapper().ExaminationToEmployeeExaminationDTO(examinations.get(i),
 					employees.get(i), type));
 		}
 
@@ -301,7 +302,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
-	public List<DermatologistExaminationDTO> getFutureExaminations(ExaminationType type) {
+	public List<EmployeeExaminationDTO> getFutureExaminations(ExaminationType type) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
 		List<Examination> examinations = examinationRepository.getFutureExaminations(patient.getId(), type,
@@ -309,9 +310,9 @@ public class ExaminationServiceImpl implements ExaminationService {
 		List<User> employees = new ArrayList<User>();
 		examinations.forEach(e -> employees.add(userRepository.findById(e.getEmplyeedId()).orElse(null)));
 
-		List<DermatologistExaminationDTO> examinationDTOs = new ArrayList<DermatologistExaminationDTO>();
+		List<EmployeeExaminationDTO> examinationDTOs = new ArrayList<EmployeeExaminationDTO>();
 		for (int i = 0; i < examinations.size(); i++) {
-			examinationDTOs.add(new ExaminationMapper().ExaminationToDermatologistExaminationDTO(examinations.get(i),
+			examinationDTOs.add(new ExaminationMapper().ExaminationToEmployeeExaminationDTO(examinations.get(i),
 					employees.get(i), type));
 		}
 
@@ -387,17 +388,17 @@ public class ExaminationServiceImpl implements ExaminationService {
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public List<DermatologistExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type) {
+	public List<EmployeeExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type) {
 		List<Examination> examinations = examinationRepository.getAllFutureExaminationsForPharmacy(id, type, ExaminationStatus.Unfilled);
 		List<User> employees = new ArrayList<User>();
 		examinations.forEach(
 				e -> employees.add(userRepository.findById(e.getEmplyeedId()).orElse(null))
 		);
 
-		List<DermatologistExaminationDTO> examinationDTOs = new ArrayList<DermatologistExaminationDTO>();
+		List<EmployeeExaminationDTO> examinationDTOs = new ArrayList<EmployeeExaminationDTO>();
 		ExaminationMapper mapper = new ExaminationMapper();
 		for(int i = 0; i < examinations.size(); i++) {
-			examinationDTOs.add(mapper.ExaminationToDermatologistExaminationDTO(examinations.get(i), employees.get(i), type));
+			examinationDTOs.add(mapper.ExaminationToEmployeeExaminationDTO(examinations.get(i), employees.get(i), type));
 		}
 
 		return examinationDTOs;

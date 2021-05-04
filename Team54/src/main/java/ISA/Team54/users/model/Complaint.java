@@ -9,7 +9,8 @@ import ISA.Team54.users.enums.ComplaintType;
 @Entity
 public class Complaint {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "complaintSeqGen", sequenceName = "complaintSeq",initialValue = 4,allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "complaintSeqGen")
 	private Long id;
 	
 	@Column(unique = false,nullable = false)
@@ -18,7 +19,7 @@ public class Complaint {
 	@Column(unique = false,nullable = false)
 	private int objectId;
 	
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	private ComplaintType type;
 	
 	@JsonBackReference
@@ -29,11 +30,11 @@ public class Complaint {
 		super();
 	}
 
-	public Complaint(Long id, String text, Patient patient) {
+	public Complaint(int objectId, String text, ComplaintType type) {
 		super();
-		this.id = id;
+		this.objectId = objectId;
 		this.text = text;
-		this.patient = patient;
+		this.type = type;
 	}
 
 	public Long getId() {
@@ -59,4 +60,23 @@ public class Complaint {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
+
+	public int getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(int objectId) {
+		this.objectId = objectId;
+	}
+
+	public ComplaintType getType() {
+		return type;
+	}
+
+	public void setType(ComplaintType type) {
+		this.type = type;
+	}
+	
+	
+	
 }

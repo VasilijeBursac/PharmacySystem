@@ -21,8 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
-
+import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationSearchDTO;
 import ISA.Team54.Examination.dto.ExaminationTypeDTO;
 import ISA.Team54.Examination.enums.ExaminationType;
@@ -52,7 +51,11 @@ public class PharmacyController {
 	@PostMapping("/addPharmacy")
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public  ResponseEntity<Pharmacy>  addPharmacy(@RequestBody PharmacyDTO pharmacyDTO){
-		return new ResponseEntity<>(this.pharmacyService.addPharmacy(pharmacyDTO), HttpStatus.OK);	
+		try {
+			return new ResponseEntity<>(this.pharmacyService.addPharmacy(pharmacyDTO), HttpStatus.CREATED);
+		}catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@GetMapping("/allPharmacies")
@@ -74,20 +77,20 @@ public class PharmacyController {
 	
 	@PostMapping("/all-examinations")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
-	public  ResponseEntity<List<DermatologistExaminationDTO>> getFreeDermatologistExaminationsForPharmacy(@PathVariable long id){
-		return new ResponseEntity<List<DermatologistExaminationDTO>>(examinationService.getAllExaminationsForPharmacy(id, ExaminationType.DermatologistExamination), HttpStatus.OK);	
+	public  ResponseEntity<List<EmployeeExaminationDTO>> getFreeDermatologistExaminationsForPharmacy(@PathVariable long id){
+		return new ResponseEntity<List<EmployeeExaminationDTO>>(examinationService.getAllExaminationsForPharmacy(id, ExaminationType.DermatologistExamination), HttpStatus.OK);	
 	}
 
-	public  ResponseEntity<List<DermatologistExaminationDTO>> getAllExaminationsForPharmacy(@RequestBody PharmacyExaminationDTO examinationSearch){
-		List<DermatologistExaminationDTO> examinations = examinationService.getAllExaminationsForPharmacy(examinationSearch.getId(), examinationSearch.getType());
-		return new ResponseEntity<List<DermatologistExaminationDTO>>(examinations, HttpStatus.OK);	
+	public  ResponseEntity<List<EmployeeExaminationDTO>> getAllExaminationsForPharmacy(@RequestBody PharmacyExaminationDTO examinationSearch){
+		List<EmployeeExaminationDTO> examinations = examinationService.getAllExaminationsForPharmacy(examinationSearch.getId(), examinationSearch.getType());
+		return new ResponseEntity<List<EmployeeExaminationDTO>>(examinations, HttpStatus.OK);	
 	}
 	
 	@PostMapping("/examinations")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
-	public  ResponseEntity<List<DermatologistExaminationDTO>> getExaminationsForPharmacyAndDate(@RequestBody PharmacyExaminationDTO examinationSearch){
-		List<DermatologistExaminationDTO> examinations = examinationService.getExaminationsForPharmacyAndDate(examinationSearch.getId(), examinationSearch.getType(), examinationSearch.getDate());
-		return new ResponseEntity<List<DermatologistExaminationDTO>>(examinations, HttpStatus.OK);	
+	public  ResponseEntity<List<EmployeeExaminationDTO>> getExaminationsForPharmacyAndDate(@RequestBody PharmacyExaminationDTO examinationSearch){
+		List<EmployeeExaminationDTO> examinations = examinationService.getExaminationsForPharmacyAndDate(examinationSearch.getId(), examinationSearch.getType(), examinationSearch.getDate());
+		return new ResponseEntity<List<EmployeeExaminationDTO>>(examinations, HttpStatus.OK);	
 	}
 	
 	@PostMapping("/search-examinations")
@@ -132,8 +135,8 @@ public class PharmacyController {
 
 	@PostMapping("{id}/dermatologist-examinations")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
-	public  ResponseEntity<List<DermatologistExaminationDTO>> getFreeDermatologistExaminationsForPharmacy(@PathVariable long id, @RequestBody ExaminationTypeDTO type){
-		return new ResponseEntity<List<DermatologistExaminationDTO>>(examinationService.getExaminationsForPharmacy(id, type.getType()), HttpStatus.OK);
+	public  ResponseEntity<List<EmployeeExaminationDTO>> getFreeDermatologistExaminationsForPharmacy(@PathVariable long id, @RequestBody ExaminationTypeDTO type){
+		return new ResponseEntity<List<EmployeeExaminationDTO>>(examinationService.getExaminationsForPharmacy(id, type.getType()), HttpStatus.OK);
 	}
 
 	private boolean CheckIfPharmacyUnique(Pharmacy pharmacy, List<Pharmacy> pharmacies) {

@@ -2,7 +2,7 @@ package ISA.Team54.Examination.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
+import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationDTO;
 import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
@@ -22,16 +22,17 @@ public class ExaminationMapper {
 	public ExaminationDTO ExaminationToExaminationDTO(Examination examination) {
 		return new ExaminationDTO(examination.getId(),examination.getPatient().getName(),examination.getPatient().getSurname(),examination.getTerm().getStart());
 	}
-	public DermatologistExaminationDTO ExaminationToDermatologistExaminationDTO(Examination examination, User user, ExaminationType type) {
+	public EmployeeExaminationDTO ExaminationToEmployeeExaminationDTO(Examination examination, User user, ExaminationType type) {
 		double rating;
 		if(type.equals(ExaminationType.DermatologistExamination))
 			rating = ((Dermatologist)user).getRatings();
 		else rating = ((Pharmacist)user).getRatings();
 		
-		return new DermatologistExaminationDTO(
+		return new EmployeeExaminationDTO(
 				examination.getId(), 
 				examination.getTerm(), 
-				user.getName() + " " + user.getSurname(), 
+				user.getName() + " " + user.getSurname(),
+				user.getId(),
 				rating,
 				examination.getPrice());
 	}
