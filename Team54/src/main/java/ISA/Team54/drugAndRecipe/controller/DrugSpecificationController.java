@@ -24,7 +24,12 @@ public class DrugSpecificationController {
 	@PostMapping("/addDrugSpecification")
 	@PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
 	public  ResponseEntity<DrugSpecification> addDrugSpecification(@RequestBody DrugSpecificationDTO drugSpecificationDTO){
-		return new ResponseEntity<>(drugSpecificationService.addDrugSpecification(DrugSpecificationMapper.DrugSpecificationDTOIntoDrugSpecification(drugSpecificationDTO)), HttpStatus.OK);	
+		try {
+			return new ResponseEntity<>(drugSpecificationService.addDrugSpecification(DrugSpecificationMapper.DrugSpecificationDTOIntoDrugSpecification(drugSpecificationDTO)), HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+			
 	} 
 	
 }

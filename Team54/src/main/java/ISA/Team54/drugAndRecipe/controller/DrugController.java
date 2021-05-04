@@ -44,15 +44,7 @@ public class DrugController {
 	private DrugService drugService;
 
 	@Autowired
-	private PharmacyService pharmacyService;
-
-	@Autowired
 	private DrugInPharmacyService drugInPharmacyService;
-	
-	@Autowired
-	private ContraindicationRepository contraIndicationRepository;
-	@Autowired
-	private IngredientRepository ingredientRepository;
 	
 	@Autowired
 	private DrugSpecificationService drugSpecificationService;
@@ -90,11 +82,16 @@ public class DrugController {
 	
 	@PostMapping("/addDrug")
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-	public  ResponseEntity<Drug> addDrug(@RequestBody DrugDTO drugDTO){
-		Drug newDrug = DrugMapper.DrugDTOIntoDrug(drugDTO);
-		newDrug.setDrugSpecification(drugSpecificationService.findOneById(drugDTO.getDrugSpecification()));
-		newDrug.setSubstituteDrugs(drugService.getSubstituteDrugsForNewDrug(drugDTO.getSubstituteDrugs()));		
-		return new ResponseEntity<>(drugService.addDrug(newDrug), HttpStatus.OK);	
+	public  ResponseEntity<String> addDrug(@RequestBody DrugDTO drugDTO){
+		try {
+			Drug newDrug = drugService.addDrug(DrugMapper.DrugDTOIntoDrug(drugDTO));
+			newDrug.setDrugSpecification(drugSpecificationService.findOneById(drugDTO.getDrugSpecification()));
+			newDrug.setSubstituteDrugs(drugService.getSubstituteDrugsForNewDrug(drugDTO.getSubstituteDrugs()));		
+			return new ResponseEntity<>(HttpStatus.CREATED);	
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
+		}
+		
 	} 
 
 	@GetMapping("/byPharmacyId/{pharmacyId}")

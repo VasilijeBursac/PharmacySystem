@@ -140,5 +140,18 @@ public class DrugReservationController {
     public void penalIfDeadlineOver(){
         drugReservationService.penalIfDeadlineOver();
     }
+    
+    @GetMapping("/checkForComplaint")
+    @PreAuthorize("hasRole('PATIENT')")
+    public ResponseEntity<Boolean> isAnyDrugFromChoosenPharmacySoldToPatient(@RequestParam("patientId") long patientId, @RequestParam("pharmacyId") long pharmacyId){
+        try{
+            if(drugReservationService.isAnyDrugFromChoosenPharmacySoldToPatient(patientId, pharmacyId))
+            	return new ResponseEntity<>(HttpStatus.OK);
+            else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    
 
 }

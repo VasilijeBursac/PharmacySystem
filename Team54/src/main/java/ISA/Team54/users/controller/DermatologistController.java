@@ -25,10 +25,10 @@ public class DermatologistController {
 	private DermatologistService dermatologistService;
 	
 	@GetMapping("/allDermatologists")
-	//@PreAuthorize("hasRole('SYSTEM_ADMIN')")
+	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public  List<UserInfoDTO> findAll(){
 		List<UserInfoDTO> userDTOs = new ArrayList<UserInfoDTO>();
-		this.dermatologistService.findAll().forEach(systemAdministrator -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(systemAdministrator)));
+		this.dermatologistService.findAll().forEach(dermatologist -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(dermatologist)));
 		return userDTOs;
 	}
 	

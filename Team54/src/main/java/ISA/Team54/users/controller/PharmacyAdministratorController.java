@@ -48,10 +48,10 @@ public class PharmacyAdministratorController {
 	}
 	
 	@GetMapping("/allPharmacyAdmins")
-	//@PreAuthorize("hasRole('SYSTEM_ADMIN')")
+	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public  List<UserInfoDTO> findAll(){
 		List<UserInfoDTO> userDTOs = new ArrayList<UserInfoDTO>();
-		this.pharmacyAdministratorService.findAll().forEach(systemAdministrator -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(systemAdministrator)));
+		this.pharmacyAdministratorService.findAll().forEach(pharmacyAdministrator -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(pharmacyAdministrator)));
 		return userDTOs;
 	}
 	

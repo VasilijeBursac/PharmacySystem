@@ -27,9 +27,7 @@ export default {
                 this.items = response.data;
             
             })
-            .catch(error => {
-            this.errorMessage = error.message;
-            console.error("There was an error!", error);});} 
+          } 
 };
 </script>
 <style>

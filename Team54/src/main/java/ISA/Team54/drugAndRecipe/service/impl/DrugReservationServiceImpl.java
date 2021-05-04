@@ -189,4 +189,11 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 			return drugRepository.findOneById(drugReservation.getReservedDrug().getDrugInPharmacyId().getDrugId());
 		
 	}
+
+	@Override
+	public Boolean isAnyDrugFromChoosenPharmacySoldToPatient(long patientId, long pharmacyId) {
+		if(drugReservationRepository.findOneByPatientIdAndStatusAndReservedDrugDrugInPharmacyIdPharmaciId(patientId, ReservationStatus.Sold, pharmacyId) != null) 
+			return true;
+		return false;		
+	}
 }

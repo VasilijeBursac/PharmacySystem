@@ -28,6 +28,8 @@ import ISA.Team54.users.dto.PatientDTO;
 import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.exceptions.AllergyAlreadyAddedException;
 import ISA.Team54.users.mapper.PatientMapper;
+import ISA.Team54.users.mappers.UserInfoMapper;
+import ISA.Team54.users.mappers.UserMapper;
 import ISA.Team54.users.model.User;
 import ISA.Team54.users.service.interfaces.PatientService;
 
@@ -82,9 +84,9 @@ public class PatientController {
 	}
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('PATIENT')")
-	public Patient loadById(@PathVariable long id){
+	public UserInfoDTO loadById(@PathVariable long id){
 		System.out.println(id);
-		return this.patientService.findById(id);
+		return UserInfoMapper.UserTOUserInfoDTO(this.patientService.findById(id));
 	}
 	
 	@PutMapping("")
