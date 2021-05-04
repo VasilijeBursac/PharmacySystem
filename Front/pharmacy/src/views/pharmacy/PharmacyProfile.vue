@@ -78,8 +78,8 @@ export default {
             .get('/pharmacy/' + this.pharmacyId)
             .then( res => {
                 this.pharmacy = JSON.parse(JSON.stringify(res.data))
-            }),
-            this.isAnyDrugFromChoosenPharmacySoldToPatient()
+            })
+            this.isAnyDrugFromChoosenPharmacySoldToPatient();
     },
     methods:{
         openModal(){
