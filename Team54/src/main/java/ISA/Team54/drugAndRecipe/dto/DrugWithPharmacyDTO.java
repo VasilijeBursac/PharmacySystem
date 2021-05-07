@@ -8,17 +8,20 @@ public class DrugWithPharmacyDTO {
 	private String pharmacyCity;
 	private double pharmacyRating;
 	private DrugInPharmacyId drugInPharmacy;
+	private float drugPrice;
 	
 	public DrugWithPharmacyDTO() {
 		super();
 	}
 	
-	public DrugWithPharmacyDTO(String pharmacyName, String pharmacyCity, double pharmacyRating, DrugInPharmacyId drugInPharmacy) {
+	public DrugWithPharmacyDTO(String pharmacyName, String pharmacyCity, double pharmacyRating, DrugInPharmacyId drugInPharmacy,
+			float drugPrice) {
 		super();
 		this.pharmacyName = pharmacyName;
 		this.pharmacyCity = pharmacyCity;
 		this.pharmacyRating = pharmacyRating;
 		this.drugInPharmacy = drugInPharmacy;
+		this.drugPrice = drugPrice;
 	}
 	
 	public String getPharmacyName() {
@@ -45,4 +48,13 @@ public class DrugWithPharmacyDTO {
 	public void setDrugInPharmacyId(DrugInPharmacyId drugInPharmacy) {
 		this.drugInPharmacy = drugInPharmacy;
 	}
+
+	public float getDrugPrice() {
+		return drugPrice;
+	}
+
+	public void setDrugPrice(float drugPrice) {
+		this.drugPrice = drugPrice;
+	}
+	
 }

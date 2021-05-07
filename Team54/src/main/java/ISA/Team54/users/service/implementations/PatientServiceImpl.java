@@ -1,5 +1,6 @@
 package ISA.Team54.users.service.implementations;
 
+import java.io.Console;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -13,11 +14,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import ISA.Team54.Examination.enums.ExaminationStatus;
+import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.loyalty.enums.LoyaltyExaminationPoints;
+import ISA.Team54.loyalty.repository.ExamiantionLoyaltyPointsRepository;
+import ISA.Team54.loyalty.repository.LoyaltyRepository;
 import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.exceptions.AllergyAlreadyAddedException;
 import ISA.Team54.users.mappers.UserInfoMapper;
@@ -37,6 +42,8 @@ public class PatientServiceImpl implements PatientService {
 	private DrugService drugService;
 	@Autowired
 	private ExaminationRepository examinationRepository;
+	@Autowired
+	private ExamiantionLoyaltyPointsRepository examiantionLoyaltyPointsRepository;
 	
 	public List<User> findByName(String name) throws AccessDeniedException {
 		List<User> result = patientRepository.findByName(name);
@@ -149,5 +156,29 @@ public class PatientServiceImpl implements PatientService {
 			patient.setPenaltyPoints(0);
 			patientRepository.save(patient);
 		}
+	}
+
+	@Override
+	public void addLoyaltyPointsForReservedDrug(long drugId){
+		Drug drug = drugService.findById(drugId);		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		patient.setLoyaltyPoints(patient.getLoyaltyPoints() + drug.getLoyalityPoints());
+		patientRepository.save(patient);
+	}
+	
+	@Override
+	public void addLoyaltyPointsForScheduledExamination(long examinationId){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		Examination examination = examinationRepository.findById(examinationId).orElse(null);		
+		patient.setLoyaltyPoints(patient.getLoyaltyPoints() + getExaminationLoyaltyPoints(examination.getType()));
+		patientRepository.save(patient);
+	}
+	
+	private int getExaminationLoyaltyPoints(ExaminationType type) {
+		if(type.equals(ExaminationType.DermatologistExamination)) 
+			return examiantionLoyaltyPointsRepository.findByType(LoyaltyExaminationPoints.DermatologistExamination).getPoints();
+		return examiantionLoyaltyPointsRepository.findByType(LoyaltyExaminationPoints.PharmacistExamiantion).getPoints();
 	}
 }

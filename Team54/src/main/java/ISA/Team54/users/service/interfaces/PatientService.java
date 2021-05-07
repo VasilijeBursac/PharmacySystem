@@ -24,4 +24,7 @@ public interface PatientService {
     void addAllergy(long id) throws Exception;
     void addPenaltyPointForPatient(Long id);
     void deletePenaltyPointsForAll();
+    void addLoyaltyPointsForReservedDrug(long drugId);
+    void addLoyaltyPointsForScheduledExamination(long examinationId);
+    
 }

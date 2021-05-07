@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ import ISA.Team54.drugAndRecipe.repository.DrugAllergyRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugsInPharmacyRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.loyalty.repository.LoyaltyRepository;
 import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.repository.PatientRepository;
@@ -42,6 +45,8 @@ public class DrugServiceImpl implements DrugService {
 	private PatientRepository patientRepository;
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private LoyaltyRepository loyaltyRepository;
 	
 	@Override
 	public List<Drug> getDrugsForPatient(Long id) {
@@ -153,6 +158,15 @@ public class DrugServiceImpl implements DrugService {
 		List<Drug> substituteDrugs = new ArrayList<>();
 		substituteDrugsIds.forEach(subDrugId -> substituteDrugs.add(drugRepository.findOneById((long)subDrugId)));
 		return substituteDrugs;
+	}
+
+	@Override
+	public float getDrugPriceWithDiscount(DrugInPharmacy drugInPharmacy) {		
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		float price = drugInPharmacy.getPricelist().getPrice();
+		return (float) (0.01 * price * (100 - loyaltyRepository.getLoyaltyCategory(patient.getLoyaltyPoints()).getDiscount())) ;
+		    
 	}
 	
 }

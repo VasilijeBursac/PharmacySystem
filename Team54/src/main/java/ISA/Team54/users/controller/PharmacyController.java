@@ -2,11 +2,9 @@ package ISA.Team54.users.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugReservationService;
-import ISA.Team54.rating.model.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,14 +23,11 @@ import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationSearchDTO;
 import ISA.Team54.Examination.dto.ExaminationTypeDTO;
 import ISA.Team54.Examination.enums.ExaminationType;
-import ISA.Team54.Examination.model.Examination;
 
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.users.dto.PharmacyDTO;
 import ISA.Team54.users.dto.PharmacyExaminationDTO;
-import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.mappers.PharmacyMapper;
-import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.service.interfaces.PharmacyService;
 
@@ -59,8 +54,12 @@ public class PharmacyController {
 	}
 	
 	@GetMapping("/allPharmacies")
-	public  List<PharmacyDTO> findAll(){
-		return this.pharmacyService.findAll().stream().map(p -> new PharmacyMapper().PharmacyToPharmacyDTO(p)).collect(Collectors.toList());
+	public ResponseEntity<List<PharmacyDTO>> findAll(){
+		try {
+			return new ResponseEntity<List<PharmacyDTO>>(pharmacyService.findAll().stream().map(p -> PharmacyMapper.PharmacyToPharmacyDTO(p)).collect(Collectors.toList()),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@GetMapping("/{id}")
@@ -96,11 +95,13 @@ public class PharmacyController {
 	@PostMapping("/search-examinations")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
 	public ResponseEntity<List<PharmacyDTO>> getFreePharmaciesForInterval(@RequestBody ExaminationSearchDTO examinationSearchDTO){
-		System.out.println("TU");
 		List<Pharmacy> pharmacies=  examinationService.getFreePharmaciesForInterval(examinationSearchDTO.getDate(), examinationSearchDTO.getType());
 		List<PharmacyDTO> pharmacyDTOs = new ArrayList<PharmacyDTO>();
 		
-		pharmacies.forEach(p -> pharmacyDTOs.add(new PharmacyMapper().PharmacyToPharmacyDTO(p)));
+		pharmacies.forEach(p -> {
+			p.setPharmacistPrice(pharmacyService.getPharmacistPriceWithDiscount(p.getPharmacistPrice()));
+			pharmacyDTOs.add(PharmacyMapper.PharmacyToPharmacyDTO(p));
+			});
 		return new ResponseEntity<List<PharmacyDTO>>(pharmacyDTOs, HttpStatus.OK);
 	}
 
@@ -113,7 +114,7 @@ public class PharmacyController {
 			List<Pharmacy> distinctPharmacies = getPharmaciesWithoutDuplicates(pharmacies);
 			List<PharmacyDTO> pharmacyDTOs = new ArrayList<PharmacyDTO>();
 			distinctPharmacies.forEach(
-					p -> pharmacyDTOs.add(new PharmacyMapper().PharmacyToPharmacyDTO(p))
+					p -> pharmacyDTOs.add(PharmacyMapper.PharmacyToPharmacyDTO(p))
 			);
 			return new ResponseEntity<List<PharmacyDTO>>(pharmacyDTOs, HttpStatus.OK);
 		}catch (Exception e){

@@ -119,9 +119,9 @@ export default {
                   this.toast('Uspešno ste dodali novu apoteku!','Uspešno!','success') 
                 })                    
                 .catch(error => {
-                    if(error.response.status === 500) {
-                        this.toast('Greska na serverskoj strani!','Neuspešno', 'danger');               
-                    } 
+                     if(error.response.status == 400)
+                        this.toast('Greska prilikom dodavanja apoteke !', 'Neuspešno', 'danger')
+                     else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')
                 });    
                 
         },

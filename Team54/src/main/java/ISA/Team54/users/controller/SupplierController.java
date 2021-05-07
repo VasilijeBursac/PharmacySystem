@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +26,14 @@ public class SupplierController {
 	
 	@GetMapping("/allSuppliers")
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-	public  List<UserInfoDTO> findAll(){
-		List<UserInfoDTO> userDTOs = new ArrayList<UserInfoDTO>();
-		this.supplierService.findAll().forEach(supplier -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(supplier)));
-		return userDTOs;
+	public ResponseEntity<List<UserInfoDTO>> findAll(){
+		try {
+			List<UserInfoDTO> userDTOs = new ArrayList<UserInfoDTO>();
+			this.supplierService.findAll().forEach(supplier -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(supplier)));
+			return new ResponseEntity<>(userDTOs,HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
 	}
 }

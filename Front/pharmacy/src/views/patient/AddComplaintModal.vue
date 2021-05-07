@@ -2,6 +2,7 @@
   <div class="complaintModal">
 
     <b-modal id="complaintModal" hide-footer title="Podnosenje zalbe za izabranu apoteku">
+        <b-form @submit="addComplaint">
             <b-form-group id="complaint-group" label="Unesite zalbu:" label-for="comlpaint-input" class="text-center">
                 <b-form-textarea
                     rows = "3"
@@ -14,7 +15,7 @@
                 </b-form-textarea>
             </b-form-group>
         
-                <b-button @click="addComplaint" block variant="success">
+                <b-button type = "submit" block variant="success">
                     Podnesi zalbu
                 </b-button>
       
@@ -22,7 +23,7 @@
             <b-button @click="closeModal" block variant="danger">
                 Otkaži
             </b-button>
-      
+        </b-form>
     </b-modal>
   </div>
 </template>
@@ -39,7 +40,8 @@ export default {
         }
     },
     methods: {
-        addComplaint: function(){
+        addComplaint(event){
+            event.preventDefault()
                 this.isBusy = true
                 this.$http
                     .post("complaint/addComplaint",{
@@ -48,15 +50,15 @@ export default {
                         type : this.complaintType
                     })
                     .then( () => {
-                        this.toast('Uspešno ste podneli zalbu na apoteku!', 'Uspešno', 'success')
+                        this.toast('Uspešno ste podneli zalbu !' , 'Uspešno', 'success')
                         this.closeModal()
                         this.isBusy = false
                     })
                     .catch( error => {
                         this.isBusy = false
-                        if(error.response.status == 400){
+                        if(error.response.status == 400)
                             this.toast('Greska prilikom dodavanja zalbe !', 'Neuspešno', 'danger')
-                        }else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+                        else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
                 })           
         },
         toast(message, title, variant){

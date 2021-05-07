@@ -230,8 +230,7 @@ export default {
             if(this.drug.ingredient !== ""){
                  this.drug.ingredients.push({ name : this.drug.ingredient}); 
                  this.drug.ingredient = '';              
-            }
-           
+            }          
         },
         deleteContraindication(deletedContraindication){
           var newArray = this.drug.contraindications.filter(contraindication => {
@@ -281,9 +280,9 @@ export default {
                        this.addDrug() 
                 })                    
                 .catch(error => {
-                    if(error.response.status === 500) {
-                        this.toast('Greska na serverskoj strani!','Neuspešno', 'danger');                
-                    }
+                     if(error.response.status == 400)
+                        this.toast('Greska prilikom dodavanja leka !', 'Neuspešno', 'danger')
+                     else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')
                 });       
         },
         addDrug(){
@@ -303,9 +302,9 @@ export default {
                     this.toast('Uspešno ste dodali novi lek!','Uspešno!','success')     
                 })                    
                 .catch(error => {
-                    if(error.response.status === 500) {
-                        this.toast('Greska na serverskoj strani!','Neuspešno', 'danger');                
-                    }
+                    if(error.response.status == 400)
+                        this.toast('Greska prilikom dodavanja leka !', 'Neuspešno', 'danger')
+                     else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')
                 });       
         },
          toast(message, title, variant){

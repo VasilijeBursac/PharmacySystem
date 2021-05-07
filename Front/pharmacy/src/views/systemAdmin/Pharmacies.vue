@@ -22,13 +22,21 @@ export default {
             // GET request for examination information
             this.$axios.get("pharmacy/allPharmacies")
             .then(response => {              
-                this.items = response.data;
-            
+                this.items = response.data;            
             })
             .catch(error => {
-            this.errorMessage = error.message;
-            //console.error("There was an error!", error)
-            });}
+            if(error.response.status == 404)
+                this.toast('Trenutno ne postoji nijedna apoteka u sistemu','Neuspešno', 'danger'); 
+            });
+  },methods: {
+    toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
+                autoHideDelay: 5000
+            })
+        }
+  }
 };
 </script>
 <style>
