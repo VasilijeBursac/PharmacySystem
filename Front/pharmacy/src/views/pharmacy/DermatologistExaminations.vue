@@ -52,7 +52,7 @@ export default {
             .get('/pharmacy/' + this.$route.params.id)
             .then( res => {
                 this.pharmacy = res.data.name
-            }),
+            });
 		this.$http
             .post('pharmacy/' + this.$route.params.id + '/dermatologist-examinations', {
 				type: 'DermatologistExamination'
@@ -69,7 +69,7 @@ export default {
 						})
 				});
 				this.data = data
-            })
+            });
 	}
 }
 </script>
