@@ -134,7 +134,7 @@ public class DrugServiceImpl implements DrugService {
 	}
 	@Override
 	public List<Drug> getAllDrugs() {
-		return drugRepository.findAll();
+		return 7;
 	}
 
 	@Override
