@@ -2,11 +2,16 @@ package ISA.Team54.drugAndRecipe.service.interfaces;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
 import ISA.Team54.drugAndRecipe.model.Drug;
+import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
 import ISA.Team54.drugAndRecipe.model.DrugSpecification;
+import ISA.Team54.users.model.Patient;
 
 public interface DrugService {
 	public List<Drug> getDrugsForPatient(Long id);
@@ -20,5 +25,7 @@ public interface DrugService {
 	public boolean isPatientAlergicOnDrug(Long patientId, Long drugId);
 	public List<Drug> getSubstituteForDrug(Long drugId);
 	public List<Drug> getSubstituteDrugsForNewDrug(List<Integer> substituteDrugsIds);
-
+	public float getDrugPriceWithDiscount(DrugInPharmacy drugInPharmacy);
+	
+	
 }

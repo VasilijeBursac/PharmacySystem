@@ -80,17 +80,16 @@ public class ComplaintController {
 	
 	@GetMapping("/allComplaints")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
-	public List<ComplaintDTO> loadComplaints(){
-		List<ComplaintDTO> complaintDTOs = new ArrayList<ComplaintDTO>();	
+	public ResponseEntity<List<ComplaintDTO>> findAllComplaints(){
+		List<ComplaintDTO> complaintDTOs = new ArrayList<ComplaintDTO>();
+		try {
+			complaintService.findAllComplaints().forEach(complaint -> complaintDTOs.add(
+					ComplaintMapper.ComplaintIntoComplaintDTO(complaint, getComplaintObjectName(complaint))));
+			return new ResponseEntity<>(complaintDTOs, HttpStatus.OK); 
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+		}
 		
-		complaintService.findAllComplaints().forEach(complaint -> complaintDTOs.add(
-				new ComplaintDTO(complaint.getPatient().getName() + " "
-								+ complaint.getPatient().getSurname(),
-								getComplaintObjectName(complaint),
-								complaint.getText(),
-								complaint.getPatient().getEmail(), 
-								complaint.getType())));
-		return complaintDTOs; 
 	}
 	
 	private String getComplaintObjectName(Complaint complaint) {

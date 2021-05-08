@@ -135,7 +135,7 @@ export default {
 
           window.location.reload();
         })
-        .catch( (error) => {
+        .catch( error => {
                      if (error.response.status == 401) {
                       this.toast('Ne postoji korisinik sa unetim podacima!', 'Neuspešno', 'danger')
                       }

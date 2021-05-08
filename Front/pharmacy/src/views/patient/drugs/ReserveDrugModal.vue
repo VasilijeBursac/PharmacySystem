@@ -52,7 +52,7 @@ export default {
     data(){
         return {
             items: [],
-			fields:['ime', 'grad', {key: 'ocena', sortable: true}, 'akcije'],
+			fields:['ime', 'grad', {key: 'ocena', sortable: true}, {key: 'cena sa popustom', sortable: true}, 'akcije'],
 
             selected: null,
             options: [],            
@@ -87,6 +87,7 @@ export default {
                                 ime: element.pharmacyName,
                                 grad: element.pharmacyCity,
                                 ocena: element.pharmacyRating != 0 ? element.pharmacyRating : 'Nema ocenu',
+                                'cena sa popustom' : element.drugPrice,
                                 id: element.drugInPharmacyId
                             })
                         });

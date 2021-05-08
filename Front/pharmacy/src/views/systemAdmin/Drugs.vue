@@ -27,7 +27,21 @@ export default {
                 this.items = response.data;
             
             })
-          } 
+           .catch(error => {
+          if(error.response.status == 404)
+            this.toast('Trenutno ne postoji nijedan lek u sistemu','Neuspešno', 'danger');  
+          }
+          );
+  },
+  methods: {
+    toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
+                autoHideDelay: 5000
+            })
+        }
+  }
 };
 </script>
 <style>

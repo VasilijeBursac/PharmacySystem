@@ -8,7 +8,6 @@
         <li class="nav-item"><a href="#" class="nav-link">Godišnji odmori</a></li>
         <li class="nav-item"><a href="#" class="nav-link"><router-link to="complaints">Zalbe</router-link></a></li>
         <li class="nav-item"><a href="#" class="nav-link"><router-link to="drugsPage">Sifranik lekova</router-link></a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Loyalty</a></li>
         <li class="nav-item" style="align-right"><a href="#" class="nav-link" @click="logout">Odjava</a></li>
     </ul>
 </template>

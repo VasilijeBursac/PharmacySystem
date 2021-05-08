@@ -76,7 +76,7 @@ export default {
     data(){
         return {
             pharmacyItems: [],
-			pharmacyFields:['ime', 'grad', {key: 'ocena', sortable: true}, {key: 'cena', sortable: true}, 'akcije'],
+			pharmacyFields:['ime', 'grad', {key: 'ocena', sortable: true}, {key: 'cena sa popustom', sortable: true}, 'akcije'],
 
             pharmacistItems: [],
 			pharmacistFields:['ime', 'prezime', {key: 'ocena', sortable: true}, 'akcije'],
@@ -173,13 +173,14 @@ export default {
                 })
                 .then( res => {
                     if(res.status == 200){  
+                      
                         let data = []
                          res.data.forEach(element => {
                             data.push({ 
                                 ime: element.name, 
                                 grad: element.address, 
                                 ocena: element.rating != 0 ? element.rating : 'Nema ocenu',
-                                cena: element.pharmacistPrice + ' din',
+                                'cena sa popustom': element.pharmacistPrice + ' din',
                                 id: element.id
                             })
                         });

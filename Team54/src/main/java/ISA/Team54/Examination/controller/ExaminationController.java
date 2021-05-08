@@ -35,6 +35,7 @@ import ISA.Team54.drugAndRecipe.dto.DrugDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.exceptions.DrugOutOfStockException;
 import ISA.Team54.exceptions.InvalidTimeLeft;
 import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.dto.UserInfoDTO;
@@ -80,7 +81,6 @@ public class ExaminationController {
 						.add(new ExaminationMapper().ExaminationToExaminationDTOHistory(examination, employee));
 			}
 			List<DrugDTO> drugsForPatient = new ArrayList<DrugDTO>();
-			List<Drug> eee = drugService.getDrugsForPatient((long) patientId);
 			for (Drug drug : drugService.getDrugsForPatient((long) patientId)) {
 				drugsForPatient.add(new DrugMapper().DrugIntoDrugDTO(drug));
 			}
@@ -151,8 +151,14 @@ public class ExaminationController {
 
 	@GetMapping("/schedule/{id}")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
-	public void scheduleExamination(@PathVariable long id) {
-		examinationService.scheduleExamination(id); 
+	public ResponseEntity<String> scheduleExamination(@PathVariable long id) {
+		try {
+			examinationService.scheduleExamination(id);
+			patientService.addLoyaltyPointsForScheduledExamination(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        } 		
 	}
 
 	@PostMapping("/scheduleExamination")

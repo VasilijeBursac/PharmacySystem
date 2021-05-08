@@ -33,6 +33,7 @@ import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.exceptions.InvalidTimeLeft;
+import ISA.Team54.loyalty.repository.LoyaltyRepository;
 import ISA.Team54.shared.model.DateRange;
 import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.enums.UserRole;
@@ -71,6 +72,8 @@ public class ExaminationServiceImpl implements ExaminationService {
 	private DermatologistWorkScheduleRepository dermatologistWorkScheduleRepository;
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private LoyaltyRepository loyaltyRepository;
 
 	public Long getCurrentEmployedId() {
 		ExaminationType examinaitonType = ExaminationType.DermatologistExamination;
@@ -274,8 +277,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 		Examination examination = examinationRepository.findById(id).orElse(null);
 		if (examination != null) {
 			examination.setStatus(ExaminationStatus.Filled);
-			examination.setPatient(patient);
-
+			examination.setPatient(patient);			
 			examinationRepository.save(examination);
 			new Thread(() -> {
 				emailService.sendEmail("tim54isa@gmail.com", "Zakazan pregled", "Uspesno ste zakazali pregled!");
@@ -398,10 +400,18 @@ public class ExaminationServiceImpl implements ExaminationService {
 		List<EmployeeExaminationDTO> examinationDTOs = new ArrayList<EmployeeExaminationDTO>();
 		ExaminationMapper mapper = new ExaminationMapper();
 		for(int i = 0; i < examinations.size(); i++) {
+			examinations.get(i).setPrice(getExaminationPriceWithDiscount(examinations.get(i).getPrice()));
 			examinationDTOs.add(mapper.ExaminationToEmployeeExaminationDTO(examinations.get(i), employees.get(i), type));
 		}
 
 		return examinationDTOs;
+	}
+	
+	private int getExaminationPriceWithDiscount(int price) {		
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		return  (int) (0.01 * price * (100 - loyaltyRepository.getLoyaltyCategory(patient.getLoyaltyPoints()).getDiscount()));
+		    
 	}
 
 	public boolean scheduleExamination(Date start) {

@@ -6,7 +6,9 @@ import java.util.List;
 
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.repository.ExaminationRepository;
+import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
 import ISA.Team54.drugAndRecipe.model.DrugReservation;
+import ISA.Team54.loyalty.repository.LoyaltyRepository;
 import ISA.Team54.rating.model.Rating;
 import ISA.Team54.users.model.*;
 
@@ -66,6 +68,10 @@ public class PharmacyServiceImpl implements PharmacyService {
 
 	@Autowired
 	private ExaminationRepository examinationRepository;
+	
+	@Autowired
+	private LoyaltyRepository loyaltyRepository;
+	
 	
 	@Override
 	public Pharmacy addPharmacy(PharmacyDTO pharmacyDTO) {
@@ -158,4 +164,12 @@ public class PharmacyServiceImpl implements PharmacyService {
 		
 	}
 
+	@Override
+	public double getPharmacistPriceWithDiscount(double price) {		
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		return  0.01 * price * (100 - loyaltyRepository.getLoyaltyCategory(patient.getLoyaltyPoints()).getDiscount());
+		    
+	}
+	
 }

@@ -18,7 +18,7 @@
                         <b-row>
                             <label class="float-left ml-3">Unesite odgovor : </label>
                                 <b-form-textarea id="response"                            
-                                    rows = "3"
+                                    rows = "2"
                                     max-rows = "4"                                                 
                                     v-model="pharmacistResponses[index]"
                                                                 
@@ -54,7 +54,7 @@
                         <b-row >
                             <label class="float-left ml-3">Unesite odgovor : </label>
                                 <b-form-textarea id="response"                              
-                                    rows = "3"
+                                    rows = "2"
                                     max-rows = "4"                                                 
                                     v-model="dermatologistResponses[index]"                                 
                                     >
@@ -88,7 +88,7 @@
                         <b-row >
                             <label class="float-left ml-3">Unesite odgovor : </label>
                                 <b-form-textarea id="response"                            
-                                    rows = "3"
+                                    rows = "2"
                                     max-rows = "4"                                                 
                                     v-model="pharmacyResponses[index]"                                
                                     >
@@ -159,9 +159,9 @@ export default {
                 this.toast('Odogovr na zalbu je poslat korisniku na mejl !','Uspešno!','success')                    
             })                    
             .catch(error => {
-                if(error.response.status == 400) {
-                    this.toast('Greska','Neuspešno', 'danger');              
-                }
+                if(error.response.status == 400) 
+                    this.toast('Greska prilikom slanja odgovora !', 'Neuspešno', 'danger')
+                else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')     
             });
                
     },
@@ -210,21 +210,21 @@ export default {
         margin: 50px auto 0 auto;
     }
     .single-complaint{
-        padding:20px;
+        padding:17px;
         margin: 20px 0 0 0;
         box-sizing: border-box;
         background-color: rgb(238, 238, 238);
     }
     .single-complaint label{
-        font-size: 20px;
+        font-size: 17px;
     }
 
     #h3{
-         margin: 30px 0 0 0; 
+         margin: 20px 0 0 0; 
     }
 
     #h4{
-        margin: 60px 0px 25px 0px;
+        margin: 50px 0px 25px 0px;
         text-align: left;
     }
 
@@ -234,7 +234,8 @@ export default {
     }
 
     #buttons{
-        margin: 20px 250px 0 280px; 
+        margin: 20px 250px 0 280px;
+         
     }
  
 </style>

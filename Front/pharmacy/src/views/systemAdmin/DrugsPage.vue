@@ -4,7 +4,7 @@
         <div class="drugs-main">
             <b-card no-body >
                 <b-tabs pills card align="center" lazy>
-                    <b-tab title="Prikaz lekvoa" active class="text-center">
+                    <b-tab title="Prikaz lekova" active class="text-center">
                         <Drugs/>
                     </b-tab>
                      <b-tab title="Dodaj novi lek"  class="text-center">

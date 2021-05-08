@@ -6,11 +6,13 @@ import ISA.Team54.users.model.Pharmacy;
 
 public class DrugWithPharmacyMapper {
 	
-	public DrugWithPharmacyDTO DrugInPharmacyToDrugWithPharmacyDTO(DrugInPharmacy drugInPharmacy, Pharmacy pharmacy) {
+	public DrugWithPharmacyDTO DrugInPharmacyToDrugWithPharmacyDTO(DrugInPharmacy drugInPharmacy, Pharmacy pharmacy,
+					float price) {
 		return new DrugWithPharmacyDTO(
 				pharmacy.getName(),
 				pharmacy.getAddress(),
 				pharmacy.getRatings(),
-				drugInPharmacy.getDrugInPharmacyId());
+				drugInPharmacy.getDrugInPharmacyId(),
+				price);
 	}
 }

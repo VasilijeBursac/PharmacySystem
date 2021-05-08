@@ -74,10 +74,14 @@ public class DrugController {
 	}
 	
 	@GetMapping("")
-	public List<DrugDTO> getAll(){
-		List<DrugDTO> drugDTOs = new ArrayList<DrugDTO>();
-		this.drugService.getAllDrugs().forEach(drug -> drugDTOs.add(DrugMapper.DrugIntoDrugDTOForTable(drug)));
-		return drugDTOs;
+	public ResponseEntity<List<DrugDTO>> getAll(){
+		try {
+			List<DrugDTO> drugDTOs = new ArrayList<DrugDTO>();
+			this.drugService.getAllDrugs().forEach(drug -> drugDTOs.add(DrugMapper.DrugIntoDrugDTOForTable(drug)));
+			return new ResponseEntity<>(drugDTOs,HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PostMapping("/addDrug")
