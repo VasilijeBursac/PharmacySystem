@@ -77,7 +77,8 @@ public class DrugController {
 	public ResponseEntity<List<DrugDTO>> getAll(){
 		try {
 			List<DrugDTO> drugDTOs = new ArrayList<DrugDTO>();
-			this.drugService.getAllDrugs().forEach(drug -> drugDTOs.add(DrugMapper.DrugIntoDrugDTOForTable(drug)));
+			this.drugService.getAllDrugs().forEach(drug -> 
+				drugDTOs.add(DrugMapper.DrugIntoDrugDTOForTable(drug)));
 			return new ResponseEntity<>(drugDTOs,HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -88,10 +89,11 @@ public class DrugController {
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public  ResponseEntity<String> addDrug(@RequestBody DrugDTO drugDTO){
 		try {
-			Drug newDrug = drugService.addDrug(DrugMapper.DrugDTOIntoDrug(drugDTO));
+			Drug newDrug = DrugMapper.DrugDTOIntoDrug(drugDTO);
 			newDrug.setDrugSpecification(drugSpecificationService.findOneById(drugDTO.getDrugSpecification()));
-			newDrug.setSubstituteDrugs(drugService.getSubstituteDrugsForNewDrug(drugDTO.getSubstituteDrugs()));		
-			return new ResponseEntity<>(HttpStatus.CREATED);	
+			newDrug.setSubstituteDrugs(drugService.getSubstituteDrugsForNewDrug(drugDTO.getSubstituteDrugs()));
+			drugService.addDrug(newDrug);
+			return new ResponseEntity<>( HttpStatus.CREATED);	
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
 		}

@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import PatientProfile from "../views/patient/profile/Profile.vue";
+import SupplierProfile from "../views/supplier/SupplierProfile.vue";
 import Registration from "../views/registration/Registration.vue";
 import PharmacyAdminProfile from  "../views/pharmacyAdmin/profile/PharmacyAdminProfile.vue";
 import DermatologistProfile from  "../views/dermatologistAndPharmacist/dermatologist/DermatologistProfile.vue";
@@ -196,6 +197,32 @@ const routes = [
     component: () =>
       import("../views/systemAdmin/Complaints.vue")
 
+  },
+  {
+    path: "/orders",
+    name: "Orders",
+    component: () =>
+      import("../views/supplier/Orders.vue")
+
+  },
+  {
+    path: "/supplier-drugs",
+    name: "DrugsInStorage",
+    component: () =>
+      import("../views/supplier/DrugsInStorage.vue")
+
+  },
+  {
+    path: "/supplier-offers",
+    name: "Offers",
+    component: () =>
+      import("../views/supplier/Offers.vue")
+
+  },
+  {
+    path: "/supplier-profile",
+    name: "SupplierProfile",
+    component: SupplierProfile
   }
 ];
 

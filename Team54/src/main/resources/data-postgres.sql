@@ -252,12 +252,29 @@ insert into supplier_drugs_in_storage( supplier_id, drugs_in_storage_id) values 
 insert into supplier_drugs_in_storage( supplier_id, drugs_in_storage_id) values ( 19, 8);
 insert into supplier_drugs_in_storage( supplier_id, drugs_in_storage_id) values ( 19, 9);
 
-insert into orders( deadline, status, administrator_id) values ( '2021-02-17', 'Waiting', 13);
-insert into orders( deadline, status, administrator_id) values ( '2021-06-22', 'Waiting', 13);
-insert into orders( deadline, status, administrator_id) values ( '2021-05-08', 'Waiting', 14);
-insert into orders( deadline, status, administrator_id) values ( '2021-01-22', 'Fulfilled', 14);
+insert into orders( deadline, status, administrator_id) values ( '2021-10-17', 'Waiting', 13);
+insert into orders( deadline, status, administrator_id) values ( '2021-10-22', 'Waiting', 13);
+insert into orders( deadline, status, administrator_id) values ( '2021-10-08', 'Waiting', 14);
+insert into orders( deadline, status, administrator_id) values ( '2021-10-22', 'Fulfilled', 14);
 insert into orders( deadline, status, administrator_id) values ( '2021-12-11', 'Fulfilled', 14);
+/*-- 3-1400 1-1450 2-1500 --*/
 
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-09-11', 'Accepted', 3350, 1, 15);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-09-11', 'Declined', 3350, 2, 15);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-09-11', 'Waiting', 6700, 3, 15);
+
+insert into drug_in_order( drug_id, order_id, quantity) values ( 1, 1, 10);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 2, 1, 20);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 1, 15);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 1, 2, 10);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 2, 2, 9);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 2, 2);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 1, 3, 5);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 2, 3, 6);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 3, 19);
 
 /*-- DERMATOLOGISTS IN PHARMACY --*/
 

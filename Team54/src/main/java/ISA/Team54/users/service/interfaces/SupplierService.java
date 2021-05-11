@@ -6,4 +6,5 @@ import ISA.Team54.users.model.Supplier;
 
 public interface SupplierService {
 	   List<Supplier> findAll();
+	   Supplier findById(long id);
 }

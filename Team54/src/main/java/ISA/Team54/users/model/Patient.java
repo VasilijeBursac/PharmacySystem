@@ -17,11 +17,11 @@ import org.hibernate.annotations.Proxy;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugAllergy;
 import ISA.Team54.drugAndRecipe.model.DrugReservation;
 import ISA.Team54.drugAndRecipe.model.ERecipe;
+import ISA.Team54.Examination.model.Examination;
 
 @Entity
 public class Patient extends User {

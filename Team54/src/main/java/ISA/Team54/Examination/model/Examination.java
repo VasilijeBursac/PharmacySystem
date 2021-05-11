@@ -20,9 +20,9 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.Examination.enums.ExaminationStatus;
 import ISA.Team54.Examination.enums.ExaminationType;
-import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacy;
 

@@ -6,34 +6,34 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class DrugInOrderId implements Serializable {
-	private long drug_id;
-	private long order_id;
+	private long drugId;
+	private long orderId;
 	public DrugInOrderId() {
 		super();
 	}
-	public DrugInOrderId(long drug_id, long order_id) {
+	public DrugInOrderId(long drugId, long orderId) {
 		super();
-		this.drug_id = drug_id;
-		this.order_id = order_id;
+		this.drugId = drugId;
+		this.orderId = orderId;
 	}
-	public long getDrug_id() {
-		return drug_id;
+	public long getDrugId() {
+		return drugId;
 	}
-	public void setDrug_id(long drug_id) {
-		this.drug_id = drug_id;
+	public void setDrugId(long drugId) {
+		this.drugId = drugId;
 	}
-	public long getOrder_id() {
-		return order_id;
+	public long getOrdeId() {
+		return orderId;
 	}
-	public void setOrder_id(long order_id) {
-		this.order_id = order_id;
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (drug_id ^ (drug_id >>> 32));
-		result = prime * result + (int) (order_id ^ (order_id >>> 32));
+		result = prime * result + (int) (drugId ^ (drugId >>> 32));
+		result = prime * result + (int) (orderId ^ (orderId >>> 32));
 		return result;
 	}
 	@Override
@@ -45,9 +45,9 @@ public class DrugInOrderId implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DrugInOrderId other = (DrugInOrderId) obj;
-		if (drug_id != other.drug_id)
+		if (drugId != other.drugId)
 			return false;
-		if (order_id != other.order_id)
+		if (orderId != other.orderId)
 			return false;
 		return true;
 	}

@@ -19,4 +19,9 @@ public class SupplierServiceImpl implements SupplierService {
 	public List<Supplier> findAll() {
 		return this.supplierRepository.findAll();
 	}
+
+	@Override
+	public Supplier findById(long id) {
+		return supplierRepository.findById(id);
+	}
 }
