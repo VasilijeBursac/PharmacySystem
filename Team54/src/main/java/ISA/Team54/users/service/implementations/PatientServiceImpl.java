@@ -13,13 +13,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import ISA.Team54.drugAndRecipe.model.Drug;
+import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.Examination.enums.ExaminationStatus;
 import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
-import ISA.Team54.drugAndRecipe.model.Drug;
-import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.loyalty.enums.LoyaltyExaminationPoints;
 import ISA.Team54.loyalty.repository.ExamiantionLoyaltyPointsRepository;
 import ISA.Team54.loyalty.repository.LoyaltyRepository;

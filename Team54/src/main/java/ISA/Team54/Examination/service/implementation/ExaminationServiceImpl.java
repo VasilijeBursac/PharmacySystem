@@ -16,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import ISA.Team54.drugAndRecipe.dto.DrugDTO;
+import ISA.Team54.drugAndRecipe.model.Drug;
+import ISA.Team54.drugAndRecipe.repository.DrugRepository;
+import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
 import ISA.Team54.Examination.dto.ExaminationInformationDTO;
@@ -28,10 +31,6 @@ import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.model.Term;
 import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
-import ISA.Team54.drugAndRecipe.dto.DrugDTO;
-import ISA.Team54.drugAndRecipe.model.Drug;
-import ISA.Team54.drugAndRecipe.repository.DrugRepository;
-import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.exceptions.InvalidTimeLeft;
 import ISA.Team54.loyalty.repository.LoyaltyRepository;
 import ISA.Team54.shared.model.DateRange;

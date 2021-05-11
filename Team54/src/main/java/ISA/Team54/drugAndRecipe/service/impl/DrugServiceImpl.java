@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ISA.Team54.Examination.model.Examination;
-import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugInPharmacyMapper;
@@ -24,6 +22,8 @@ import ISA.Team54.drugAndRecipe.repository.DrugAllergyRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugsInPharmacyRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.Examination.model.Examination;
+import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.loyalty.repository.LoyaltyRepository;
 import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.model.Patient;
@@ -37,8 +37,6 @@ public class DrugServiceImpl implements DrugService {
 	private DrugRepository drugRepository;
 	@Autowired
 	private ExaminationRepository examinationRepository;
-	@Autowired
-	private DrugAllergyRepository drugAllergyRepsoitory;
 	@Autowired
 	private DrugsInPharmacyRepository drugsInPharmacyRepository;
 	@Autowired
@@ -134,7 +132,7 @@ public class DrugServiceImpl implements DrugService {
 	}
 	@Override
 	public List<Drug> getAllDrugs() {
-		return 7;
+		return drugRepository.findAll();
 	}
 
 	@Override
@@ -154,9 +152,9 @@ public class DrugServiceImpl implements DrugService {
 	}
 
 	@Override
-	public List<Drug> getSubstituteDrugsForNewDrug(List<Integer> substituteDrugsIds) {
+	public List<Drug> getSubstituteDrugsForNewDrug(List<Long> substituteDrugsIds) {
 		List<Drug> substituteDrugs = new ArrayList<>();
-		substituteDrugsIds.forEach(subDrugId -> substituteDrugs.add(drugRepository.findOneById((long)subDrugId)));
+		substituteDrugsIds.forEach(subDrugId -> substituteDrugs.add(drugRepository.findOneById(subDrugId)));
 		return substituteDrugs;
 	}
 

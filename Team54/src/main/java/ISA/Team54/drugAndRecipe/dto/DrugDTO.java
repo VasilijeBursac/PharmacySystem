@@ -14,7 +14,7 @@ public class DrugDTO {
 	private String shape;
 	private String manifacturer;
 	private String additionalInfo;
-	private List<Integer> substituteDrugs;
+	private List<Long> substituteDrugs;
 	private int drugSpecification;
 	
 	public DrugDTO() {
@@ -37,7 +37,7 @@ public class DrugDTO {
 	
 	
 	public DrugDTO(long id, String code, int loyalityPoints, String name, String type, String shape,
-			String manifacturer, String additionalInfo, List<Integer> substituteDrugs,
+			String manifacturer, String additionalInfo, List<Long> substituteDrugs,
 			int drugSpecification) {
 		super();
 		this.id = id;
@@ -112,11 +112,11 @@ public class DrugDTO {
 	 * @return the substituteDrugs
 	 */
 
-	public List<Integer> getSubstituteDrugs() {
+	public List<Long> getSubstituteDrugs() {
 		return substituteDrugs;
 	}
 
-	public void setSubstituteDrugs(List<Integer> substituteDrugs) {
+	public void setSubstituteDrugs(List<Long> substituteDrugs) {
 		this.substituteDrugs = substituteDrugs;
 	}
 

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import ISA.Team54.Examination.model.Examination;
-import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
 import ISA.Team54.drugAndRecipe.model.DrugReservation;
+import ISA.Team54.Examination.model.Examination;
+import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.loyalty.repository.LoyaltyRepository;
 import ISA.Team54.rating.model.Rating;
 import ISA.Team54.users.model.*;

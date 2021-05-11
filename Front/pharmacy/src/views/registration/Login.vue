@@ -129,7 +129,7 @@ export default {
                 this.$router.push("pharmacist-profile");
             }
             if (response.data.role === "ROLE_SUPPLIER") {
-                this.$router.push("patient-profile");
+                this.$router.push("supplier-profile");
             }
 
 

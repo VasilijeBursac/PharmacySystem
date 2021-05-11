@@ -5,6 +5,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugReservationService;
+import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
+import ISA.Team54.Examination.dto.ExaminationSearchDTO;
+import ISA.Team54.Examination.dto.ExaminationTypeDTO;
+import ISA.Team54.Examination.enums.ExaminationType;
+import ISA.Team54.Examination.service.interfaces.ExaminationService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,12 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
-import ISA.Team54.Examination.dto.ExaminationSearchDTO;
-import ISA.Team54.Examination.dto.ExaminationTypeDTO;
-import ISA.Team54.Examination.enums.ExaminationType;
-
-import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.users.dto.PharmacyDTO;
 import ISA.Team54.users.dto.PharmacyExaminationDTO;
 import ISA.Team54.users.mappers.PharmacyMapper;

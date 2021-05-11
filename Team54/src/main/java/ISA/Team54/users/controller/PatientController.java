@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ISA.Team54.Examination.model.Examination;
-import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.users.dto.DermatologistPatientDTO;
+import ISA.Team54.drugAndRecipe.dto.DrugDTO;
+import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugAllergy;
+import ISA.Team54.Examination.model.Examination;
+import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.users.dto.BasicPatientInfoDTO;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.dto.PatientDTO;
@@ -85,7 +87,6 @@ public class PatientController {
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('PATIENT')")
 	public UserInfoDTO loadById(@PathVariable long id){
-		System.out.println(id);
 		return UserInfoMapper.UserTOUserInfoDTO(this.patientService.findById(id));
 	}
 	
@@ -97,8 +98,10 @@ public class PatientController {
 	
 	@GetMapping("/allergies/{id}")
 	@PreAuthorize("hasRole('PATIENT')")
-	public List<Drug> getPatientAllergies(@PathVariable long id){
-		return this.patientService.getPatientAllergies(id);
+	public List<DrugDTO> getPatientAllergies(@PathVariable long id){
+		List<DrugDTO> allergiesDTOs = new ArrayList<>();
+		patientService.getPatientAllergies(id).forEach(a -> allergiesDTOs.add(DrugMapper.DrugIntoDrugDTO(a)));
+		return allergiesDTOs;
 	}
 	
 	@DeleteMapping("/allergies/{id}")
