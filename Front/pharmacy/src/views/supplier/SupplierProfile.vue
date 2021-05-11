@@ -21,8 +21,6 @@ export default {
         return{
         }
     },
-    mounted(){
-    },
     components: {
         SupplierProfileInformation,
     }
