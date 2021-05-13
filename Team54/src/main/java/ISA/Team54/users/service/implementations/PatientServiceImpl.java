@@ -27,8 +27,10 @@ import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.exceptions.AllergyAlreadyAddedException;
 import ISA.Team54.users.mappers.UserInfoMapper;
 import ISA.Team54.users.model.Patient;
+import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.model.User;
 import ISA.Team54.users.repository.PatientRepository;
+import ISA.Team54.users.repository.PharmacyRepository;
 import ISA.Team54.users.service.interfaces.PatientService;
 
 @Service
@@ -44,6 +46,8 @@ public class PatientServiceImpl implements PatientService {
 	private ExaminationRepository examinationRepository;
 	@Autowired
 	private ExamiantionLoyaltyPointsRepository examiantionLoyaltyPointsRepository;
+	@Autowired
+	private PharmacyRepository pharmacyRepository;
 	
 	public List<User> findByName(String name) throws AccessDeniedException {
 		List<User> result = patientRepository.findByName(name);
@@ -180,5 +184,55 @@ public class PatientServiceImpl implements PatientService {
 		if(type.equals(ExaminationType.DermatologistExamination)) 
 			return examiantionLoyaltyPointsRepository.findByType(LoyaltyExaminationPoints.DermatologistExamination).getPoints();
 		return examiantionLoyaltyPointsRepository.findByType(LoyaltyExaminationPoints.PharmacistExamiantion).getPoints();
+	}
+
+	@Override
+	public void addPharmacyForPromotions(long pharmacyId) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		
+		Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId);		
+		List<Pharmacy> drugPharmacies = patient.getSubscribedPharmacies();
+		
+		drugPharmacies.add(pharmacy);
+		patientRepository.save(patient);	
+		
+	}
+
+	@Override
+	public boolean checkForSubscription(long pharmacyId) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		List<Pharmacy> pharmacies = patient.getSubscribedPharmacies();
+		if(pharmacies.size() == 0) return false;
+		for (Pharmacy pharmacy : pharmacies) {
+			if(pharmacy.getId() == pharmacyId) 
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public List<Pharmacy> getSubscribedPharmacies() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		return patient.getSubscribedPharmacies();
+		
+	}
+
+	@Override
+	public void deleteSubscribedPharmacy(long id) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		List<Pharmacy> subscribedPharmacies = patient.getSubscribedPharmacies();
+		Iterator<Pharmacy> it = subscribedPharmacies.iterator();
+		while (it.hasNext()) {
+			Pharmacy pharmacy = it.next();
+			if(pharmacy.getId() == id) {
+				it.remove();
+				break;				
+			}
+		}
+		patientRepository.save(patient);
 	}
 }

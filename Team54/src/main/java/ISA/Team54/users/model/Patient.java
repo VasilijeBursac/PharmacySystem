@@ -21,6 +21,7 @@ import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugAllergy;
 import ISA.Team54.drugAndRecipe.model.DrugReservation;
 import ISA.Team54.drugAndRecipe.model.ERecipe;
+import ISA.Team54.promotion.model.Promotion;
 import ISA.Team54.Examination.model.Examination;
 
 @Entity
@@ -56,6 +57,11 @@ public class Patient extends User {
 	@OneToMany(mappedBy="patient",cascade = CascadeType.ALL,fetch = FetchType.LAZY)	
 	private List<Examination> examinations;
 
+	@JsonManagedReference
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "subscribedPharmacies", joinColumns = @JoinColumn(name = "patient_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pharmacy_id", referencedColumnName = "id"))
+	private List<Pharmacy> subscribedPharmacies;
+	
 	public Patient() {
 		super();
 	}
@@ -124,8 +130,16 @@ public class Patient extends User {
 		this.examinations = examinations;
 	}
 
-	
+	public List<Pharmacy> getSubscribedPharmacies() {
+		return subscribedPharmacies;
+	}
 
+	public void setSubscribedPharmacies(List<Pharmacy> subscribedPharmacies) {
+		this.subscribedPharmacies = subscribedPharmacies;
+	}
+
+	
+	
 	
 	
 }

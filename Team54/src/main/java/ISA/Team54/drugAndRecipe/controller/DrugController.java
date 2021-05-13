@@ -101,8 +101,13 @@ public class DrugController {
 	} 
 
 	@GetMapping("/byPharmacyId/{pharmacyId}")
-	public List<DrugInPharmacyDTO> getAllDrugsInPharmacy(@PathVariable Long pharmacyId){
-		return drugInPharmacyService.getAllDrugsInPharmacy(pharmacyId);
+	public ResponseEntity<List<DrugInPharmacyDTO>> getAllDrugsInPharmacy(@PathVariable long pharmacyId){
+		try{
+			return new ResponseEntity<>(drugInPharmacyService.getAllDrugsInPharmacy(pharmacyId),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
 	}
 	
 
