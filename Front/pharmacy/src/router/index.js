@@ -223,6 +223,12 @@ const routes = [
     path: "/supplier-profile",
     name: "SupplierProfile",
     component: SupplierProfile
+  },
+  {
+    path: "/patient-subsribed-pharmacies",
+    name: "SubscribedPharmacies",
+    component: () =>
+    import("../views/patient/pharmacy/SubscribedPharmacies.vue")
   }
 ];
 

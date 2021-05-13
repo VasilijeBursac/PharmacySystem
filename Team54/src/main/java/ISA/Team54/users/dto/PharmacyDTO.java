@@ -26,8 +26,17 @@ public class PharmacyDTO {
 		this.pharmacistPrice = pharmacistPrice;
 	}
 	
+	public PharmacyDTO(long id, String name, String address,String city,String country) {
+		super();		
+		this.id = id;
+		this.name = name;
+		this.address = address;
+		this.city = city;
+		this.country = country;
+	}
 	
-public PharmacyDTO(long id, String name, String address, String city, String country, double rating,
+	
+	public PharmacyDTO(long id, String name, String address, String city, String country, double rating,
 			double pharmacistPrice, String description) {
 		super();
 		this.id = id;

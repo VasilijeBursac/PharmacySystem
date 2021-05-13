@@ -63,6 +63,11 @@ insert into pharmacy(id, name, address, city, country, pharmacist_price, descrip
 insert into pharmacy(id, name, address, city, country, pharmacist_price, description) values (2,'Apoteka Sirmijum', 'Save Tekelije 14','Zrenjanin ', 'Srbija', 900, 'Apoteka u kojoj je zaposlen tim vrhunskih stručnjaka. Pregledi i savetovanja po najpovoljnijim cenama. Veliki asortiman lekova.');
 
 
+
+insert into subscribed_pharmacies(patient_id, pharmacy_id) values (5, 1);
+insert into subscribed_pharmacies(patient_id, pharmacy_id) values (6, 2);
+insert into subscribed_pharmacies(patient_id, pharmacy_id) values (6, 1);
+
 /* --- PHARMACISTS --- */
 		
 /* dimitrije@gmail.com, dimi */

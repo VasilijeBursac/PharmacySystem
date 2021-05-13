@@ -9,6 +9,7 @@ import ISA.Team54.drugAndRecipe.model.DrugAllergy;
 import ISA.Team54.users.dto.BasicPatientInfoDTO;
 import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.model.Patient;
+import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.model.User;
 
 public interface PatientService {
@@ -26,5 +27,8 @@ public interface PatientService {
     void deletePenaltyPointsForAll();
     void addLoyaltyPointsForReservedDrug(long drugId);
     void addLoyaltyPointsForScheduledExamination(long examinationId);
-    
+    void addPharmacyForPromotions(long pharmacyId);
+    boolean checkForSubscription(long pharmacyId);
+    List<Pharmacy> getSubscribedPharmacies();
+    void deleteSubscribedPharmacy(long id);
 }

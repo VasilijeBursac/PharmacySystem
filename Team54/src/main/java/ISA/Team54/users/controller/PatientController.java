@@ -22,18 +22,23 @@ import ISA.Team54.drugAndRecipe.dto.DrugDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugAllergy;
+import ISA.Team54.drugAndRecipe.model.PharmacyDrugInERecipe;
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.users.dto.BasicPatientInfoDTO;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.dto.PatientDTO;
+import ISA.Team54.users.dto.PharmacyDTO;
 import ISA.Team54.users.dto.UserInfoDTO;
 import ISA.Team54.users.exceptions.AllergyAlreadyAddedException;
 import ISA.Team54.users.mapper.PatientMapper;
+import ISA.Team54.users.mappers.PharmacyMapper;
 import ISA.Team54.users.mappers.UserInfoMapper;
 import ISA.Team54.users.mappers.UserMapper;
 import ISA.Team54.users.model.User;
 import ISA.Team54.users.service.interfaces.PatientService;
+import ISA.Team54.users.service.interfaces.PharmacistService;
+import ISA.Team54.users.service.interfaces.PharmacyService;
 
 @RestController
 @RequestMapping(value = "/patient", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,6 +47,8 @@ public class PatientController {
 	private PatientService patientService;
 	@Autowired
 	private ExaminationService examinationSerivce;
+	@Autowired
+	private PharmacyService pharmacyService;
 	
 	@GetMapping("patientBySurnameAndName/{surnameAndName}")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
@@ -123,5 +130,49 @@ public class PatientController {
 		}
 	}
 	
+	@PostMapping("/addPharmacyForPromotions/{phamracyId}")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<String> addPharmacyForPromotion(@PathVariable long phamracyId){
+		try {
+			patientService.addPharmacyForPromotions(phamracyId);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping("/checkForSubsrciption/{pharmacyId}")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<Boolean> checkForSubsrciption(@PathVariable long pharmacyId){
+		  if(patientService.checkForSubscription(pharmacyId))
+	        	return new ResponseEntity<>(HttpStatus.OK);
+	      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping("/getSubscribedPharmacies")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<List<PharmacyDTO>> getSubscribedPharmacies(){
+		  try{
+			  List<PharmacyDTO> subscribedPharmaciesDTOs = new ArrayList<>();
+			  patientService.getSubscribedPharmacies().forEach(pharmacy ->
+			  	   subscribedPharmaciesDTOs.add(PharmacyMapper.PharmacyToSubscribedPharmacyDTO(pharmacy)));
+	  		  return new ResponseEntity<>(subscribedPharmaciesDTOs, HttpStatus.OK);
+		  } catch (Exception e) {
+			  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	      
+	}
+	
+	@DeleteMapping("/deleteSubscribedPharmacy/{pharmacyId}")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<String> deleteSubscribedPharmacy(@PathVariable long pharmacyId){
+		try {
+			this.patientService.deleteSubscribedPharmacy(pharmacyId);
+			return new ResponseEntity<>(HttpStatus.OK);			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
+		}
+		
+	}
 	
 }

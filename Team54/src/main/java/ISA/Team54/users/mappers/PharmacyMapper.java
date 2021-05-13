@@ -37,4 +37,13 @@ public class PharmacyMapper {
 		pharmacy.setCity(pharmacyDTO.getCity());
 		pharmacy.setCountry(pharmacyDTO.getCountry());
 	}
+	
+	public static PharmacyDTO PharmacyToSubscribedPharmacyDTO(Pharmacy pharmacy) {
+		return new PharmacyDTO(
+				pharmacy.getId(),
+				pharmacy.getName(),
+				pharmacy.getAddress(),
+				pharmacy.getCity(),
+				pharmacy.getCountry());
+	}
 }

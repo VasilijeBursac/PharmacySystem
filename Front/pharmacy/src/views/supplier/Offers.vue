@@ -13,7 +13,7 @@
                     <b-form-checkbox value="Ceka na odgovor">Ceka na odgovor</b-form-checkbox>
                 </b-form-checkbox-group>               
             </b-form-group>
-        <b-table :tbody-transition-props="transProps"  striped hover :items="data" :fields="fields">
+        <b-table   striped hover :items="data" :fields="fields">
         </b-table>
     </div>
 </template>
@@ -30,9 +30,7 @@ export default {
                 { label: "Ukupna cena", key: "totalPrice", sortable: true },
                 { label: "Status", key: "offerStatus", sortable: true },
             ],
-            transProps: {
-                name: "flip-list"
-            },
+            
             selected : []
         }
     },
