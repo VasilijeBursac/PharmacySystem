@@ -21,7 +21,9 @@ public class DermatologistServiceImpl implements DermatologistService {
 	
 	@Override
 	public List<Dermatologist> findAll() {
-		return this.dermatologistRepository.findAll();
+		if(dermatologistRepository.findAll().size() != 0)
+			return dermatologistRepository.findAll();
+		return null;
 	}
 
 	@Override

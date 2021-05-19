@@ -25,7 +25,9 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 	
 	@Override
 	public List<DrugInPharmacy> getDrugsInPharmaciesByDrug(long id) {
-		return drugsInPharmacyRepository.findByDrugId(id);
+		if(drugsInPharmacyRepository.findByDrugId(id).size() != 0)
+			return drugsInPharmacyRepository.findByDrugId(id);
+		return null;
 	}
 
 	@Override
@@ -34,7 +36,6 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 		List<DrugInPharmacy> drugsInPharmacy = drugsInPharmacyRepository.findAllByDrugInPharmacyIdPharmaciId(pharmacyId);
 		
 		for(DrugInPharmacy drugInPharmacy : drugsInPharmacy) {
-			System.out.println(drugInPharmacy.getDrugInPharmacyId().getDrugId() );
 			Drug drug = drugRepository.findOneById(drugInPharmacy.getDrugInPharmacyId().getDrugId());
 			DrugInPharmacyDTO drugInPharmacyDTO = DrugInPharmacyMapper.DrugInPharmacyToDrugInPharmacyDTO(drugInPharmacy, drug);
 			drugsInPharmacyDTOs.add(drugInPharmacyDTO);

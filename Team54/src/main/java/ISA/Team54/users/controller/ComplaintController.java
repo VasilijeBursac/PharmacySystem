@@ -54,11 +54,9 @@ public class ComplaintController {
 	@PostMapping("/addComplaint")
 	@PreAuthorize("hasRole('PATIENT')")
 	public  ResponseEntity<String> addComplaint(@RequestBody ComplaintRequestDTO complaintDTO){
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		
 		try {
 			Complaint complaint = ComplaintMapper.ComplaintDTOIntoComplaint(complaintDTO);
-			complaint.setPatient(patient);
 			complaintService.addComplaint(complaint);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (Exception e) {

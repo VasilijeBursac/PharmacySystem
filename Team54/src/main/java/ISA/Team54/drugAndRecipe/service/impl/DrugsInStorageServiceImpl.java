@@ -26,7 +26,9 @@ public class DrugsInStorageServiceImpl implements DrugInStorageService{
 	public List<DrugInStorage> findAllDrugsInStorageForSupplier() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Supplier supplier = supplierRepository.findById(((Supplier) authentication.getPrincipal()).getId());
-		return drugInStorageRepository.findAllBySupplier(supplier);
+		if(drugInStorageRepository.findAllBySupplier(supplier).size() != 0)
+			return drugInStorageRepository.findAllBySupplier(supplier);
+		return null;
 	}
 
 

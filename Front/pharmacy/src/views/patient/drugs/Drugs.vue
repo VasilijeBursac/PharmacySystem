@@ -52,9 +52,9 @@ export default {
                 })
                 .catch( (error) => {
                     this.tableBusy = false
-                    if(error.response.status == 400){
+                    if(error.response.status == 400)
                         this.toast('Ne možete otkazati rezervaciju leka do čijeg roka za preuzimanje je ostalo manje od 24h!', 'Neuspešno', 'danger')
-                    }else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+                    else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
                 })
         },
         toast(message, title, variant){

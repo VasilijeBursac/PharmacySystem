@@ -106,7 +106,6 @@ export default {
                 })
         },
         reserveDrug(row){
-
             this.tableBusy = true
 
             this.$http

@@ -8,7 +8,7 @@
                         <h6 class="h6 text-left font-italic mt-n1">{{pharmacy.address}}, {{pharmacy.city}}, {{pharmacy.country}}</h6>
                         <p class="h6 text-left mt-4 mb-3">{{pharmacy.description}}</p>
 
-                        <b-button v-if="!subscribed" block @click = "subscribeToPromotions">
+                        <b-button v-if="!subscribed && loggedUserRole != 'ROLE_UNREGISTERED'"  block @click = "subscribeToPromotions">
                             <b-icon icon="bell-fill" aria-hidden="true"></b-icon> Pretplati se na akcije i promocije apoteke
                         </b-button> 
                         <p id = "subscription" v-if="subscribed" class = "h6 text-left mt-4 mb-3">Pretplaceni ste na akcije i promocije apoteke !</p>          
@@ -46,12 +46,12 @@ export default {
             .then( res => {
                 this.pharmacy = JSON.parse(JSON.stringify(res.data))
             })
-
-        this.$http
-            .get('patient/checkForSubsrciption/' + this.pharmacyId)
-            .then( () => {
-                this.subscribed = true
-            })
+        if(this.loggedUserRole != "ROLE_UNREGISTERED")
+            this.$http
+                .get('patient/checkForSubsrciption/' + this.pharmacyId)
+                .then( () => {
+                    this.subscribed = true
+                })
     },
     methods:{
        subscribeToPromotions(){

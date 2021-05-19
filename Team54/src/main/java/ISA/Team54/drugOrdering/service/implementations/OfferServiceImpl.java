@@ -61,7 +61,9 @@ public class OfferServiceImpl implements OfferService{
 	public List<Offer> findAllOffersForSupplier() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Supplier supplier = supplierRepository.findById(((Supplier) authentication.getPrincipal()).getId());
-		return offerRepository.findAllBySupplier(supplier);
+		if(offerRepository.findAllBySupplier(supplier).size() != 0)
+			return offerRepository.findAllBySupplier(supplier);
+		return null;
 	}
 }
 

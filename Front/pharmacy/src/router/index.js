@@ -229,7 +229,20 @@ const routes = [
     name: "SubscribedPharmacies",
     component: () =>
     import("../views/patient/pharmacy/SubscribedPharmacies.vue")
+  },
+  {
+    path: "/all-drugs",
+    name: "AllDrugs",
+    component: () =>
+    import("../views/patient/drugs/AllDrugs.vue")
+  },
+  {
+    path: "/drug-informations",
+    name: "DrugInformations",
+    component: () =>
+    import("../views/patient/drugs/DrugInformations.vue")
   }
+  
 ];
 
 const router = new VueRouter({

@@ -1,5 +1,6 @@
 package ISA.Team54.rating.controller;
 
+import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.exceptions.ObjectAlreadyRated;
 import ISA.Team54.rating.dto.RatingDTO;
@@ -100,6 +101,9 @@ public class RatingController {
         }else if(rating.getPharmacy() != null){
             Pharmacy pharmacy = pharmacyService.getPharmacyById(rating.getPharmacy().getId());
             return pharmacy.getName();
+        }else if(rating.getDrug() != null){
+            Drug drug = drugService.findById(rating.getDrug().getId());
+            return drug.getName();
         }
         return "";
     }

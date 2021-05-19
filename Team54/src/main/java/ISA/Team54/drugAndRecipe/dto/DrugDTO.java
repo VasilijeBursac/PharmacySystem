@@ -16,13 +16,14 @@ public class DrugDTO {
 	private String additionalInfo;
 	private List<Long> substituteDrugs;
 	private int drugSpecification;
+	private double rating;
 	
 	public DrugDTO() {
 		super();
 	}
 	
 	public DrugDTO(long id, String code, int loyalityPoints, String name, String type, String shape,
-			String manifacturer, String additionalInfo) {
+			String manifacturer, String additionalInfo, double rating) {
 		super();
 		this.id = id;
 		this.code = code;
@@ -32,9 +33,8 @@ public class DrugDTO {
 		this.shape = shape;
 		this.manifacturer = manifacturer;
 		this.additionalInfo = additionalInfo;
-	}
-	
-	
+		this.rating = rating;
+	}	
 	
 	public DrugDTO(long id, String code, int loyalityPoints, String name, String type, String shape,
 			String manifacturer, String additionalInfo, List<Long> substituteDrugs,
@@ -127,7 +127,14 @@ public class DrugDTO {
 	public void setDrugSpecification(int drugSpecification) {
 		this.drugSpecification = drugSpecification;
 	}
-	
+
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
 	
 	
 	

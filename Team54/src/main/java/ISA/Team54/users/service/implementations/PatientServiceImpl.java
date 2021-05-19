@@ -216,7 +216,7 @@ public class PatientServiceImpl implements PatientService {
 	public List<Pharmacy> getSubscribedPharmacies() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
-		return patient.getSubscribedPharmacies();
+		return patient.getSubscribedPharmacies().size() != 0 ? patient.getSubscribedPharmacies() : null;
 		
 	}
 

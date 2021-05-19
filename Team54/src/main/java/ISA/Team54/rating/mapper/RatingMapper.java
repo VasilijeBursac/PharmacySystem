@@ -18,6 +18,8 @@ public class RatingMapper {
             return "Dermatolog";
         else if(rating.getPharmacist() != null)
             return "Farmaceut";
+        else if(rating.getDrug() != null)
+            return "Lek";
         else return "Apoteka";
     }
 }

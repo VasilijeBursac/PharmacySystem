@@ -1,7 +1,7 @@
 <template>    
     <ul class="nav navbar-nav">      
-        <li class="nav-item active"><a href="#" class="nav-link"><router-link to="/pharmacies">Pregled apoteka</router-link></a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Pregled lekova</a></li>
+        <li class="nav-item active"><a href="#" class="nav-link"><router-link to="/pharmacies">Pretraga apoteka</router-link></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><router-link to="/all-drugs">Pretraga lekova</router-link></a></li>
         <li class="nav-item"><a href="#" class="nav-link"><router-link to="/myexaminations">Moji pregledi</router-link></a></li>
         <li class="nav-item"><a href="#" class="nav-link">Moji eRecepti</a></li>
         <li class="nav-item"><a href="#" class="nav-link"><router-link to="/mydrugs">Moji lekovi</router-link></a></li>

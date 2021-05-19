@@ -17,7 +17,9 @@ public class SystemAdministratorServiceImpl  implements SystemAdministratorServi
 	
 	@Override
 	public List<SystemAdministrator> findAll() {
-		return this.systemAdministratorRepository.findAll();
+		if(systemAdministratorRepository.findAll().size() != 0)
+			return systemAdministratorRepository.findAll();
+		return null;
 	}
 }
 

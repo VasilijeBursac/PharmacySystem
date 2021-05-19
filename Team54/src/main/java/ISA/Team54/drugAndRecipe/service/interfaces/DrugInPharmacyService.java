@@ -8,4 +8,5 @@ import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
 public interface DrugInPharmacyService {
 	List<DrugInPharmacy> getDrugsInPharmaciesByDrug(long id);
 	List<DrugInPharmacyDTO> getAllDrugsInPharmacy(long pharmacyId);
+	
 }
