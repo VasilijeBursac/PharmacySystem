@@ -134,15 +134,6 @@ values (19,'Somborski bulevar 99','Zrenjanin', true,'Srbija','natasa@gmail.com',
 		'062941622','Subotic');
 
 		
-insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id)
-values (4.7, 3, null,null, 5);
-insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id)
-values (5, 3, null,null, 5);
-insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id)
-values (4, null, 10,null, 5);
-insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id)
-values (3, null, 9,null, 7);
-		
 insert into user_authority( user_id, authority_id) values (1,4);
 insert into user_authority( user_id, authority_id) values (2,4);
 insert into user_authority( user_id, authority_id) values (3,4);
@@ -189,6 +180,23 @@ insert into drug_allergies( drug_id, patient_id) values ( 3, 8);
 insert into drug_allergies(drug_id, patient_id) values ( 4, 6);
 insert into drug_allergies(drug_id, patient_id) values ( 4, 7);
 
+		
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id, drug_id)
+values (4.7, 3, null,null, 5, null);
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id, drug_id)
+values (5, 3, null,null, 5, null);
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id, drug_id)
+values (4, null, 10,null, 5, null);
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id, drug_id)
+values (3, null, 9,null, 7 , null);
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id, drug_id)
+values (4, null, null, 1, 5, null);
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id, drug_id)
+values (5, null, null, null, 5, 1);
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id, drug_id)
+values (4, null, null, null, 5, 2);
+insert into rating(rating, dermatologist_id, pharmacist_id, pharmacy_id, patient_id, drug_id)
+values (3, null, null, null, 5, 3);
 
 
  /* -- INGREDIENTS --*/

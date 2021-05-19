@@ -19,6 +19,7 @@ public class DrugSpecificationMapper {
 		for(Drug d :drugSubstitute ) {
 			substituteDrugsDTO.add(new DrugMapper().DrugIntoDrugDTO(d));
 		}
+
 		List<ContraindicationDTO> contraindicationDTOs = new ArrayList<ContraindicationDTO>();
 		drugSpecification.getContraindications().forEach(contraindication -> contraindicationDTOs.add(ContraindicationMapper.ContraindicationToContraindicationDTO(contraindication)));
 		

@@ -64,8 +64,6 @@ export default {
             .catch( (error) => {
                 if(error.response.status == 404)
                     this.toast('Nemate nijednu apoteku na koju ste pretplaceni!','Neuspešno', 'danger')  
-                else if(error.response.status != 200)
-                    this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
             })
     }
 }

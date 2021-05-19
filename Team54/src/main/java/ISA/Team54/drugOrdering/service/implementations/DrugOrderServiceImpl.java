@@ -17,7 +17,9 @@ public class DrugOrderServiceImpl implements DrugOrderService{
 	
 	@Override
 	public List<DrugsOrder> findAllWaitingOrders() {
-		return drugOrderRepository.findAllWaitingOrders();
+		if(drugOrderRepository.findAllWaitingOrders().size() != 0)
+			return drugOrderRepository.findAllWaitingOrders();
+		return null;
 	}
 
 	@Override

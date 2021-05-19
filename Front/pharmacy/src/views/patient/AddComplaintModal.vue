@@ -57,8 +57,7 @@ export default {
                     .catch( error => {
                         this.isBusy = false
                         if(error.response.status == 400)
-                            this.toast('Greska prilikom dodavanja zalbe !', 'Neuspešno', 'danger')
-                        else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+                            this.toast('Greska prilikom dodavanja zalbe !', 'Neuspešno', 'danger') 
                 })           
         },
         toast(message, title, variant){

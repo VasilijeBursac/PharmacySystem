@@ -20,7 +20,7 @@
                 </b-form-group>
 
                 <b-form-group v-if="subjectSelected == 'drug'" id="drug-group" label="Lekovi koje ste koristili:" label-for="drug-input">
-                    <b-form-select v-model="selected" :options="options"></b-form-select>
+                    <b-form-select v-model="selected" :options="drugs"></b-form-select>
                 </b-form-group>
 
                 <b-form-group v-if="subjectSelected == 'pharmacy'" id="pharmacy-group" label="Apoteke koje ste posetili:" label-for="pharmacy-input">

@@ -31,7 +31,7 @@ export default {
             })
             .catch(error => {
             if(error.response.status == 404)
-                this.toast('Trenutno ne postoji nijedan dermatolog u sistemu','Neuspešno', 'danger'); 
+                this.toast('Trenutno ne postoji nijedan dermatolog u sistemu','Neuspešno', 'danger');
             });
   },methods: {
     toast(message, title, variant){

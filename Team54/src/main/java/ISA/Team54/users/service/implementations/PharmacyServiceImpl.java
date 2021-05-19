@@ -141,7 +141,9 @@ public class PharmacyServiceImpl implements PharmacyService {
 	}
 
 	public List<Pharmacy> findAll() {
-		return this.pharmacyRepository.findAll();
+		if(pharmacyRepository.findAll().size() != 0)
+			return pharmacyRepository.findAll();
+		return null;
 	}
 
 	@Override

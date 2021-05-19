@@ -132,7 +132,9 @@ public class DrugServiceImpl implements DrugService {
 	}
 	@Override
 	public List<Drug> getAllDrugs() {
-		return drugRepository.findAll();
+		if(drugRepository.findAll().size() != 0)
+			return drugRepository.findAll();
+		return null;
 	}
 
 	@Override
@@ -143,7 +145,7 @@ public class DrugServiceImpl implements DrugService {
 	@Override
 	public List<Drug> getSubstituteForDrug(Long drugId) {
 		Drug mainDrug = drugRepository.findOneById((long)drugId);
-		 return mainDrug.getMainDrugs();
+		return mainDrug.getSubstituteDrugs();
 	}
 
 	@Override

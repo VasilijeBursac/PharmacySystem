@@ -16,7 +16,8 @@ public class DrugMapper {
 	
 	public static DrugDTO DrugIntoDrugDTOForTable(Drug drug)
 	{
-		return new DrugDTO(drug.getId(),drug.getCode(),drug.getLoyalityPoints(),drug.getName(),drug.getType(),drug.getShape(),drug.getManifacturer(),drug.getAdditionalInfo());
+		return new DrugDTO(drug.getId(),drug.getCode(),drug.getLoyalityPoints(),drug.getName(),
+				drug.getType(),drug.getShape(),drug.getManifacturer(),drug.getAdditionalInfo(),drug.getRatings());
 	}
 	
 	public static Drug DrugDTOIntoDrug(DrugDTO drugdto)

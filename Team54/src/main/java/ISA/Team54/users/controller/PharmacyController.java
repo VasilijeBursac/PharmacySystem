@@ -47,7 +47,7 @@ public class PharmacyController {
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public  ResponseEntity<Pharmacy>  addPharmacy(@RequestBody PharmacyDTO pharmacyDTO){
 		try {
-			return new ResponseEntity<>(this.pharmacyService.addPharmacy(pharmacyDTO), HttpStatus.CREATED);
+			return new ResponseEntity<>(pharmacyService.addPharmacy(pharmacyDTO), HttpStatus.CREATED);
 		}catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

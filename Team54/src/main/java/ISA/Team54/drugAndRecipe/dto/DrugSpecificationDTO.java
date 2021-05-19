@@ -9,6 +9,7 @@ import ISA.Team54.drugAndRecipe.model.Ingredient;
 public class DrugSpecificationDTO {
 	private List<ContraindicationDTO> contraindications;
 	private List<IngredientDTO> ingredients;
+	private List<DrugDTO> substituteDrugs;
 	private String suggestedDose;
 
 	public DrugSpecificationDTO() {
@@ -22,6 +23,7 @@ public class DrugSpecificationDTO {
 		this.contraindications = contraindications;
 		this.ingredients = ingredients;
 		this.suggestedDose = suggestedDose;
+		this.substituteDrugs = substitute;
 	}
 
 	public DrugSpecificationDTO(List<ContraindicationDTO> contraindications,List<IngredientDTO> ingredients,
@@ -49,6 +51,14 @@ public class DrugSpecificationDTO {
 	}
 	public void setSuggestedDose(String suggestedDose) {
 		this.suggestedDose = suggestedDose;
+	}
+
+	public List<DrugDTO> getSubstituteDrugs() {
+		return substituteDrugs;
+	}
+
+	public void setSubstituteDrugs(List<DrugDTO> substituteDrugs) {
+		this.substituteDrugs = substituteDrugs;
 	}
 	
 	

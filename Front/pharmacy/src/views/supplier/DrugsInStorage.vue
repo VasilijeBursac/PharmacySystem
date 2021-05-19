@@ -45,8 +45,8 @@ export default {
             .catch( (error) => {
                 if(error.response.status == 400)
                     this.toast('Trenutno nemate lekova u ponudi!','Neuspešno', 'danger')  
-                else if(error.response.status != 200)
-                    this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+                else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+                    
             })
     },
     components:{

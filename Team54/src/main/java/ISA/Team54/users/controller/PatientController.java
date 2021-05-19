@@ -97,6 +97,12 @@ public class PatientController {
 		return UserInfoMapper.UserTOUserInfoDTO(this.patientService.findById(id));
 	}
 	
+	@GetMapping("/points/{id}")
+	@PreAuthorize("hasRole('PATIENT')")
+	public PatientDTO loadPoints(@PathVariable long id){
+		return PatientMapper.PatientToPatientDTO(patientService.findById(id));
+	}
+	
 	@PutMapping("")
 	@PreAuthorize("hasRole('PATIENT')")
 	public void updatePatient(@RequestBody UserInfoDTO user){
