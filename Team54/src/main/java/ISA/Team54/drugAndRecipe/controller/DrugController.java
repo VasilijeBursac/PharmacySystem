@@ -32,9 +32,7 @@ import ISA.Team54.drugAndRecipe.repository.IngredientRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugSpecificationService;
-import ISA.Team54.users.dto.UserInfoDTO;
-import ISA.Team54.users.mappers.UserInfoMapper;
-import ISA.Team54.users.service.interfaces.PharmacyService;
+
 
 @RestController
 @RequestMapping(value = "/drugs", produces = MediaType.APPLICATION_JSON_VALUE)

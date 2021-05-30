@@ -2,6 +2,7 @@ package ISA.Team54.drugAndRecipe.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,15 +27,14 @@ public class ERecipe {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 
 	@Column(unique = false, nullable = true)
-	private LocalDateTime dateOfIssue;
+	private Date dateOfIssue;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY) 
-	@JoinTable(name = "drugsInERecipe", joinColumns = @JoinColumn(name = "erecipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "drug_id", referencedColumnName = "id"))
-	public List<Drug> drugs = new ArrayList<Drug>();
-
+	@Column(unique = false,nullable = true)
+	private String code;
+	
 	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Patient patient;
@@ -43,28 +43,27 @@ public class ERecipe {
 		super();
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public LocalDateTime getDateOfIssue() {
-		return dateOfIssue;
-	}
-
-	public void setDateOfIssue(LocalDateTime dateOfIssue) {
+	public ERecipe(Date dateOfIssue) {
+		super();
 		this.dateOfIssue = dateOfIssue;
 	}
 
-	public List<Drug> getDrugs() {
-		return drugs;
+
+
+	public long getId() {
+		return id;
 	}
 
-	public void setDrugs(List<Drug> drugs) {
-		this.drugs = drugs;
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Date getDateOfIssue() {
+		return dateOfIssue;
+	}
+
+	public void setDateOfIssue(Date dateOfIssue) {
+		this.dateOfIssue = dateOfIssue;
 	}
 
 	public Patient getPatient() {
@@ -74,5 +73,15 @@ public class ERecipe {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
+	
 
 }

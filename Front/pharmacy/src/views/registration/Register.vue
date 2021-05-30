@@ -148,29 +148,13 @@ export default {
                     phoneNumber : this.user.phone,
             })
             .then( () => {
-                     this.$http         
-                        .post('auth/login',{
-                            email : this.user.email,
-                            password : this.user.password
-                        })
-                        .then( (response) => {
-                                                                     
-                            this.$store.commit("setUserRole", response.data.role);
-                            this.$store.commit("setUserId", response.data.userId);
-                            this.$store.commit("setJWT", response.data.accessToken);
-                            localStorage.setItem("UserRole", response.data.role);
-                            localStorage.setItem("UserId", response.data.userId);
-                            localStorage.setItem("JWT", response.data.accessToken);
-                            localStorage.setItem("Confirmed", response.data.confirmed);
-                            this.$router.push('patient-profile');   
-                            window.location.reload();
-                        }); 
-                })                    
-                .catch((error) => {
-                    if(error.response.status === 500) {                 
-                        this.toast('Vec postoji korisnik sa unetim imejlom!', 'Neuspešno', 'danger')  
-                    }
-                });    
+                 this.toast('Poslat vam je imejl sa linkom za aktivaciju naloga!', 'Uspešno', 'success')  
+            })                    
+            .catch((error) => {
+                if(error.response.status === 500) {                 
+                    this.toast('Vec postoji korisnik sa unetim imejlom!', 'Neuspešno', 'danger')  
+                }
+            });    
             }     
         },
          toast(message, title, variant){

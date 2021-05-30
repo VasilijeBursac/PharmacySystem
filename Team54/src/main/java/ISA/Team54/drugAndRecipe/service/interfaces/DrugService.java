@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import ISA.Team54.drugAndRecipe.dto.DrugForERecipeDTO;
 import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
 import ISA.Team54.drugAndRecipe.model.Drug;
@@ -26,6 +27,8 @@ public interface DrugService {
 	public List<Drug> getSubstituteForDrug(Long drugId);
 	public List<Drug> getSubstituteDrugsForNewDrug(List<Long> substituteDrugsIds);
 	public float getDrugPriceWithDiscount(DrugInPharmacy drugInPharmacy);
+	public List<DrugForERecipeDTO> getDrugsFromErecipe(Long eRecipeId); 
+	public Drug getDrugByName(String name);
 	
 	
 }

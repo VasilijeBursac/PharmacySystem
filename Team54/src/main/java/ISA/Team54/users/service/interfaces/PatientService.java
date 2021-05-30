@@ -31,4 +31,6 @@ public interface PatientService {
     boolean checkForSubscription(long pharmacyId);
     List<Pharmacy> getSubscribedPharmacies();
     void deleteSubscribedPharmacy(long id);
+    void activatePatient(long patientId);
+   
 }

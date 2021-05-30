@@ -87,6 +87,7 @@ public class AuthenticationController {
 		UserRole userRole;	 
 		
 		boolean confirmation = user.getConfirmed();
+		boolean activation = user.getActivated();
 		
 		if(authentication.getAuthorities().stream()
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_PATIENT"))) {
@@ -109,7 +110,7 @@ public class AuthenticationController {
 		
 		
 		// Vrati token kao odgovor na uspesnu autentifikaciju
-		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getId(), userRole, confirmation));
+		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getId(), userRole, confirmation, activation));
 	}
 
 	// Endpoint za registraciju novog korisnika

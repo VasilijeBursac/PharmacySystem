@@ -47,9 +47,6 @@ public class Drug {
 	@JsonBackReference
 	@ManyToMany(mappedBy="drugs")
 	private Set<Examination> examinations;
-	
-	@ManyToMany(mappedBy="drugs")
-	private Set<ERecipe> erecipes;
 
 	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private DrugSpecification drugSpecification;
@@ -135,14 +132,6 @@ public class Drug {
 
 	public void setExaminations(Set<Examination> examinations) {
 		this.examinations = examinations;
-	}
-
-	public Set<ERecipe> getErecipes() {
-		return erecipes;
-	}
-
-	public void setErecipes(Set<ERecipe> erecipes) {
-		this.erecipes = erecipes;
 	}
 
 	public DrugSpecification getDrugSpecification() {

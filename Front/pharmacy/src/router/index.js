@@ -241,6 +241,18 @@ const routes = [
     name: "DrugInformations",
     component: () =>
     import("../views/patient/drugs/DrugInformations.vue")
+  },
+  {
+    path: "/activation",
+    name: "ActivationPage",
+    component: () =>
+    import("../views/registration/ActivationPage.vue")
+  },
+  {
+    path: "/eRecipes",
+    name: "ERecipesPage",
+    component: () =>
+    import("../views/patient/eRecipe/ERecipesPage.vue")
   }
   
 ];

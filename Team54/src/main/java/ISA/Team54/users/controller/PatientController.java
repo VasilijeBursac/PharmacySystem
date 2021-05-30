@@ -22,7 +22,6 @@ import ISA.Team54.drugAndRecipe.dto.DrugDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugAllergy;
-import ISA.Team54.drugAndRecipe.model.PharmacyDrugInERecipe;
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.users.dto.BasicPatientInfoDTO;
@@ -180,5 +179,10 @@ public class PatientController {
 		}
 		
 	}
+	
+	@PutMapping("/activate/{patientId}")
+	public void activatePatient(@PathVariable Long patientId){
+		patientService.activatePatient(patientId);
+	} 
 	
 }

@@ -235,4 +235,11 @@ public class PatientServiceImpl implements PatientService {
 		}
 		patientRepository.save(patient);
 	}
+	
+	@Override
+	public void activatePatient(long patientId) {
+		Patient patient = patientRepository.findById(patientId);
+		patient.setActivated(true);
+		patientRepository.save(patient);
+	}	
 }

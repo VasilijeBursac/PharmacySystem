@@ -42,4 +42,28 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 		}
 		return drugsInPharmacyDTOs;
 	}
+
+	@Override
+	public List<DrugInPharmacy> getAllDrugsInPharmacy() {
+		if(drugsInPharmacyRepository.findAll().size() == 0)
+			return null;
+		return drugsInPharmacyRepository.findAll();
+	}
+
+	@Override
+	public List<DrugInPharmacy> getDrugsInPharmaciesByPharmacy(long pharmacyId) {
+		if(drugsInPharmacyRepository.findAllByDrugInPharmacyIdPharmaciId(pharmacyId).size() != 0)
+			return drugsInPharmacyRepository.findAllByDrugInPharmacyIdPharmaciId(pharmacyId);
+		return null;
+	}
+
+	@Override
+	public void decreaseDrugQuantity(long drugId, long pharmacyId, int quantity) {
+		DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(drugId, pharmacyId);
+		System.out.println(drugInPharmacy.getQuantity() + "preeeee"); 
+		drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - quantity);
+		System.out.println(drugInPharmacy.getQuantity() + "posleeeeeee"); 
+		drugsInPharmacyRepository.save(drugInPharmacy);
+		
+	}
 }
