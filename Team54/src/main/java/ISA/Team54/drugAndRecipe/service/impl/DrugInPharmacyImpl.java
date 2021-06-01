@@ -15,6 +15,7 @@ import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugsInPharmacyRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
+import ISA.Team54.exceptions.DrugOutOfStockException;
 @Transactional(readOnly = true)
 @Service
 public class DrugInPharmacyImpl implements DrugInPharmacyService {
@@ -61,12 +62,14 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 
 	
 	@Override
-	@Transactional(readOnly = false)
-	public void decreaseDrugQuantities(List<Long> drugIds, long pharmacyId, List<Integer> quantities) throws PessimisticLockingFailureException{
-		List<DrugInPharmacy> drugsInPharmacy = drugsInPharmacyRepository.findAll();
+	@Transactional(readOnly = false, rollbackFor = DrugOutOfStockException.class )
+	public void decreaseDrugQuantities(List<Long> drugIds, long pharmacyId, List<Integer> quantities) throws DrugOutOfStockException{
+		List<DrugInPharmacy> drugsInPharmacy = drugsInPharmacyRepository.findAllByPharmacyId(pharmacyId);
 		for (DrugInPharmacy drugInPharmacy : drugsInPharmacy) {
 			for(int i = 0; i < drugIds.size(); i++){
 				if(drugInPharmacy.getDrugInPharmacyId().getDrugId() == drugIds.get(i) && drugInPharmacy.getDrugInPharmacyId().getPharmaciId() == pharmacyId) {
+					if(drugInPharmacy.getQuantity() < quantities.get(i))
+						throw new DrugOutOfStockException();
 					drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - quantities.get(i));
 					drugsInPharmacyRepository.save(drugInPharmacy);
 				}

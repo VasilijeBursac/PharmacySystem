@@ -29,6 +29,7 @@ import ISA.Team54.drugAndRecipe.service.interfaces.DrugInERecipeService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.drugAndRecipe.service.interfaces.ERecipeService;
+import ISA.Team54.exceptions.DrugOutOfStockException;
 import ISA.Team54.users.exceptions.DrugNotFoundException;
 
 @RestController
@@ -68,7 +69,7 @@ public class ERecipeController {
 			ERecipe eRecipe = eRecipeService.addERecipe(new ERecipe(newERecipeDTO.getDateOfIssue()));
 			addDrugsInERecipes(newERecipeDTO, eRecipe.getId());
 			return new ResponseEntity<>(HttpStatus.CREATED);	
-		} catch (PessimisticLockingFailureException e) {
+		} catch (DrugOutOfStockException e) {
 			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);	
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
@@ -83,7 +84,7 @@ public class ERecipeController {
 		return drugIds;
 	}
 	
-	private void addDrugsInERecipes(NewERecipeDTO newERecipeDTO, long eRecipeId) {
+	private void addDrugsInERecipes(NewERecipeDTO newERecipeDTO, long eRecipeId) throws DrugOutOfStockException {
 		List<Long> drugIds = drugNamesToDrugIds(newERecipeDTO.getDrugNames());
 		drugInPharmacyService.decreaseDrugQuantities(drugIds, newERecipeDTO.getPharmacyId(), newERecipeDTO.getQuantities());
 		for(int i = 0; i < drugIds.size(); i++){

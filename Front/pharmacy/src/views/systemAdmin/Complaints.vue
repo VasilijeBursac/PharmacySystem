@@ -163,6 +163,8 @@ export default {
             .catch(error => {
                 if(error.response.status == 400) 
                     this.toast('Greska prilikom slanja odgovora !', 'Neuspešno', 'danger')
+                else if (error.response.status == 405)
+                    this.toast('Greska! Na ovu zalbu je vec poslat odgovor.','Neuspešno', 'danger')  
                 else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')     
             });
                

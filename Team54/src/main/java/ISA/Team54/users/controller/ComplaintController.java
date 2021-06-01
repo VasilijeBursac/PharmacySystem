@@ -74,6 +74,8 @@ public class ComplaintController {
 												complaintRespondDTO.getEmail(), 
 												complaintRespondDTO.getComplaintType());
 			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (PessimisticLockingFailureException e) {
+			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}	
