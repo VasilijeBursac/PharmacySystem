@@ -14,47 +14,47 @@ insert into contraindications( id, name) values (4, 'Deca mlađa od 2 godine');
 /* --- DERMATOLOGISTS --- */
 
 /* pera@gmail.com, pera */
-insert into dermatologist(id,address, city, country, email, name, password, phone_number, surname, price,confirmed) 
+insert into dermatologist(id,address, city, country, email, name, password, phone_number, surname, price, confirmed, activated) 
 values (1,'Jovana Ducica 22','Beograd','Srbija','pera@gmail.com','Pera','$2y$10$4pqzt42GblUIbx6vrwSGhObU5wtpGd1EaCXSLqnXh0dIeouX5P98e',
-		'231432123','Peric', 1500,true);
+		'231432123','Peric', 1500, true, true);
 		
 /* zika@gmail.com, zika */
-insert into dermatologist(id,address, city, country, email, name, password, phone_number, surname, price,confirmed) 
+insert into dermatologist(id,address, city, country, email, name, password, phone_number, surname, price, confirmed, activated) 
 values (2,'Janka Cmelika 9','Novi Sad','Srbija','zika@gmail.com','Zika','$2y$10$MN616XcMIPO4vqY2bjNEQO97f9mmT6fbFuinbLLylKr0QrJoIJSWm',
-		'0617788996','Zikic', 2000,false);
+		'0617788996','Zikic', 2000, false, true);
 		
 /* marko@gmail.com, marko */
-insert into dermatologist(id,address, city, country, email, name, password, phone_number, surname, price,confirmed) 
+insert into dermatologist(id,address, city, country, email, name, password, phone_number, surname, price, confirmed, activated) 
 values (3,'Bulevar Oslobodjenja 49','Nis','Srbija','marko@gmail.com','Marko','$2y$10$zsoFKgzcVBAUFgjNLNPrGeIK1Utd7ZBEik9GlhDNYZXA.0yVltuaq',
-		'021879554','Markovic', 1700, true);
+		'021879554','Markovic', 1700, true, true);
 		
 /* petar@gmail.com, petar */
-insert into dermatologist(id,address, city, country, email, name, password, phone_number, surname, price,confirmed) 
+insert into dermatologist(id,address, city, country, email, name, password, phone_number, surname, price, confirmed, activated) 
 values (4,'Trg Slobode 4','Subotica','Srbija','petar@gmail.com','Petar','$2y$10$8a2ynifL9RQtjOOVJA3RfO.LcNzmievmarf54iJTM.fg8LgTtGwbu',
-		'06987445','Petrovic', 1400, true);
+		'06987445','Petrovic', 1400, true, true);
 		
 /* --- PATIENTS --- */
 		
 		
 /* filip@gmail.com, filip */
-insert into patient(id,address, city, confirmed, country, email, name, password, phone_number, surname, loyalty_points, penalty_points) 
+insert into patient(id,address, city, confirmed, country, email, name, password, phone_number, surname, loyalty_points, penalty_points, activated) 
 values (5,'Bulevar Mihajla Pupina 2','Beograd', true,'Srbija','filip@gmail.com','Filip','$2y$10$Y8ssB0gdD8hGqvTmAeh6n.ZD7lpKoQkNYlKzUJrCCsjsTy73tGVJS',
-		'061985622','Filipovic', 120, 1);
+		'061985622','Filipovic', 120, 1, true);
 		
 /* mihajlo@gmail.com, mihajlo */
-insert into patient(id,address, city, confirmed, country, email, name, password, phone_number, surname, loyalty_points, penalty_points) 
+insert into patient(id,address, city, confirmed, country, email, name, password, phone_number, surname, loyalty_points, penalty_points, activated) 
 values (6,'Ruzveltova 34','Beograd', true,'Srbija','mihajlo@gmail.com','Mihajlo','$2y$10$RsVLRg9b4gIw8IegArZGi.FGP3IkbG8/97D/TyYjSyslbEDSIzq2.',
-		'01147884','Mihajlovic', 10, 0);
+		'01147884','Mihajlovic', 10, 0, true);
 		
 /* ana@gmail.com, ana */
-insert into patient(id,address, city, confirmed, country, email, name, password, phone_number, surname, loyalty_points, penalty_points) 
+insert into patient(id,address, city, confirmed, country, email, name, password, phone_number, surname, loyalty_points, penalty_points, activated) 
 values (7,'Bulevar Oslobodjenja 56','Novi Sad', true,'Srbija','ana@gmail.com','Ana','$2y$10$Ot3AbKBsBoZSRign2IFkI.vuY6iuUbKxGhtWJY39D9oH6OGJWbUFq',
-		'061985622','Anic', 0, 1);
+		'061985622','Anic', 0, 1, true);
 		
 /* kristina@gmail.com, kristina */
-insert into patient(id,address, city, confirmed, country, email, name, password, phone_number, surname, loyalty_points, penalty_points) 
+insert into patient(id,address, city, confirmed, country, email, name, password, phone_number, surname, loyalty_points, penalty_points, activated) 
 values (8,'Somborski bulevar 97','Zajecar', true,'Srbija','kristina@gmail.com','Kristina','$2y$10$IZLi/JPnH2LrQ9TxyVVhZOpLCY.Z3ZJGp1szResXjLUOFCTb/4vum',
-		'061985622','Krstic', 27, 2);
+		'061985622','Krstic', 27, 2, true);
 
 
 /* --- PHARMACIES --- */
@@ -71,67 +71,67 @@ insert into subscribed_pharmacies(patient_id, pharmacy_id) values (6, 1);
 /* --- PHARMACISTS --- */
 		
 /* dimitrije@gmail.com, dimi */
-insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date,start_date,pharmacy_id,confirmed) 
+insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date, start_date, pharmacy_id, confirmed, activated) 
 values (9,'Bulevar Mihajla Pupina 2','Zitiste','Srbija','dimitrije@gmail.com','Dimitrije','$2y$10$3vrKs8fQ4UL9h93TCSfOPOGsGYks8rKmvkUPHgwonIfv.8Jl1yQhi',
-		'061985022','Bulaja','2021-03-15','2021-03-01', 1,false);
+		'061985022','Bulaja','2021-03-15','2021-03-01', 1, false, true);
 		
 /* mihajlo@gmail.com, mika */
-insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date,start_date,pharmacy_id,confirmed) 
+insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date, start_date, pharmacy_id, confirmed, activated) 
 values (10,'Ruzveltova 21','Zrenjanin','Srbija','mihajlo@gmail.com','Mihajlo','$2y$10$JIe9RowUDmlOW7vKSDiBnuZup7wo/I0y1l052uWHNaIuWMYPJkB7m',
-		'01147881','Omaljev','2021-05-29','2021-01-11', 2,false);
+		'01147881','Omaljev','2021-05-29','2021-01-11', 2, false, true);
 
 /* mario@gmail.com, kima */		
-insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date,start_date,pharmacy_id,confirmed) 
+insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date, start_date, pharmacy_id, confirmed, activated) 
 values (17,'Bulevar Mihajla Pupina 11','Zrenjanin','Srbija','mario@gmail.com','Mario','$2y$10$zbIaMV.WAa0D4vj7kS274O8awW6OJoC1KIUBiJ3NpgdAjBGtefcy2',
-		'061985022','Petromanjanc','2021-09-11','2021-02-11', 1,false);
+		'061985022','Petromanjanc','2021-09-11','2021-02-11', 1, false, true);
 		
 /* ivica@gmail.com, ivica */
-insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date,start_date,pharmacy_id,confirmed) 
+insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date,start_date,pharmacy_id,confirmed, activated) 
 values (18,'Ruzveltova 21','Zrenjanin','Srbija','mihajlo@gmail.com','Ivica','$2y$10$cavm.nwcllSXz6W8aPjtKuYrkafL9nSPaKDz45LVaHWmRMWJBZXp2',
-		'01147881','Novakov','2021-06-29','2021-01-21', 2,false);
+		'01147881','Novakov','2021-06-29','2021-01-21', 2, false, true);
 
 		
 /* --- SYSTEM_ADMINISTRATORS --- */
 		
 /* dejan@gmail.com, deki */
-insert into system_administrator(id,address, city, confirmed, country, email, name, password, phone_number, surname) 
+insert into system_administrator(id,address, city, confirmed, country, email, name, password, phone_number, surname, activated) 
 values (11,'Bulevar Oslobodjenja 9','Novi Sad', true, 'Srbija','dejan@gmail.com','Dejan','$2y$10$c.hDMq1zCr96WdxerDedN.LwjiWQHUB/1nrpP6XGfLY.gninxZUqG',
-		'061385622','Nedeljkovic');
+		'061385622', 'Nedeljkovic', true);
 		
 /* nemanja@gmail.com, neca */
-insert into system_administrator(id,address, city, confirmed,country, email, name, password, phone_number, surname) 
+insert into system_administrator(id,address, city, confirmed,country, email, name, password, phone_number, surname, activated) 
 values (12,'Somborski bulevar 97','Zvornik', true,'Srbija','nemanja@gmail.com','Nemanja','$2y$10$bRNOF2hrIy9CROZ8ZHcreumOotmoKt6JCxgb3PoigVz0p.VxATlBC',
-		'061981622','Jevtic');
+		'061981622','Jevtic', true);
 
 /* --- PHARMACY_ADMINISTRATORS --- */
 		
 /* milena@gmail.com, milence */
-insert into pharmacy_administrator(id,address, city, country, email, name, password, phone_number, surname, pharmacy_id, confirmed) 
+insert into pharmacy_administrator(id,address, city, country, email, name, password, phone_number, surname, pharmacy_id, confirmed, activated) 
 values (13,'Balzakova 1','Novi Sad','Srbija','milena@gmail.com','Milena','$2y$10$7u1AWYA7wW3UkcB2PchaTOnenZwVo0TTSbL9w2I68feFLt/u9vI8G',
-		'061385600','Kovacevic', 1, false);
+		'061385600','Kovacevic', 1, false, true);
 		
 /* denis@gmail.com, denis */
-insert into pharmacy_administrator(id,address, city, country, email, name, password, phone_number, surname, pharmacy_id, confirmed) 
+insert into pharmacy_administrator(id,address, city, country, email, name, password, phone_number, surname, pharmacy_id, confirmed, activated) 
 values (14,'Somborski bulevar 90','Zrenjanin','Srbija','denis@gmail.com','Denis','$2y$10$ihpttwUywTQ2Iw2FBXYfGueEACL239/xdGRguelnU/3GsS4sPxQja',
-		'062981622','Fruza', 2, false);
+		'062981622','Fruza', 2, false, true);
 
 
 /* --- SUPPLIER --- */
 		
 /* jovan@gmail.com, jovan */
-insert into supplier(id,address, city, confirmed, country, email, name, password, phone_number, surname) 
+insert into supplier(id,address, city, confirmed, country, email, name, password, phone_number, surname, activated) 
 values (15,'Balzakova 2','Novi Sad', true,'Srbija','jovan@gmail.com','Jovan','$2y$10$GnY077C6faJvHeE8nfEr.e3rFBxQfaY7mz62ChyKiRp/Nchpglw4m',
-		'061385600','Cvijovic');
+		'061385600','Cvijovic', true);
 		
 /* danijel@gmail.com, danijel */
-insert into supplier(id,address, city,confirmed, country, email, name, password, phone_number, surname) 
+insert into supplier(id,address, city,confirmed, country, email, name, password, phone_number, surname, activated) 
 values (16,'Somborski bulevar 91','Zrenjanin', true,'Srbija','danijel@gmail.com','Danijel','$2y$10$tmCL0qXq3J797yMJtd9xmuaaeOVYolsFPZfSPbhm/1rcoJL7DMDZO',
-		'062981622','Novakovic');
+		'062981622','Novakovic', true);
 		
 /* natasa@gmail.com, nata */
-insert into supplier(id,address, city, confirmed, country, email, name, password, phone_number, surname) 
+insert into supplier(id,address, city, confirmed, country, email, name, password, phone_number, surname, activated) 
 values (19,'Somborski bulevar 99','Zrenjanin', true,'Srbija','natasa@gmail.com','Natasa','$2y$10$SDsigowv761RRb9KIuiYwedVzSWvI05uIiR1o7MTp9QcaXS3fgS/.',
-		'062941622','Subotic');
+		'062941622','Subotic', true);
 
 		
 insert into user_authority( user_id, authority_id) values (1,4);
@@ -166,7 +166,7 @@ insert into drug(id, name, code, type, shape, manifacturer, additional_info, loy
 insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points, drug_specification_id) values (2, 'Bensedin','125697','antibiotik', 'kapsula', 'Hemofarm', 'Uzimati jednom dnevno', 3, 2);
 insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points, drug_specification_id) values (3, 'Bisoprolol','365895', 'anestetik', 'mast', 'Jugoremedija', 'Uzimati tri puta dnevno', 4, 3);
 insert into drug(id, name, code, type, shape, manifacturer, additional_info, loyalty_points, drug_specification_id) values (4, 'Brufen','023547', 'anetetik', 'gel', 'Hemofarm', 'Cuvati na hladnom', 5, 4);
-insert into drug(id, name, code, type, shape, manifacturer, additional_Info, loyalty_points, drug_specification_id) values (5, 'Probiotic','785493', 'anestetik', 'sirup', 'Jugoremedija', 'Uzimati jendom denvo', 5, 5);
+insert into drug(id, name, code, type, shape, manifacturer, additional_Info, loyalty_points, drug_specification_id) values (5, 'Bulardi','785493', 'probiotik', 'sirup', 'Jugoremedija', 'Uzimati jendom denvo', 5, 5);
 
 insert into substitute_drugs(substitute_drug_id,main_drug_id) values(2,1);
 insert into substitute_drugs(substitute_drug_id,main_drug_id) values(3,1);
@@ -455,9 +455,17 @@ update drug_in_pharmacy set pricelist_id = 9 where drug_id = 5 and pharmaci_id =
   
  /* -- ERECIPE --*/
  
- insert into erecipe(date_of_issue,patient_id) values ('2021-01-01 12:00',8);
- insert into erecipe(date_of_issue,patient_id) values ('2021-01-01 10:00',5);
- insert into erecipe(date_of_issue,patient_id) values ('2020-12-01 9:00',5);
+ insert into erecipe(date_of_issue,patient_id, code) values ('2021-01-01 12:00',8, '2345');
+ insert into erecipe(date_of_issue,patient_id, code) values ('2021-01-01 10:00',5, '1246');
+ insert into erecipe(date_of_issue,patient_id, code) values ('2020-12-01 9:00',5, '3547');
+ 
+ insert into drug_inerecipe(drug_id, e_recipe_id, pharmaci_id, quantity_inerecipe) values (1, 1, 1, 5);
+ insert into drug_inerecipe(drug_id, e_recipe_id, pharmaci_id, quantity_inerecipe) values (1, 2, 1, 5);
+ insert into drug_inerecipe(drug_id, e_recipe_id, pharmaci_id, quantity_inerecipe) values (2, 2, 1, 1);
+ insert into drug_inerecipe(drug_id, e_recipe_id, pharmaci_id, quantity_inerecipe) values (3, 2, 1, 1);
+ insert into drug_inerecipe(drug_id, e_recipe_id, pharmaci_id, quantity_inerecipe) values (4, 2, 2, 1);
+ insert into drug_inerecipe(drug_id, e_recipe_id, pharmaci_id, quantity_inerecipe) values (5, 2, 2, 2);
+ insert into drug_inerecipe(drug_id, e_recipe_id, pharmaci_id, quantity_inerecipe) values (1, 3, 1, 2);
  
   insert into loyalty_category(id, name, lower, upper, discount)
  values (1, 'Bronze', 0, 50, 10);

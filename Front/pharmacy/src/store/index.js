@@ -25,6 +25,7 @@ export default new Vuex.Store({
 		},
 		setJWT(state,newJWT) {
 			state.JWT = newJWT;
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + newJWT;
 		}
 	},
 	actions: {},

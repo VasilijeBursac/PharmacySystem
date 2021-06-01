@@ -57,6 +57,9 @@ public abstract class User implements UserDetails{
 	@Column(unique = false,nullable = true)
 	protected Boolean confirmed = false;	
 	
+	@Column(unique = false,nullable = true)
+	protected Boolean activated = true;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -194,6 +197,14 @@ public abstract class User implements UserDetails{
 
 	public void setConfirmed(Boolean confirmed) {
 		this.confirmed = confirmed;
+	}
+
+	public Boolean getActivated() {
+		return activated;
+	}
+
+	public void setActivated(Boolean activated) {
+		this.activated = activated;
 	}	
 	
 	

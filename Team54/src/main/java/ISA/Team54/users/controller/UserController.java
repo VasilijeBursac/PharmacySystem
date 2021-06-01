@@ -54,23 +54,5 @@ public class UserController {
 	public void updateUserInfo(@RequestBody UserInfoDTO user){
 		this.userService.updateUserInfo(user);
 	} 
-	/*
-	@GetMapping("/user/all")
-	@PreAuthorize("hasRole('ADMIN')")
-	public List<Patient> loadAll() {
-		return this.userService.findAll();
-	}
-
-	@GetMapping("/whoami")
-	@PreAuthorize("hasRole('USER')")
-	public Patient user(Principal user) {
-		return this.userService.findByUsername(user.getName());
-	}
 	
-	@GetMapping("/foo")
-    public Map<String, String> getFoo() {
-        Map<String, String> fooObj = new HashMap<>();
-        fooObj.put("foo", "bar");
-        return fooObj;
-    }*/
 }

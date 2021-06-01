@@ -51,12 +51,16 @@
 
 <script>
 export default {
+    props : ['fromLogin','user'],
     data(){
         return{
             form:{
                 oldPassword:'',
                 newPassword: '',
-                repeatedNewPassword: ''
+                repeatedNewPassword: '',
+                changePasswordLogin : false,
+                email: '',
+                password: ''
             }
         }
     },
@@ -84,38 +88,47 @@ export default {
                     .then( res => {
                         if(res.status == 200){
                             this.toast('success', 'Uspešno!', `Uspešno ste izmenili svoju lozinku!`)
-                            this.closeModal();
+                            if(this.fromLogin == true){
+                                this.$store.commit("setUserRole", this.user.role);
+                                this.$store.commit("setUserId", this.user.userId);
+                                localStorage.setItem("UserRole", this.user.role);
+                                localStorage.setItem("UserId", this.user.userId);
+                                localStorage.setItem("Confirmed", this.user.confirmed);       
 
-                            if ( localStorage.getItem("UserRole") === "ROLE_PATIENT") {
-                                this.$router.push("patient-profile");
+                                if (this.user.role === "ROLE_PATIENT") {
+                                    this.$router.push("patient-profile");
+                                }
+                                if (this.user.role === "ROLE_SYSTEM_ADMIN") {
+                                    this.$router.push("systemAdminsPage");
+                                }
+                                if (this.user.role === "ROLE_PHARMACY_ADMIN") {
+                                    this.$router.push("patient-profile");
+                                }
+                                if (this.user.role === "ROLE_DERMATOLOGIST") {
+                                    this.$router.push("dermatologist-profile");
+                                }
+                                if (this.user.role === "ROLE_PHARMACIST") {
+                                    this.$router.push("pharmacist-profile");
+                                }
+                                if (this.user.role === "ROLE_SUPPLIER") {
+                                    this.$router.push("supplier-profile");
+                                }
+
+                                 window.location.reload();
                             }
-                            if (localStorage.getItem("UserRole") === "ROLE_SYSTEM_ADMIN") {
-                                this.$router.push("systemAdminsPage");
-                            }
-                            if (localStorage.getItem("UserRole") === "ROLE_PHARMACY_ADMIN") {
-                                this.$router.push("patient-profile");
-                            }
-                            if (localStorage.getItem("UserRole") === "ROLE_DERMATOLOGIST") {
-                                this.$router.push("dermatologist-profile");
-                            }
-                            if (localStorage.getItem("UserRole") === "ROLE_PHARMACIST") {
-                                this.$router.push("pharmacist-profile");
-                            }
-                            if (localStorage.getItem("UserRole") === "ROLE_SUPPLIER") {
-                                this.$router.push("supplier-profile");
-                            }
+                            this.closeModal();
 
                         } else {
                             this.toast('danger', 'Neuspešno!', 'Greška pri izmeni lozinke!')
                         }
                     })
-                    .catch((error) => {
-                        alert(error.response.status)
+                    .catch(() => {
                         this.toast('danger', 'Neuspešno!', 'Greška pri izmeni lozinke! Niste uneli ispravnu staru lozinku!')
                     })
 
             }
         },
+        
 
          toast(variant, title, message){
             this.$bvToast.toast(message, {

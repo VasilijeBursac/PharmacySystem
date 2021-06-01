@@ -9,18 +9,20 @@ public class UserTokenState {
     private Long userId;
     private UserRole role;
     private boolean confirmed;
+    private boolean activated;
 
     public UserTokenState() {
         this.accessToken = null;
         this.expiresIn = null;
     }
 
-    public UserTokenState(String accessToken, long expiresIn, long userId,UserRole role,boolean confirmed) {
+    public UserTokenState(String accessToken, long expiresIn, long userId,UserRole role,boolean confirmed,boolean activated) {
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
         this.userId = userId;
         this.role = role;
         this.confirmed = confirmed;
+        this.activated = activated;
     }
 
     	
@@ -63,5 +65,15 @@ public class UserTokenState {
 	public void setConfirmed(boolean confirmed) {
 		this.confirmed = confirmed;
 	}
+
+	public boolean isActivated() {
+		return activated;
+	}
+
+	public void setActivated(boolean activated) {
+		this.activated = activated;
+	}
+	
+	
     
 }

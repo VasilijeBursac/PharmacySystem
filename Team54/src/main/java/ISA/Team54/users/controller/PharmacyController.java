@@ -1,10 +1,14 @@
 package ISA.Team54.users.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import ISA.Team54.drugAndRecipe.dto.PharmacyForDrugDTO;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugReservationService;
+import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationSearchDTO;
 import ISA.Team54.Examination.dto.ExaminationTypeDTO;
@@ -25,8 +29,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.zxing.NotFoundException;
+
+import ISA.Team54.users.dto.DrugNamesAndQuantitiesDTO;
 import ISA.Team54.users.dto.PharmacyDTO;
 import ISA.Team54.users.dto.PharmacyExaminationDTO;
+import ISA.Team54.users.dto.PharmacyForERecipeDTO;
+import ISA.Team54.users.exceptions.DrugNotFoundException;
+import ISA.Team54.users.mappers.PharmacyForErecipeMapper;
 import ISA.Team54.users.mappers.PharmacyMapper;
 import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.service.interfaces.PharmacyService;
@@ -42,6 +52,9 @@ public class PharmacyController {
 
 	@Autowired
 	private DrugReservationService drugReservationService;
+	
+	@Autowired
+	private DrugService drugService;
 	
 	@PostMapping("/addPharmacy")
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
@@ -146,5 +159,35 @@ public class PharmacyController {
 				return false;
 		}
 		return true;
+	}
+	
+	@PostMapping("/pharmaciesForErecipe")
+	@PreAuthorize("hasRole('ROLE_PATIENT')")
+	public ResponseEntity<List<PharmacyForERecipeDTO>> getPharmaciesForErecipe(@RequestBody DrugNamesAndQuantitiesDTO drugNamesAndQuantitiesDTO){
+		try {
+			List<PharmacyForERecipeDTO> pharmacyForERecipeDTOs = new ArrayList<>();
+			for(Map.Entry pharmacy : pharmacyService.getPharmaciesWithTotalPrices(
+												drugNamesToDrugIds(drugNamesAndQuantitiesDTO.getDrugNames()),
+												drugNamesAndQuantitiesDTO.getDrugQuantities()).entrySet()){    
+				pharmacyForERecipeDTOs.add(PharmacyForErecipeMapper.PharmacyToPharmacyForErecipeDTO(
+						pharmacyService.getPharmacyById(Long.parseLong(pharmacy.getKey().toString())),
+						Float.parseFloat(pharmacy.getValue().toString())));
+			}
+			 return new ResponseEntity<>(pharmacyForERecipeDTOs, HttpStatus.OK);
+		} catch (DrugNotFoundException e){
+			 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} catch (Exception e){
+			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	private List<Long> drugNamesToDrugIds(List<String> drugNames) throws DrugNotFoundException{
+		List<Long> drugIds = new ArrayList();
+		for(int i = 0; i < drugNames.size(); i++) {
+			if(drugService.getDrugByName(drugNames.get(i)) == null)
+				throw new DrugNotFoundException();
+			drugIds.add(drugService.getDrugByName(drugNames.get(i)).getId());
+		}
+		return drugIds;
 	}
 }
