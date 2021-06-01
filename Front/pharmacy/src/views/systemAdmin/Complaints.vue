@@ -3,7 +3,7 @@
       <h3 id = "h3" class="h3 align-middle ">Sve zalbe korisnika u sistemu</h3>
       
       <div id="show-complaints">
-            <h4 id = "h4">
+            <h4 id = "h4" v-if="pharmacistComplaints.length != 0">
                 Zalbe na farmaceute :
             </h4>
             <div v-for = "(complaint,index) in pharmacistComplaints" :key="complaint.text" class = "single-complaint">
@@ -27,7 +27,7 @@
                         </b-row>
                         <b-row >
                             <div id = "buttons">                        
-                                <b-button  variant="success" class="mr-2" @click="respondToComplaint(complaint.email, complaint.complaintType, index)">
+                                <b-button  variant="success" class="mr-2" @click="respondToComplaint(complaint.id, complaint.email, complaint.complaintType, index)">
                                     <b-icon-check></b-icon-check>
                                     Odgovori </b-button>
                                 <b-button  variant="danger" type = "reset">
@@ -39,7 +39,7 @@
                     </b-form>    
                                                                      
             </div>
-             <h4 id = "h4">
+             <h4 id = "h4" v-if="dermatologistComplaints.length != 0">
                 Zalbe na dermatologe :
             </h4>
             <div v-for = "(complaint,index) in dermatologistComplaints" :key="complaint.text" class = "single-complaint">
@@ -62,7 +62,7 @@
                         </b-row>
                         <b-row >
                             <div id = "buttons">                        
-                                <b-button  variant="success" class="mr-2" @click="respondToComplaint(complaint.email, complaint.complaintType, index)">
+                                <b-button  variant="success" class="mr-2" @click="respondToComplaint(complaint.id, complaint.email, complaint.complaintType, index)">
                                     <b-icon-check></b-icon-check>
                                     Odgovori </b-button>
                                 <b-button  variant="danger" type= "reset">
@@ -73,7 +73,7 @@
                         </b-row>
                      </b-form>                                                        
             </div>
-             <h4 id = "h4">
+             <h4 id = "h4" v-if="pharmacyComplaints.length != 0">
                 Zalbe na apoteke :
             </h4>
             <div v-for = "(complaint,index) in pharmacyComplaints" :key="complaint.text" class = "single-complaint">
@@ -96,7 +96,7 @@
                         </b-row>
                         <b-row >
                             <div id = "buttons">                        
-                                <b-button  variant="success" class="mr-2" @click="respondToComplaint(complaint.email, complaint.complaintType, index)">
+                                <b-button  variant="success" class="mr-2" @click="respondToComplaint(complaint.id, complaint.email, complaint.complaintType, index)">
                                     <b-icon-check></b-icon-check>
                                     Odgovori </b-button>
                                 <b-button  variant="danger" type = "reset">
@@ -137,7 +137,7 @@ export default {
         else this.pharmacyResponses[index] = '' 
                
     },
-    respondToComplaint(email, complaintType, index){              
+    respondToComplaint(id, email, complaintType, index){            
         this.email = email;
         this.complaintType = complaintType;
         if(complaintType == "PharmacistComplaint")
@@ -151,12 +151,14 @@ export default {
            return;    
         }      
         this.$http.post("complaint/respondToComplaint",{
+                id : id,
                 response : this.responseText,
-                email : this.email,
-                complaintType : this.complaintType
+                email : email,
+                complaintType : complaintType
         })
         .then( () => {
-                this.toast('Odogovr na zalbu je poslat korisniku na mejl !','Uspešno!','success')                    
+                this.toast('Odogovr na zalbu je poslat korisniku na mejl !','Uspešno!','success')
+                window.location.reload();
             })                    
             .catch(error => {
                 if(error.response.status == 400) 
@@ -164,6 +166,12 @@ export default {
                 else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')     
             });
                
+    },
+    deleteElementFromList(elementForDeleting,list){
+          var newArray = list.filter(element => {
+          return element !== elementForDeleting;
+        });
+          list = newArray
     },
     toast(message, title, variant){
         this.$bvToast.toast(message, {
@@ -173,24 +181,24 @@ export default {
         })
     }
   }, 
-  created() {
+  mounted() {
             this.$axios.get("complaint/allComplaints")
             .then(response => {                
                 var comlpaints = response.data.slice(0,10);
                 comlpaints.forEach(element => {
-                    if(element.complaintType == "PharmacistComplaint"){
+                    if(element.complaintType == "PharmacistComplaint" && !element.responded){
                         this.pharmacistComplaintObjects.push({
                             name : "farmaceuta"
                         })
                         this.pharmacistComplaints.push(element)
                     }
-                    else if(element.complaintType == "DermatologistComplaint"){
+                    else if(element.complaintType == "DermatologistComplaint" && !element.responded){
                         this.dermatologistComplaintObjects.push({
                             name : "dermatologa"
                         })
                         this.dermatologistComplaints.push(element)
                     }    
-                    else {
+                    else if(!element.responded){
                         this.pharmacyComplaintObjects.push({
                             name : "apoteku"
                         })
@@ -199,7 +207,10 @@ export default {
                     
                 });    
              
-            }) 
+            }) .catch(error => {
+                if(error.response.status == 404)
+                    this.toast('Trenutno ne postoji nijedna zalba u sistemu!','Neuspešno', 'danger');  
+                });
        
         } 
 };

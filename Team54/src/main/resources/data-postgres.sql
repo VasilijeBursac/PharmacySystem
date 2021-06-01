@@ -476,6 +476,6 @@ update drug_in_pharmacy set pricelist_id = 9 where drug_id = 5 and pharmaci_id =
 
  /* -- ERECIPE --*/
  
- insert into complaint(id, object_id, text, type, patient_id) values (1, 1, 'Ne posvecuje dovoljno paznje pacijentima!','DermatologistComplaint', 5);
- insert into complaint(id, object_id, text, type, patient_id) values (2, 9, 'Jako bezobrazan i neljubazan!','PharmacistComplaint', 5);
- insert into complaint(id, object_id, text, type, patient_id) values (3, 1, 'Prevelike cene i neljubazni radnici!','PharmacyComplaint', 5);
+ insert into complaint(id, object_id, responded, text, type, patient_id) values (1, 1, false, 'Ne posvecuje dovoljno paznje pacijentima!','DermatologistComplaint', 5);
+ insert into complaint(id, object_id, responded, text, type, patient_id) values (2, 9, false, 'Jako bezobrazan i neljubazan!','PharmacistComplaint', 5);
+ insert into complaint(id, object_id, responded, text, type, patient_id) values (3, 1, false, 'Prevelike cene i neljubazni radnici!','PharmacyComplaint', 5);

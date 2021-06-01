@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugInPharmacyMapper;
@@ -13,7 +15,7 @@ import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugsInPharmacyRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
-
+@Transactional(readOnly = true)
 @Service
 public class DrugInPharmacyImpl implements DrugInPharmacyService {
 	
@@ -57,13 +59,19 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 		return null;
 	}
 
+	
 	@Override
-	public void decreaseDrugQuantity(long drugId, long pharmacyId, int quantity) {
-		DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(drugId, pharmacyId);
-		System.out.println(drugInPharmacy.getQuantity() + "preeeee"); 
-		drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - quantity);
-		System.out.println(drugInPharmacy.getQuantity() + "posleeeeeee"); 
-		drugsInPharmacyRepository.save(drugInPharmacy);
+	@Transactional(readOnly = false)
+	public void decreaseDrugQuantities(List<Long> drugIds, long pharmacyId, List<Integer> quantities) throws PessimisticLockingFailureException{
+		List<DrugInPharmacy> drugsInPharmacy = drugsInPharmacyRepository.findAll();
+		for (DrugInPharmacy drugInPharmacy : drugsInPharmacy) {
+			for(int i = 0; i < drugIds.size(); i++){
+				if(drugInPharmacy.getDrugInPharmacyId().getDrugId() == drugIds.get(i) && drugInPharmacy.getDrugInPharmacyId().getPharmaciId() == pharmacyId) {
+					drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - quantities.get(i));
+					drugsInPharmacyRepository.save(drugInPharmacy);
+				}
+			}
+		}
 		
 	}
 }

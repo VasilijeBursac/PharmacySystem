@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -59,8 +60,8 @@ public class ComplaintController {
 			Complaint complaint = ComplaintMapper.ComplaintDTOIntoComplaint(complaintDTO);
 			complaintService.addComplaint(complaint);
 			return new ResponseEntity<>(HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} catch ( PessimisticLockingFailureException e) {
+			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 		}	
 	} 
 	
@@ -68,8 +69,10 @@ public class ComplaintController {
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public  ResponseEntity<String> respondToComplaint(@RequestBody ComplaintRespondDTO complaintRespondDTO){
 		try {
-			complaintService.respondToComplaint(complaintRespondDTO.getResponse(), complaintRespondDTO.getEmail(), 
-					complaintRespondDTO.getComplaintType());
+			complaintService.respondToComplaint(complaintRespondDTO.getId(), 
+												complaintRespondDTO.getResponse(),
+												complaintRespondDTO.getEmail(), 
+												complaintRespondDTO.getComplaintType());
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

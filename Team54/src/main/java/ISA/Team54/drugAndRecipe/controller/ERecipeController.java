@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +68,8 @@ public class ERecipeController {
 			ERecipe eRecipe = eRecipeService.addERecipe(new ERecipe(newERecipeDTO.getDateOfIssue()));
 			addDrugsInERecipes(newERecipeDTO, eRecipe.getId());
 			return new ResponseEntity<>(HttpStatus.CREATED);	
+		} catch (PessimisticLockingFailureException e) {
+			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);	
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
 		}
@@ -82,9 +85,8 @@ public class ERecipeController {
 	
 	private void addDrugsInERecipes(NewERecipeDTO newERecipeDTO, long eRecipeId) {
 		List<Long> drugIds = drugNamesToDrugIds(newERecipeDTO.getDrugNames());
+		drugInPharmacyService.decreaseDrugQuantities(drugIds, newERecipeDTO.getPharmacyId(), newERecipeDTO.getQuantities());
 		for(int i = 0; i < drugIds.size(); i++){
-			System.out.println(drugIds.get(i) + "leeeek");
-			drugInPharmacyService.decreaseDrugQuantity(drugIds.get(i), newERecipeDTO.getPharmacyId(), newERecipeDTO.getQuantities().get(i));
 			drugInERecipeService.addDrugInERecipe(new DrugInERecipe(new DrugInERecipeId(newERecipeDTO.getPharmacyId(),
 																						drugIds.get(i),
 																						eRecipeId),				
