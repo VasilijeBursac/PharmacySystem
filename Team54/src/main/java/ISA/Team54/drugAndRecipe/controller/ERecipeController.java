@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import ISA.Team54.drugAndRecipe.service.interfaces.DrugInERecipeService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.drugAndRecipe.service.interfaces.ERecipeService;
+import ISA.Team54.exceptions.DrugOutOfStockException;
 import ISA.Team54.users.exceptions.DrugNotFoundException;
 
 @RestController
@@ -67,6 +69,8 @@ public class ERecipeController {
 			ERecipe eRecipe = eRecipeService.addERecipe(new ERecipe(newERecipeDTO.getDateOfIssue()));
 			addDrugsInERecipes(newERecipeDTO, eRecipe.getId());
 			return new ResponseEntity<>(HttpStatus.CREATED);	
+		} catch (DrugOutOfStockException e) {
+			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);	
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
 		}
@@ -80,11 +84,10 @@ public class ERecipeController {
 		return drugIds;
 	}
 	
-	private void addDrugsInERecipes(NewERecipeDTO newERecipeDTO, long eRecipeId) {
+	private void addDrugsInERecipes(NewERecipeDTO newERecipeDTO, long eRecipeId) throws DrugOutOfStockException {
 		List<Long> drugIds = drugNamesToDrugIds(newERecipeDTO.getDrugNames());
+		drugInPharmacyService.decreaseDrugQuantities(drugIds, newERecipeDTO.getPharmacyId(), newERecipeDTO.getQuantities());
 		for(int i = 0; i < drugIds.size(); i++){
-			System.out.println(drugIds.get(i) + "leeeek");
-			drugInPharmacyService.decreaseDrugQuantity(drugIds.get(i), newERecipeDTO.getPharmacyId(), newERecipeDTO.getQuantities().get(i));
 			drugInERecipeService.addDrugInERecipe(new DrugInERecipe(new DrugInERecipeId(newERecipeDTO.getPharmacyId(),
 																						drugIds.get(i),
 																						eRecipeId),				

@@ -4,6 +4,7 @@ import ISA.Team54.users.enums.ComplaintType;
 
 public class ComplaintRespondDTO {
 	
+	private long id;
 	private String response;
 	private String email;
 	private ComplaintType complaintType;
@@ -12,8 +13,9 @@ public class ComplaintRespondDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ComplaintRespondDTO(String response, String email, ComplaintType complaintType) {
+	public ComplaintRespondDTO(long id,String response, String email, ComplaintType complaintType) {
 		super();
+		this.id = id;
 		this.response = response;
 		this.email = email;
 		this.complaintType = complaintType;
@@ -36,6 +38,12 @@ public class ComplaintRespondDTO {
 	}
 	public void setComplaintType(ComplaintType complaintType) {
 		this.complaintType = complaintType;
+	}
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	

@@ -26,6 +26,9 @@ public class Complaint {
 	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Patient patient;
 	
+	@Column(unique = false,nullable = true)
+	private Boolean responded;
+	
 	public Complaint() {
 		super();
 	}
@@ -76,6 +79,16 @@ public class Complaint {
 	public void setType(ComplaintType type) {
 		this.type = type;
 	}
+
+	public Boolean getResponded() {
+		return responded;
+	}
+
+	public void setResponded(Boolean responded) {
+		this.responded = responded;
+	}
+
+	
 	
 	
 	

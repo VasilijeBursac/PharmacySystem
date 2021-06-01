@@ -3,10 +3,12 @@ package ISA.Team54.users.dto;
 import ISA.Team54.users.enums.ComplaintType;
 
 public class ComplaintDTO {
+	private long id;
 	private String patient;
 	private String complaintObjectName;
 	private String text;
 	private String email;
+	private boolean responded;
 	private ComplaintType complaintType;
 		 
 	public ComplaintDTO() {
@@ -14,12 +16,14 @@ public class ComplaintDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ComplaintDTO(String patient, String complaintObjectName, String text, String email, ComplaintType complaintType) {
+	public ComplaintDTO(long id, String patient, String complaintObjectName, String text, String email,boolean responded, ComplaintType complaintType) {
 		super();
+		this.id = id;
 		this.patient = patient;
 		this.complaintObjectName = complaintObjectName;
 		this.text = text;
 		this.email = email;
+		this.responded = responded;
 		this.complaintType = complaintType;
 	}
 
@@ -61,6 +65,22 @@ public class ComplaintDTO {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public boolean isResponded() {
+		return responded;
+	}
+
+	public void setResponded(boolean responded) {
+		this.responded = responded;
 	}
 	
 	

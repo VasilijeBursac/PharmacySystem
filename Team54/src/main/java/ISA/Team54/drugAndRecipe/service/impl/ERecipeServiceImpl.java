@@ -44,7 +44,7 @@ public class ERecipeServiceImpl implements ERecipeService{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
 		eRecipe.setPatient(patient);
-		emailService.sendEmail("mdjurisic98@gmail.com","Izdavanje e recepta","Uspesno ste generisali e recept!");
+		emailService.sendEmail(patient.getEmail(),"Izdavanje e recepta","Uspesno ste generisali e recept!");
 		return eRecipeRepository.save(eRecipe);
 	}
 	

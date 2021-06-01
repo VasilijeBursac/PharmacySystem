@@ -120,7 +120,9 @@
                     this.items = []
                     if(error.response.status == 400)
                         this.toast('Greska prilikom generisanja e recepta!','Neuspešno', 'danger') 
-                    else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+                    else if (error.response.status == 405)
+                        this.toast('Greska! Stanje lekova se promenilo i nije moguce izdati sve lekove!Pokusajte u drugoj apoteci!.','Neuspešno', 'danger')  
+                    else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')     
                 })    
         },
         toast(message, title, variant){

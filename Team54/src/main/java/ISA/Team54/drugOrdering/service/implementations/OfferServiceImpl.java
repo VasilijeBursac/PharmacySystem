@@ -40,10 +40,8 @@ public class OfferServiceImpl implements OfferService{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Supplier supplier = supplierRepository.findById(((Supplier) authentication.getPrincipal()).getId());
 		offer.setSupplier(supplier);
-		if(!checkDrugsInStorageForOrder(offer.getOrder().getId(),supplier)) { 
-			System.out.println(checkDrugsInStorageForOrder(offer.getOrder().getId(),supplier) + "-------------");
+		if(!checkDrugsInStorageForOrder(offer.getOrder().getId(),supplier))
 			throw new NotEnoughDrugsInStorageException();	
-		}		
 		offerRepository.save(offer);
 	}
 	

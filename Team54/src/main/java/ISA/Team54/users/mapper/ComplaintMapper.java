@@ -14,11 +14,13 @@ public class ComplaintMapper {
 	}
 	
 	public static ComplaintDTO ComplaintIntoComplaintDTO(Complaint complaint,String complaintObjectName) {
-		return new ComplaintDTO(complaint.getPatient().getName() + " "
+		return new ComplaintDTO(complaint.getId(),
+				complaint.getPatient().getName() + " "
 				+ complaint.getPatient().getSurname(),
 				complaintObjectName,
 				complaint.getText(),
-				complaint.getPatient().getEmail(), 
+				complaint.getPatient().getEmail(),
+				complaint.getResponded(),
 				complaint.getType());
 	}
 }
