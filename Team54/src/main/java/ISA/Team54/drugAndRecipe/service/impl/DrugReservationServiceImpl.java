@@ -1,4 +1,4 @@
-package ISA.Team54.drugAndRecipe.service.impl;
+ package ISA.Team54.drugAndRecipe.service.impl;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -74,7 +74,7 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 	
 	@Transactional(readOnly = false, rollbackFor = DrugOutOfStockException.class)
 	@Override
-	public void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) throws Exception {
+	public void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) throws DrugOutOfStockException {
 		DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findOneByDrugInPharmacyId(drugInPharmacyId);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
@@ -150,7 +150,7 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 			throw new Exception();
 		}
 	}
-
+	
 	private List<DrugReservation> getSoldReservationsForPatient(){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());

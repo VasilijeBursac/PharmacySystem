@@ -1,12 +1,15 @@
 package ISA.Team54.unit;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,10 +17,14 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -25,6 +32,10 @@ import ISA.Team54.Examination.enums.ExaminationStatus;
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
+import ISA.Team54.drugAndRecipe.enums.ReservationStatus;
+import ISA.Team54.drugAndRecipe.model.Drug;
+import ISA.Team54.drugAndRecipe.model.DrugReservation;
+import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.users.model.Dermatologist;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.User;
@@ -54,6 +65,9 @@ public class UserTests{
 	
 	@Autowired
 	private DermatologistService dermatologistService;
+	
+	@Autowired
+	private DrugService drugService;
 	
 	 @Test 
 	 public void findDermatologistById_ReturnsDermatologist() {
@@ -131,7 +145,7 @@ public class UserTests{
 	 }
 
 	 @Test
-	public void testDeletePenaltyPoints(){
+	public void deletePatientAllergy(){
 		 Patient patient1 = new Patient();
 		 patient1.setId(1);
 		 patient1.setName("Filip");
@@ -150,5 +164,40 @@ public class UserTests{
 		 patientService.deletePenaltyPointsForAll();
 
 		 verify(patientRepositoryMocked, times(2)).save(any(Patient.class));
+	 }
+	 
+
+	//STUDENT 4 : UNIT TEST
+	 @Test(expected =  Exception.class)
+	 public void testAddAllergy_TrowException(){
+		Patient patient = new Patient();
+        patient.setId(1);
+        patient.setName("Filip");
+        patient.setSurname("Filipovic");
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        Drug drug = new Drug(1,"Aspirin","23425",3);
+		List<Drug> drugAllergies = new ArrayList<Drug>();
+		drugAllergies.add(new Drug(1,"Aspirin","23425",3));
+		drugAllergies.add(new Drug(2,"Paracetamol","23421",4));
+		drugAllergies.add(new Drug(3,"Kafetin","23475",2));		
+		patient.setDrugAllergies(drugAllergies);
+		
+        when(authentication.getPrincipal()).thenReturn(patient);
+
+        when(drugService.findById(1L)).thenReturn(drug);
+   
+
+		try {
+			patientService.addAllergy(1L);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	 }
 }
