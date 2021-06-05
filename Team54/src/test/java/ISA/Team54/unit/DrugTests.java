@@ -71,7 +71,7 @@ public class DrugTests {
 		 DrugInPharmacyId drugInPharmacyId2 = new DrugInPharmacyId(3,1);
 		 DrugInPharmacyId drugInPharmacyId3 = new DrugInPharmacyId(2,1);
 		 DrugInPharmacyId drugInPharmacyId4 = new DrugInPharmacyId(5,1);
-		 DrugInPharmacyId drugInPharmacyId5 = new DrugInPharmacyId(1,3);
+		 DrugInPharmacyId drugInPharmacyId5 = new DrugInPharmacyId(1,1);
 		 
 		 DrugInPharmacy drugnInPharmacy1  = new DrugInPharmacy(drugInPharmacyId1,20);
 		 DrugInPharmacy drugnInPharmacy2  = new DrugInPharmacy(drugInPharmacyId2,10);
@@ -92,4 +92,63 @@ public class DrugTests {
 		 List<DrugInPharmacy> drugInPharmacies = drugInPharmacyService.getDrugsInPharmaciesByDrug(Constants.DRUG_ID1);
 		 assertEquals(drugInPharmacies.size(),5);
 	 }
+	 
+	 
+	 //STUDENT 4 : UNIT TEST
+@Test public void getDrugsInPharmaciesByPharmacy_ReturnsDrugInPharmacies() {
+		 
+		 DrugInPharmacyId drugInPharmacyId1 = new DrugInPharmacyId(1,1);
+		 DrugInPharmacyId drugInPharmacyId2 = new DrugInPharmacyId(1,2);
+		 DrugInPharmacyId drugInPharmacyId3 = new DrugInPharmacyId(1,3);
+		 DrugInPharmacyId drugInPharmacyId4 = new DrugInPharmacyId(1,4);
+		 DrugInPharmacyId drugInPharmacyId5 = new DrugInPharmacyId(1,5);
+		 
+		 DrugInPharmacy drugnInPharmacy1  = new DrugInPharmacy(drugInPharmacyId1,20);
+		 DrugInPharmacy drugnInPharmacy2  = new DrugInPharmacy(drugInPharmacyId2,10);
+		 DrugInPharmacy drugnInPharmacy3  = new DrugInPharmacy(drugInPharmacyId3,70);
+		 DrugInPharmacy drugnInPharmacy4  = new DrugInPharmacy(drugInPharmacyId4,2);
+		 DrugInPharmacy drugnInPharmacy5  = new DrugInPharmacy(drugInPharmacyId5,53);
+		 
+		 List<DrugInPharmacy> drugInPharmacy = new ArrayList<DrugInPharmacy>();
+		 
+		 drugInPharmacy.add(drugnInPharmacy1);
+		 drugInPharmacy.add(drugnInPharmacy2);
+		 drugInPharmacy.add(drugnInPharmacy3);
+		 drugInPharmacy.add(drugnInPharmacy4);
+		 drugInPharmacy.add(drugnInPharmacy5);
+		 
+		 Mockito.when(drugsInPharmacyRepositoryMock.findAllByDrugInPharmacyIdPharmaciId(Constants.PHAMRACY_ID_1)).thenReturn(drugInPharmacy);
+		 
+		 List<DrugInPharmacy> drugInPharmacies = drugInPharmacyService.getDrugsInPharmaciesByPharmacy(Constants.PHAMRACY_ID_1);
+		 assertEquals(drugInPharmacies.size(),5);
+	 }
+
+//STUDENT 4 : UNIT TEST
+@Test(expected = NullPointerException.class)
+ public void getDrugsInPharmaciesByPharmacy_ReturnNull() {
+	 
+	 DrugInPharmacyId drugInPharmacyId1 = new DrugInPharmacyId(2,1);
+	 DrugInPharmacyId drugInPharmacyId2 = new DrugInPharmacyId(2,2);
+	 DrugInPharmacyId drugInPharmacyId3 = new DrugInPharmacyId(3,3);
+	 DrugInPharmacyId drugInPharmacyId4 = new DrugInPharmacyId(4,4);
+	 DrugInPharmacyId drugInPharmacyId5 = new DrugInPharmacyId(4,5);
+	 
+	 DrugInPharmacy drugnInPharmacy1  = new DrugInPharmacy(drugInPharmacyId1,20);
+	 DrugInPharmacy drugnInPharmacy2  = new DrugInPharmacy(drugInPharmacyId2,10);
+	 DrugInPharmacy drugnInPharmacy3  = new DrugInPharmacy(drugInPharmacyId3,70);
+	 DrugInPharmacy drugnInPharmacy4  = new DrugInPharmacy(drugInPharmacyId4,2);
+	 DrugInPharmacy drugnInPharmacy5  = new DrugInPharmacy(drugInPharmacyId5,53);
+	 
+	 List<DrugInPharmacy> drugInPharmacy = new ArrayList<DrugInPharmacy>();
+	 
+	 drugInPharmacy.add(drugnInPharmacy1);
+	 drugInPharmacy.add(drugnInPharmacy2);
+	 drugInPharmacy.add(drugnInPharmacy3);
+	 drugInPharmacy.add(drugnInPharmacy4);
+	 drugInPharmacy.add(drugnInPharmacy5);
+	 
+	 Mockito.when(drugsInPharmacyRepositoryMock.findAllByDrugInPharmacyIdPharmaciId(Constants.PHAMRACY_ID_1)).thenReturn(null);
+	 
+	 List<DrugInPharmacy> drugInPharmacies = drugInPharmacyService.getDrugsInPharmaciesByPharmacy(Constants.PHAMRACY_ID_1);
+}
 }

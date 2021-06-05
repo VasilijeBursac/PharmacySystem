@@ -24,4 +24,6 @@ public class Constants {
 	public static final String PATIENT_SURNAME_3 ="Vojvodic";
 	public static final String PATIENT_SURNAME_4 ="Marinkovic";
 	public static final String PATIENT_SURNAME_5 ="Joksimovic";
+	
+	public static final Long PHAMRACY_ID_1 = 1L;
 }
