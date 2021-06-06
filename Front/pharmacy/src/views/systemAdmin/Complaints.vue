@@ -6,6 +6,7 @@
             <h4 id = "h4" v-if="pharmacistComplaints.length != 0">
                 Zalbe na farmaceute :
             </h4>
+             <b-card class="overflow-hidden" v-if="pharmacistComplaints.length != 0">
             <div v-for = "(complaint,index) in pharmacistComplaints" :key="complaint.text" class = "single-complaint">
                 <h5 > {{index + 1}}. Zalba na {{pharmacistComplaintObjects[index].name}}: {{complaint.complaintObjectName}}</h5>
                     <b-row>
@@ -39,9 +40,11 @@
                     </b-form>    
                                                                      
             </div>
+             </b-card>
              <h4 id = "h4" v-if="dermatologistComplaints.length != 0">
                 Zalbe na dermatologe :
             </h4>
+             <b-card class="overflow-hidden" v-if="dermatologistComplaints.length != 0">
             <div v-for = "(complaint,index) in dermatologistComplaints" :key="complaint.text" class = "single-complaint">
                 <h5 > {{index + 1}}. Zalba na {{dermatologistComplaintObjects[index].name}}: {{complaint.complaintObjectName}}</h5>
                     <b-row>
@@ -73,9 +76,11 @@
                         </b-row>
                      </b-form>                                                        
             </div>
+             </b-card>
              <h4 id = "h4" v-if="pharmacyComplaints.length != 0">
                 Zalbe na apoteke :
             </h4>
+             <b-card class="overflow-hidden" v-if="pharmacyComplaints.length != 0">
             <div v-for = "(complaint,index) in pharmacyComplaints" :key="complaint.text" class = "single-complaint">
                 <h5 > {{index + 1}}. Zalba na {{pharmacyComplaintObjects[index].name}}: {{complaint.complaintObjectName}}</h5>
                     <b-row>
@@ -107,6 +112,7 @@
                         </b-row>
                      </b-form>                                                        
             </div>
+             </b-card>
       </div>
   </div>
 </template>
