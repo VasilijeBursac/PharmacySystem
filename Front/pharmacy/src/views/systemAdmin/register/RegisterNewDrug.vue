@@ -2,8 +2,10 @@
 <template>
     <div class="register">
         <b-form id = "form" v-if="show" @submit="onSubmit" @reset="onReset">
-            <b-row>
-                <b-col>
+             <h4 class = "h5 text-left mb-3 mt-3">Osnovni podaci :</h4>
+            <b-card class="overflow-hidden">
+            <b-row>          
+                <b-col>                   
                 <b-form-group id="name-group" label="Naziv:" label-for="name-input" class="text-center">
                     <b-form-input
                         class="text-center"
@@ -87,14 +89,16 @@
                     placeholder="Unesite dodatne napomene"
                     required>
                 </b-form-textarea>   
-            </b-form-group>
-                    
+            </b-form-group>                  
          </b-col>
         </b-row>
+        </b-card>
         <b-row>
-            <b-col >
+        <b-col>
+        <h4 class = "h5 text-left mb-3 mt-3">Nezeljena dejstva :</h4>
+        <b-card class="overflow-hidden">
                  <div>
-                    <b-form-group id="contraindication-group" label="Unesite nezeljeno dejstvo:" label-for="contraindication-input" class="text-center">
+                    <b-form-group id="contraindication-group" class="text-center">
                         <b-form-input
                             class="text-center"
                             id="contraindication-input"
@@ -117,10 +121,13 @@
                            </template>
                     </b-table>
                 </div>
+                </b-card>
             </b-col>
             <b-col>
+                <h4 class = "h5 text-left mb-3 mt-3">Sastojci :</h4>
+                <b-card class="overflow-hidden">
                 <div>
-                    <b-form-group id="ingredients-group" label="Unesite sastojak:" label-for="ingredient-input" class="text-center">
+                    <b-form-group id="ingredients-group" class="text-center">
                         <b-form-input
                             class="text-center"
                             id="ingredient-input"
@@ -143,8 +150,11 @@
                         </template>
                     </b-table>
                 </div>
+                </b-card>
             </b-col>
         </b-row>
+        <h4 class = "h5 text-left mb-3 mt-3">Zamenski lekovi :</h4>
+        <b-card class="overflow-hidden">
         <b-row>
             <b-col>
                 <b-form-group id="substituteDrugs-group" label="Izaberi zamenski lek:" label-for="substituteDrugs-input">
@@ -166,6 +176,7 @@
                 </div>
             </b-col>
         </b-row>
+        </b-card>
         <div class="buttons text-center">                        
                 <b-button type = "submit" variant="success" class="mr-2">
                     <b-icon-check></b-icon-check>

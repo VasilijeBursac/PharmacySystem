@@ -1,6 +1,9 @@
 <template>
   <div>
+    <b-row>
     <h6 id = "h6" class="h6 float-left mb-3 mt-4">Izaberite QR kod sa listom lekova</h6>       
+    </b-row>
+    <b-card class="overflow-hidden">
     <b-form-file
         accept=".jpg, .png"
         v-model="file"
@@ -17,19 +20,24 @@
             </b-button>
         </div>
     </b-row>
+    </b-card>
+
     <div v-if="showDrugs">
         <b-row class= " ml-1 mt-3">
-            <h6 class="h6 float-middle mb-3 mt-4">Lekovi za e recept i njihova kolicina:</h6>   
-        </b-row>    
+            <h6 class="h6 float-middle mb-3 mt-4">Lekovi za e recept i njihova kolicina :</h6>   
+        </b-row>
+         <b-card class="overflow-hidden">    
         <div v-for="(drug,index) in drugNames" v-bind:key="drug">
             <span class= "">{{drug}} : {{drugQuantities[index]}}</span>
         </div>
+         </b-card>
     </div>
      <b-row class= " ml-1 mt-3">
         <div v-if="showDrugs && items.length != 0">
-          <h6 id = "h6" class="h6 float-left mb-1 mt-4">Apoteke koje na stanju imaju date lekove</h6>       
+          <h6 id = "h6" class="h6 float-left mb-3 mt-4">Apoteke koje na stanju imaju date lekove :</h6>       
         </div>
     </b-row>
+     <b-card class="overflow-hidden">
     <b-table v-if="items.length != 0" striped hover :items="items" :fields="fields">
             <template #cell(akcije)="row">
                 <b-button  @click="generateERecipe(row)" size="sm" >
@@ -38,6 +46,7 @@
                 </b-button>
             </template>
         </b-table>
+     </b-card>
   </div>
 </template>
 
