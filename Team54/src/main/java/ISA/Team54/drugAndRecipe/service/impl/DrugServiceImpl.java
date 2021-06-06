@@ -4,30 +4,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ISA.Team54.Examination.model.Examination;
-import ISA.Team54.Examination.repository.ExaminationRepository;
+import ISA.Team54.drugAndRecipe.dto.DrugForERecipeDTO;
 import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
+import ISA.Team54.drugAndRecipe.dto.ERecipeDTO;
 import ISA.Team54.drugAndRecipe.dto.IsAvalableDrugDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugInPharmacyMapper;
 import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
 import ISA.Team54.drugAndRecipe.model.Drug;
+import ISA.Team54.drugAndRecipe.model.DrugInERecipe;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacyId;
 import ISA.Team54.drugAndRecipe.model.DrugSpecification;
 import ISA.Team54.drugAndRecipe.repository.DrugAllergyRepository;
+import ISA.Team54.drugAndRecipe.repository.DrugInERecipeRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugsInPharmacyRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.Examination.model.Examination;
+import ISA.Team54.Examination.repository.ExaminationRepository;
+import ISA.Team54.loyalty.repository.LoyaltyRepository;
 import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.repository.PatientRepository;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 public class DrugServiceImpl implements DrugService {
 
 	@Autowired
@@ -35,13 +42,15 @@ public class DrugServiceImpl implements DrugService {
 	@Autowired
 	private ExaminationRepository examinationRepository;
 	@Autowired
-	private DrugAllergyRepository drugAllergyRepsoitory;
-	@Autowired
 	private DrugsInPharmacyRepository drugsInPharmacyRepository;
 	@Autowired
 	private PatientRepository patientRepository;
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private LoyaltyRepository loyaltyRepository;
+	@Autowired
+	private DrugInERecipeRepository drugInERecipeRepository;
 	
 	@Override
 	public List<Drug> getDrugsForPatient(Long id) {
@@ -129,7 +138,9 @@ public class DrugServiceImpl implements DrugService {
 	}
 	@Override
 	public List<Drug> getAllDrugs() {
-		return drugRepository.findAll();
+		if(drugRepository.findAll().size() != 0)
+			return drugRepository.findAll();
+		return null;
 	}
 
 	@Override
@@ -140,7 +151,50 @@ public class DrugServiceImpl implements DrugService {
 	@Override
 	public List<Drug> getSubstituteForDrug(Long drugId) {
 		Drug mainDrug = drugRepository.findOneById((long)drugId);
-		 return mainDrug.getMainDrugs();
+		return mainDrug.getSubstituteDrugs();
+	}
+
+	@Override
+	public Drug addDrug(Drug drug) {
+		return drugRepository.save(drug);
+	}
+
+	@Override
+	public List<Drug> getSubstituteDrugsForNewDrug(List<Long> substituteDrugsIds) {
+		List<Drug> substituteDrugs = new ArrayList<>();
+		substituteDrugsIds.forEach(subDrugId -> substituteDrugs.add(drugRepository.findOneById(subDrugId)));
+		return substituteDrugs;
+	}
+
+	@Override
+	public float getDrugPriceWithDiscount(DrugInPharmacy drugInPharmacy) {		
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		float price = drugInPharmacy.getPricelist().getPrice();
+		return (float) (0.01 * price * (100 - loyaltyRepository.getLoyaltyCategory(patient.getLoyaltyPoints()).getDiscount())) ;
+		    
+	}
+	
+	@Override
+	public List<DrugForERecipeDTO> getDrugsFromErecipe(Long eRecipeId) {
+		List<Drug> allDrugs = drugRepository.findAll();
+		List<DrugInERecipe> drugsInErecipe = drugInERecipeRepository.findAllByERecipeId(eRecipeId);
+		List<DrugForERecipeDTO> drugsFromErecipe = new ArrayList<>();
+		if(allDrugs.size() == 0 || drugsInErecipe.size() == 0) 
+			return null;		
+		
+		for(Drug drug : allDrugs) {
+			for(DrugInERecipe drugInERecipe : drugsInErecipe) {			
+				if(drug.getId() == drugInERecipe.getId().getDrugId())
+					drugsFromErecipe.add(new DrugForERecipeDTO(drug.getCode(),drug.getName(),drugInERecipe.getQuantityInERecipe()));
+			}			
+		}
+		return drugsFromErecipe;
+	}
+
+	@Override
+	public Drug getDrugByName(String name) {
+		return drugRepository.findOneByName(name);
 	}
 	
 }

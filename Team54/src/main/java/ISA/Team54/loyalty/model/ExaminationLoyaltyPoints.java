@@ -21,5 +21,28 @@ public class ExaminationLoyaltyPoints {
 	public ExaminationLoyaltyPoints(LoyaltyExaminationPoints type, int points) {
 		this.type = type;
 		this.points = points;
+	}
+
+	public ExaminationLoyaltyPoints() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public LoyaltyExaminationPoints getType() {
+		return type;
+	}
+
+	public void setType(LoyaltyExaminationPoints type) {
+		this.type = type;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
 	}	
+	
+	
 }

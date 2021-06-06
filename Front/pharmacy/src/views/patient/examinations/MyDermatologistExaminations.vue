@@ -17,12 +17,12 @@
                 </b-button>
             </template>
         </b-table>
-
+        <AddComplaintModal/>
         <h6 class="h6 text-left mt-5 mb-3">Završeni termini</h6>
         <b-table ref="past" striped hover :items="pastData" :fields="fields">
             <template #cell(akcije)="row">
-                <b-button @click="schedule(row)" size="sm" >
-                    Prikaži detaljnije
+                <b-button @click="writeComplaint(row)" size="sm" >
+                    Napisi zalbu
                 </b-button>
             </template>
         </b-table>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import AddComplaintModal from "../AddComplaintModal.vue";
 
 export default {
 	data() {
@@ -37,13 +38,19 @@ export default {
 			futureData: [],
 			pastData: [],
 			fields:['termin', 'dermatolog', {key:'ocena', sortable:true}, {key:'cena', sortable:true}, 'akcije'],
-
+            rowModal : null,
             showModal: false,
 
             tableBusy: true,
 		}
 	},
     methods:{
+        writeComplaint(row){
+             this.$root.$emit('show-complaint-modal', {
+                 objectId : row.item.dermatologistId,
+                 complaintType : 'DermatologistComplaint'
+             })
+        },
 		cancel(row){
 
             this.tableBusy = true
@@ -110,11 +117,15 @@ export default {
 						dermatolog: element.employee, 
 						ocena: element.employeeRating != 0 ? element.employeeRating : 'Nema ocenu',
 						cena: element.price + ' din',
-						id: element.examinationId
+						id: element.examinationId,
+                        dermatologistId : element.employeeId
 					})
 				});
 				this.pastData = data
             })
-	}
+	},
+     components:{
+        AddComplaintModal
+    }
 }
 </script>

@@ -19,12 +19,12 @@
                 </b-button>
             </template>
         </b-table>
-
+        <AddComplaintModal/>
         <h6 class="h6 text-left mt-5 mb-3">Završeni termini</h6>
         <b-table ref="past" striped hover :items="pastData" :fields="fields">
             <template #cell(akcije)="row">
-                <b-button @click="schedule(row)" size="sm" >
-                    Prikaži detaljnije
+               <b-button @click="writeComplaint(row)" size="sm" >
+                    Napisi zalbu
                 </b-button>
             </template>
         </b-table>
@@ -33,6 +33,7 @@
 
 <script>
 import ScheduleModal from './ScheduleModal.vue'
+import AddComplaintModal from "../AddComplaintModal.vue"
 
 export default {
 	data() {
@@ -45,6 +46,12 @@ export default {
 		}
 	},
     methods:{
+         writeComplaint(row){
+             this.$root.$emit('show-complaint-modal', {
+                 objectId : row.item.pharmacistId,
+                 complaintType : 'PharmacistComplaint'
+             })
+        },
 		cancel(row){
 
             this.isBusy = true
@@ -111,14 +118,16 @@ export default {
 						farmaceut: element.employee, 
 						ocena: element.employeeRating != 0 ? element.employeeRating : 'Nema ocenu',
 						cena: element.price + ' din',
-						id: element.examinationId
+						id: element.examinationId,
+                        pharmacistId : element.employeeId
 					})
 				});
 				this.pastData = data
             })
 	},
     components:{
-        ScheduleModal
+        ScheduleModal,
+        AddComplaintModal
     }
 }
 </script>

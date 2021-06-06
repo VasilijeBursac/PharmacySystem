@@ -12,6 +12,10 @@ public class PatientMapper {
 		return new PatientDTO((int)user.getId(),user.getName(), user.getSurname());
 	}
 	
+	public static PatientDTO PatientToPatientDTO(Patient patient) {
+		return new PatientDTO(patient.getLoyaltyPoints(), patient.getPenaltyPoints());
+	}
+	
 	public DermatologistPatientDTO PatientToDermatologistPatientDTO(Examination examination,Patient patient) {
 		return  new DermatologistPatientDTO((int)patient.getId(),patient.getName(),patient.getSurname(),examination.getTerm().getStart());
 		

@@ -1,15 +1,14 @@
 <template>    
     <ul class="nav navbar-nav">      
-        <li class="nav-item active"><a href="#" class="nav-link"><router-link to="/pharmacies">Pregled apoteka</router-link></a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Pregled lekova</a></li>
+        <li class="nav-item active"><a href="#" class="nav-link"><router-link to="/pharmacies">Pretraga apoteka</router-link></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><router-link to="/all-drugs">Pretraga lekova</router-link></a></li>
         <li class="nav-item"><a href="#" class="nav-link"><router-link to="/myexaminations">Moji pregledi</router-link></a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Moji eRecepti</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><router-link to="/eRecipes">Moji eRecepti</router-link></a></li>
         <li class="nav-item"><a href="#" class="nav-link"><router-link to="/mydrugs">Moji lekovi</router-link></a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Pretplaćene apoteke</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Žalbe</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><router-link to="/patient-subsribed-pharmacies">Pretplaćene apoteke</router-link></a></li>
         <li class="nav-item"><a href="#" class="nav-link"><router-link to="/ratings">Ocene</router-link></a></li>
         <b-nav-item-dropdown text="Profil" right>
-          <b-dropdown-item href="#"><router-link to="/patient-profile">Moj profil</router-link></b-dropdown-item>
+          <b-dropdown-item href="/patient-profile">Moj profil</b-dropdown-item>
           <b-dropdown-item href="#" @click="logout" >Odjava</b-dropdown-item>
         </b-nav-item-dropdown>
     </ul>

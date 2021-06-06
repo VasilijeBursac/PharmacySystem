@@ -30,7 +30,6 @@
 
                 </b-form>
 
-                <b-button href="#" variant="success" block>Pretraži</b-button>
             </b-card>
          </div>
     </div>

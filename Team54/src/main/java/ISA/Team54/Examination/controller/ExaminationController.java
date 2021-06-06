@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ISA.Team54.drugAndRecipe.dto.DrugDTO;
+import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
+import ISA.Team54.drugAndRecipe.model.Drug;
+import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.Examination.dto.DefinedExaminationDTO;
-import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
+import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
 import ISA.Team54.Examination.dto.ExaminationInformationDTO;
@@ -31,10 +35,7 @@ import ISA.Team54.Examination.mapper.DefinedExamiantionMapper;
 import ISA.Team54.Examination.mapper.ExaminationMapper;
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
-import ISA.Team54.drugAndRecipe.dto.DrugDTO;
-import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
-import ISA.Team54.drugAndRecipe.model.Drug;
-import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.exceptions.DrugOutOfStockException;
 import ISA.Team54.exceptions.InvalidTimeLeft;
 import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.dto.UserInfoDTO;
@@ -80,7 +81,6 @@ public class ExaminationController {
 						.add(new ExaminationMapper().ExaminationToExaminationDTOHistory(examination, employee));
 			}
 			List<DrugDTO> drugsForPatient = new ArrayList<DrugDTO>();
-			List<Drug> eee = drugService.getDrugsForPatient((long) patientId);
 			for (Drug drug : drugService.getDrugsForPatient((long) patientId)) {
 				drugsForPatient.add(new DrugMapper().DrugIntoDrugDTO(drug));
 			}
@@ -123,15 +123,15 @@ public class ExaminationController {
 
 	@PostMapping("/examination-history")
 	@PreAuthorize("hasRole('PATIENT')")
-	public ResponseEntity<List<DermatologistExaminationDTO>> getPatientExaminationsByType(@RequestBody ExaminationTypeDTO type){
+	public ResponseEntity<List<EmployeeExaminationDTO>> getPatientExaminationsByType(@RequestBody ExaminationTypeDTO type){
 		try {
 			List<Examination> examinations = examinationService.getPatientExaminationsByType(type.getType());
-			List<DermatologistExaminationDTO> examinationDTOS = new ArrayList<>();
+			List<EmployeeExaminationDTO> examinationDTOS = new ArrayList<>();
 			for (Examination examination : examinations) {
 				User employee = userSerivce.findById(examination.getEmplyeedId());
-				examinationDTOS.add(new ExaminationMapper().ExaminationToDermatologistExaminationDTO(examination, employee, type.getType()));
+				examinationDTOS.add(new ExaminationMapper().ExaminationToEmployeeExaminationDTO(examination, employee, type.getType()));
 			}
-			return new ResponseEntity<List<DermatologistExaminationDTO>>(examinationDTOS, HttpStatus.OK);
+			return new ResponseEntity<List<EmployeeExaminationDTO>>(examinationDTOS, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -151,8 +151,14 @@ public class ExaminationController {
 
 	@GetMapping("/schedule/{id}")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
-	public void scheduleExamination(@PathVariable long id) {
-		examinationService.scheduleExamination(id); 
+	public ResponseEntity<String> scheduleExamination(@PathVariable long id) {
+		try {
+			examinationService.scheduleExamination(id);
+			patientService.addLoyaltyPointsForScheduledExamination(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        } 		
 	}
 
 	@PostMapping("/scheduleExamination")
@@ -193,10 +199,10 @@ public class ExaminationController {
 
 	@PostMapping("/future")
 	@PreAuthorize("hasRole('ROLE_PATIENT')")
-	public ResponseEntity<List<DermatologistExaminationDTO>> getFutureExamination(@RequestBody ExaminationTypeDTO type) {
+	public ResponseEntity<List<EmployeeExaminationDTO>> getFutureExamination(@RequestBody ExaminationTypeDTO type) {
 		try {
-			List<DermatologistExaminationDTO> examinations = examinationService.getFutureExaminations(type.getType());
-			return new ResponseEntity<List<DermatologistExaminationDTO>>(examinations, HttpStatus.OK);
+			List<EmployeeExaminationDTO> examinations = examinationService.getFutureExaminations(type.getType());
+			return new ResponseEntity<List<EmployeeExaminationDTO>>(examinations, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

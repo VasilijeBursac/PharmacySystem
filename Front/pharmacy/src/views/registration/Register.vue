@@ -148,30 +148,19 @@ export default {
                     phoneNumber : this.user.phone,
             })
             .then( () => {
-                     this.$http         
-                        .post('auth/login',{
-                            email : this.user.email,
-                            password : this.user.password
-                        })
-                    .then( (response) => {
-                        this.toast()                                                   
-                        this.$store.commit('setUserRole',response.data.role);
-                        this.$store.commit('setUserId',response.data.userId);
-                        this.$store.commit('setJWT',response.data.accessToken);
-                        this.$router.push('patient-profile');   
-                    }); 
-                })                    
-                .catch(function (error) {
-                    if(error.response.status === 500) {
-                    alert('Vec postoji korisnik sa unetim imejlom');               
-                    }
-                });    
+                 this.toast('Poslat vam je imejl sa linkom za aktivaciju naloga!', 'Uspešno', 'success')  
+            })                    
+            .catch((error) => {
+                if(error.response.status === 500) {                 
+                    this.toast('Vec postoji korisnik sa unetim imejlom!', 'Neuspešno', 'danger')  
+                }
+            });    
             }     
         },
-        toast(){
-            this.$bvToast.toast(`Uspešno ste se ulogovali!`, {
-                title: 'Uspešno!',
-                variant: 'success',
+         toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
                 autoHideDelay: 5000
             })
         },

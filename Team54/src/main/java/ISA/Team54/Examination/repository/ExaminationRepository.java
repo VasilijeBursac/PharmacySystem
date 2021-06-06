@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import ISA.Team54.Examination.enums.ExaminationStatus;
 import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
+
 import org.springframework.data.jpa.repository.QueryHints;
 
 import javax.persistence.LockModeType;

@@ -44,6 +44,30 @@
                 </b-form-input>
             </b-form-group>
 
+            <b-form-group id="description-group" label="Opis:" label-for="description-input" class="text-center">
+                <b-form-textarea
+                    class="text-center"
+                    id="description-input"
+                    v-model="pharmacy.description"
+                    placeholder="Unesite opis apoteke"
+                    rows="4" 
+                    max-rows="6"
+                    required>
+                </b-form-textarea>
+            </b-form-group>
+
+            <b-form-group id="price-group" label="Cena savetovanja kod farmaceuta:" label-for="price-input" class="text-center">
+                <b-form-input
+                    type = "number"
+                    min = "0"
+                    class="text-center"
+                    id="price-input"
+                    v-model="pharmacy.pharmacistPrice"
+                    placeholder="Unesite cenu savetovanja "
+                    required>
+                </b-form-input>
+            </b-form-group>
+
             <div class="buttons text-center">                        
                 <b-button type="submit" variant="success" class="mr-2">
                     <b-icon-check></b-icon-check>
@@ -67,7 +91,9 @@ export default {
                 name: '',
                 address: '',
                 city: '',
-                country: ''
+                country: '',
+                description: '',
+                pharmacistPrice: 0
             },
             show: true
         }
@@ -75,33 +101,34 @@ export default {
     methods: {
           onSubmit(event) {
             event.preventDefault()
-           
+                if(this.pharmacy.pharmacistPrice == 0){
+                    this.toast('Morate uneti cenu savetovanja kod farmacetua!','Neuspešno', 'danger');
+                    return;
+                }
                 this.$http
                 .post("pharmacy/addPharmacy",{
-
                     name : this.pharmacy.name,
                     address : this.pharmacy.address,
                     city : this.pharmacy.city,
                     country : this.pharmacy.country,
-
+                    description : this.pharmacy.description,
+                    pharmacistPrice : this.pharmacy.pharmacistPrice
             })
             .then( () => {
-                  this.toast()  
-                   
+
+                  this.toast('Uspešno ste dodali novu apoteku!','Uspešno!','success') 
                 })                    
-                .catch(function (error) {
-                    if(error.response.status === 500) {
-                        alert('Greska u sistemu');               
-                    } else if(error.response.status === 401) {
-                        alert('Nemate pravo pristupa !');               
-                    }
+                .catch(error => {
+                     if(error.response.status == 400)
+                        this.toast('Greska prilikom dodavanja apoteke !', 'Neuspešno', 'danger')
+                     else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')
                 });    
                 
         },
-        toast(){
-            this.$bvToast.toast(`Uspešno ste dodali novu apoteku!`, {
-                title: 'Uspešno!',
-                variant: 'success',
+       toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
                 autoHideDelay: 5000
             })
         },
@@ -112,8 +139,8 @@ export default {
             this.pharmacy.name = ''
             this.pharmacy.address = ''
             this.pharmacy.city = ''
-             this.pharmacy.country = ''
-
+            this.pharmacy.country = ''
+            this.pharmacy.description = ''
             // Trick to reset/clear native browser form validation state
             this.show = false
             this.$nextTick(() => {

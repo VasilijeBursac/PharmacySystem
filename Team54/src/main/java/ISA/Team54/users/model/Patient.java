@@ -17,11 +17,12 @@ import org.hibernate.annotations.Proxy;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugAllergy;
 import ISA.Team54.drugAndRecipe.model.DrugReservation;
 import ISA.Team54.drugAndRecipe.model.ERecipe;
+import ISA.Team54.promotion.model.Promotion;
+import ISA.Team54.Examination.model.Examination;
 
 @Entity
 public class Patient extends User {
@@ -37,7 +38,7 @@ public class Patient extends User {
 	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<ERecipe> eRecipes;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "drug_allergies", joinColumns = @JoinColumn(name = "patient_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "drug_id", referencedColumnName = "id"))
 	public List<Drug> drugAllergies;
 
@@ -56,6 +57,11 @@ public class Patient extends User {
 	@OneToMany(mappedBy="patient",cascade = CascadeType.ALL,fetch = FetchType.LAZY)	
 	private List<Examination> examinations;
 
+	@JsonManagedReference
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "subscribedPharmacies", joinColumns = @JoinColumn(name = "patient_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pharmacy_id", referencedColumnName = "id"))
+	private List<Pharmacy> subscribedPharmacies;
+	
 	public Patient() {
 		super();
 	}
@@ -124,8 +130,16 @@ public class Patient extends User {
 		this.examinations = examinations;
 	}
 
-	
+	public List<Pharmacy> getSubscribedPharmacies() {
+		return subscribedPharmacies;
+	}
 
+	public void setSubscribedPharmacies(List<Pharmacy> subscribedPharmacies) {
+		this.subscribedPharmacies = subscribedPharmacies;
+	}
+
+	
+	
 	
 	
 }

@@ -25,7 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
+import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.enums.ExaminationStatus;
 import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
@@ -79,7 +79,7 @@ public class ExaminationIntegrationTests {
 		examinations.add(examination4);
 		examinations.add(examination5);
 		
-		List<DermatologistExaminationDTO> dermatologistExaminations = examinationService.getAllExaminationsForPharmacy(1L,ExaminationType.DermatologistExamination);
+		List<EmployeeExaminationDTO> dermatologistExaminations = examinationService.getAllExaminationsForPharmacy(1L,ExaminationType.DermatologistExamination);
 		
 		assertEquals(dermatologistExaminations.size(), 5);
 	}	
@@ -125,7 +125,7 @@ public class ExaminationIntegrationTests {
 		patient.setSurname("Filipovic");
 		when(authentication.getPrincipal()).thenReturn(patient);
 
-		List<DermatologistExaminationDTO> examinations = examinationService.getFutureExaminations(ExaminationType.PharmacistExamination);
+		List<EmployeeExaminationDTO> examinations = examinationService.getFutureExaminations(ExaminationType.PharmacistExamination);
 		assertEquals(examinations.size(), 3);
 	}
 

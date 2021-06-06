@@ -8,9 +8,10 @@
                         <h6 class="h6 text-left font-italic mt-n1">{{pharmacy.address}}, {{pharmacy.city}}, {{pharmacy.country}}</h6>
                         <p class="h6 text-left mt-4 mb-3">{{pharmacy.description}}</p>
 
-                        <b-button block>
+                        <b-button v-if="!subscribed && loggedUserRole != 'ROLE_UNREGISTERED'"  block @click = "subscribeToPromotions">
                             <b-icon icon="bell-fill" aria-hidden="true"></b-icon> Pretplati se na akcije i promocije apoteke
-                        </b-button>           
+                        </b-button> 
+                        <p id = "subscription" v-if="subscribed" class = "h6 text-left mt-4 mb-3">Pretplaceni ste na akcije i promocije apoteke !</p>          
                     </div>
                 </b-col>            
 
@@ -35,7 +36,8 @@ export default {
     data: function() {
         return{
             loggedUserRole: this.$store.getters.getUserRole,
-            pharmacy: {}
+            pharmacy: {},
+            subscribed : false
         } 
     },
     mounted(){
@@ -44,12 +46,43 @@ export default {
             .then( res => {
                 this.pharmacy = JSON.parse(JSON.stringify(res.data))
             })
+        if(this.loggedUserRole != "ROLE_UNREGISTERED")
+            this.$http
+                .get('patient/checkForSubsrciption/' + this.pharmacyId)
+                .then( () => {
+                    this.subscribed = true
+                })
     },
     methods:{
-       
+       subscribeToPromotions(){
+          this.$http
+            .post('patient/addPharmacyForPromotions/' + this.pharmacyId)
+            .then( res => {
+                this.subscribed = true
+                if(res.status == 200)
+                    this.toast('Uspesno ste se pretplatili na akcije i promocije!!','Uspesno', 'succes')    
+            })
+            .catch( error => {
+                if(error.response.status == 400)
+                    this.toast('Greska prikom prijavljivanja na akcije i promocije!','Neuspešno', 'danger')
+                else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+            })
+       },
+        toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
+                autoHideDelay: 5000
+            })
+        }
     },
     components:{
         LocationMap
     }
 }
 </script>
+<style >
+#subscription{
+    color: green;
+}
+</style>

@@ -13,6 +13,5 @@ public interface UserService {
     List<User> findBySurname(String surname);
     void changePassword(String oldPassword, String newPassword);
     void updateUserInfo(UserInfoDTO userInfoDTO);
-	
 
 }

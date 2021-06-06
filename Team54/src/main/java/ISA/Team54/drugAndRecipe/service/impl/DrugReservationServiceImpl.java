@@ -1,4 +1,4 @@
-package ISA.Team54.drugAndRecipe.service.impl;
+ package ISA.Team54.drugAndRecipe.service.impl;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -7,6 +7,7 @@ import java.util.List;
 import ISA.Team54.drugAndRecipe.service.interfaces.IClock;
 import ISA.Team54.exceptions.DrugOutOfStockException;
 import ISA.Team54.shared.service.interfaces.EmailService;
+import ISA.Team54.users.service.interfaces.PatientService;
 import ISA.Team54.users.service.interfaces.PenaltyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -68,13 +69,16 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 	@Autowired
 	private PenaltyService penaltyService;
 
+	@Autowired
+	private PatientService patientService;
+	
 	@Transactional(readOnly = false, rollbackFor = DrugOutOfStockException.class)
 	@Override
-	public void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) throws Exception {
+	public void reserveDrug(DrugInPharmacyId drugInPharmacyId, Date deadline) throws DrugOutOfStockException {
 		DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findOneByDrugInPharmacyId(drugInPharmacyId);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
-
+				
 		DrugReservation reservation = new DrugReservation();
 		reservation.setReservedDrug(drugInPharmacy);
 		reservation.setReservationToDate(deadline);
@@ -92,6 +96,8 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 					" Broj Vaše rezervacije s kojim ćete preuzeti lek je: " + drugReservation.getId());
 		}).start();
 	}
+	
+	
 
 	@Override
 	public List<DrugReservation> getReservationsForPatient() {
@@ -144,7 +150,7 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 			throw new Exception();
 		}
 	}
-
+	
 	private List<DrugReservation> getSoldReservationsForPatient(){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
@@ -188,5 +194,12 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 			//sellDrug(drugReservation.getId());
 			return drugRepository.findOneById(drugReservation.getReservedDrug().getDrugInPharmacyId().getDrugId());
 		
+	}
+
+	@Override
+	public Boolean isAnyDrugFromChoosenPharmacySoldToPatient(long patientId, long pharmacyId) {
+		if(drugReservationRepository.findOneByPatientIdAndStatusAndReservedDrugDrugInPharmacyIdPharmaciId(patientId, ReservationStatus.Sold, pharmacyId) != null) 
+			return true;
+		return false;		
 	}
 }

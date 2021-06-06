@@ -1,21 +1,19 @@
 <template>
   <div class="loginClass">
     <b-form
+      v-if="confirmed"
       id="form"
       @submit="login"
       @reset="onReset"
-      v-if="show"
       class="text-center"
     >
       <b-form-group
-        v-if="confirmed"
         id="email-group"
         label="Email:"
         label-for="email-input"
         class="text-center"
       >
         <b-form-input
-          v-if="confirmed"
           id="email-input"
           class="text-center"
           v-model="form.email"
@@ -26,7 +24,6 @@
       </b-form-group>
 
       <b-form-group
-        v-if="confirmed"
         id="password-group"
         label="Lozinka:"
         label-for="password-input"
@@ -42,22 +39,6 @@
         >
         </b-form-input>
       </b-form-group>
-      <div>
-        <b-row> </b-row>
-        <b-row>
-          <h4 v-if="!confirmed">
-            Da biste pristupili sistemu izmenite generisanu lozinku!
-          </h4>
-        </b-row>
-         <b-row sm = "3"> </b-row>
-        <b-row>
-          <b-col> </b-col>
-          <b-col>
-          <ChangePasswordModal v-if="showModal" />
-          </b-col>
-           <b-col> </b-col>
-        </b-row>
-      </div>
       <div v-if="confirmed" class="buttons text-center">
         <b-button type="submit" variant="success" class="mr-2">
           <b-icon-check></b-icon-check>
@@ -69,6 +50,24 @@
         </b-button>
       </div>
     </b-form>
+       <div v-if="!confirmed">
+        <b-row> </b-row>
+        <b-row>
+          <b-col>
+          <h4 class = "h4 text-center">
+            Da biste pristupili sistemu izmenite generisanu lozinku!
+          </h4>
+          </b-col>
+        </b-row>
+         <b-row sm = "3"> </b-row>
+        <b-row>
+          <b-col> </b-col>
+          <b-col>
+          <ChangePasswordModal v-bind:fromLogin="fromLogin" v-bind:user="user"/>
+          </b-col>
+           <b-col> </b-col>
+        </b-row>
+      </div>
   </div>
 </template>
 
@@ -81,13 +80,13 @@ export default {
         email: "",
         password: "",
       },
-      a : 0,
       confirmed: true,
-      showModal: false,
-      show: true,
+      activated: false,
+      fromLogin : true,
+      user : {},
+      show: true
     };
   },
-
   methods: {
     login(event) {
       event.preventDefault();
@@ -97,22 +96,24 @@ export default {
           password: this.form.password,
         })
         .then((response) => {
-          this.confirmed = response.data.confirmed;
-            this.$store.commit("setUserRole", response.data.role);
+        this.user = response.data  
+        this.activated = response.data.activated;
+        if(this.activated == false){
+          this.toast('Ne mozete se ulogovati dok ne aktivirate nalog pomocu linka poslatog na mejl', 'Neuspešno', 'danger')
+          return;
+        }          
+        
+        localStorage.setItem("JWT", response.data.accessToken);
+        this.$store.commit("setJWT", response.data.accessToken);
+        this.confirmed = response.data.confirmed;  
+        if(this.confirmed == true){
+         
+          this.$store.commit("setUserRole", response.data.role);
           this.$store.commit("setUserId", response.data.userId);
-          this.$store.commit("setJWT", response.data.accessToken);
           localStorage.setItem("UserRole", response.data.role);
           localStorage.setItem("UserId", response.data.userId);
           localStorage.setItem("JWT", response.data.accessToken);
-          localStorage.setItem("Confirmed", response.data.confirmed);
-          
-          if (response.data.confirmed === false) {
-            this.showModal = true;            
-            return;
-          }
-         
-          this.toast();
-        
+          localStorage.setItem("Confirmed", response.data.confirmed);       
 
           if (response.data.role === "ROLE_PATIENT") {
                 this.$router.push("patient-profile");
@@ -130,24 +131,25 @@ export default {
                 this.$router.push("pharmacist-profile");
             }
             if (response.data.role === "ROLE_SUPPLIER") {
-                this.$router.push("patient-profile");
+                this.$router.push("supplier-profile");
             }
 
 
           window.location.reload();
+        }
         })
-        .catch(function(error) {
-          if (error.response.status === 401) {
-            alert("Ne postoji korisnik sa unetim podacima");
-          }
-        });
+        .catch( error => {
+                     if (error.response.status == 401) {
+                      this.toast('Ne postoji korisinik sa unetim podacima!', 'Neuspešno', 'danger')
+                      }
+                 });
     },
-    toast() {
-      this.$bvToast.toast(`Uspešno ste se ulogovali!`, {
-        title: "Uspešno!",
-        variant: "success",
-        autoHideDelay: 5000,
-      });
+    toast(message, title, variant){
+            this.$bvToast.toast(message, {
+                title: title,
+                variant: variant,
+                autoHideDelay: 5000
+            })
     },
     closeModal() {
       this.$bvModal.hide("change-password");

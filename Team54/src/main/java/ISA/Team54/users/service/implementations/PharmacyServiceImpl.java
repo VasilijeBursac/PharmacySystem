@@ -1,12 +1,22 @@
 package ISA.Team54.users.service.implementations;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
+import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
+import ISA.Team54.drugAndRecipe.model.DrugReservation;
+import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
 import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.repository.ExaminationRepository;
-import ISA.Team54.drugAndRecipe.model.DrugReservation;
+import ISA.Team54.loyalty.repository.LoyaltyRepository;
+import ISA.Team54.rating.model.Rating;
 import ISA.Team54.users.model.*;
+
+import org.hibernate.mapping.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
@@ -16,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import ISA.Team54.drugAndRecipe.dto.DrugWithPharmacyDTO;
 import ISA.Team54.security.Authority;
+import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.dto.DermatologistRequestDTO;
 import ISA.Team54.users.dto.PharmacistRequestDTO;
 import ISA.Team54.users.dto.PharmacyAdministratorRequestDTO;
@@ -63,6 +74,16 @@ public class PharmacyServiceImpl implements PharmacyService {
 	@Autowired
 	private ExaminationRepository examinationRepository;
 	
+	@Autowired
+	private LoyaltyRepository loyaltyRepository;
+	
+	@Autowired
+	private EmailService emailService;
+	
+	@Autowired
+	private DrugInPharmacyService drugInPharmacyService;
+	
+	
 	@Override
 	public Pharmacy addPharmacy(PharmacyDTO pharmacyDTO) {
 		return pharmacyRepository.save(PharmacyMapper.PharmacyDTOToPharmacy(pharmacyDTO));		
@@ -75,7 +96,11 @@ public class PharmacyServiceImpl implements PharmacyService {
 		patient.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 		List<Authority> auth = authService.findByname("ROLE_PATIENT");
 		patient.setAuthorities(auth);
-		return patientRepository.save(patient);		
+		patient.setActivated(false);
+		patient = patientRepository.save(patient);
+		emailService.sendEmail(patient.getEmail(),"Aktivaija naloga","Da biste aktivirali svoj nalog pritisnite "
+				+ "na sledeci link http://localhost:8080/activation?id=" + patient.getId());
+		return patient;		
 	}
 	
 	@Override
@@ -83,7 +108,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 		SystemAdministrator systemAdministrator = new SystemAdministrator();
 		UserMapper.UserRequestDTOToUser(userRequest,systemAdministrator);
 		systemAdministrator.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-		List<Authority> auth = authService.findByname("ROLE_SISTEM_ADMIN");
+		List<Authority> auth = authService.findByname("ROLE_SYSTEM_ADMIN");
 		systemAdministrator.setAuthorities(auth);
 		return systemAdministratorRepository.save(systemAdministrator);			
 	}
@@ -103,7 +128,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 		PharmacyAdministratorRequestDTO pharmacyAdministratorRequestDTO) {
 		PharmacyAdministrator pharmacyAdministrator = UserMapper.PharmacyAdministratorRequestDTOToPharmacist(pharmacyAdministratorRequestDTO);
 		pharmacyAdministrator.setPassword(passwordEncoder.encode(pharmacyAdministratorRequestDTO.getPassword()));
-		List<Authority> auth = authService.findByname("ROLE_ADMIN");
+		List<Authority> auth = authService.findByname("ROLE_PHARMACY_ADMIN");
 		pharmacyAdministrator.setAuthorities(auth);
 		pharmacyAdministrator.setPharmacy(pharmacyRepository.findById(pharmacyAdministratorRequestDTO.getPharmacyId()));
 		return pharmacyAdministratorRepository.save(pharmacyAdministrator);			
@@ -131,7 +156,9 @@ public class PharmacyServiceImpl implements PharmacyService {
 	}
 
 	public List<Pharmacy> findAll() {
-		return this.pharmacyRepository.findAll();
+		if(pharmacyRepository.findAll().size() != 0)
+			return pharmacyRepository.findAll();
+		return null;
 	}
 
 	@Override
@@ -154,4 +181,67 @@ public class PharmacyServiceImpl implements PharmacyService {
 		
 	}
 
+	@Override
+	public double getPharmacistPriceWithDiscount(double price) {		
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		return  0.01 * price * (100 - loyaltyRepository.getLoyaltyCategory(patient.getLoyaltyPoints()).getDiscount());
+		    
+	}
+	
+	@Override
+	public HashMap<Long, Float> getPharmaciesWithTotalPrices(List<Long> drugIds,List<Integer> drugQuantities){
+		HashMap<Long, Float> pharmaciesWithTotalPrices= new HashMap<>();
+		List<Long> pharmaciesForErecipe = getPharmaciesForErecipe(drugIds, drugQuantities);
+		for(int i = 0; i < pharmaciesForErecipe.size(); i++) {
+			pharmaciesWithTotalPrices.put(pharmaciesForErecipe.get(i),
+										  getTotalPriceForDrugsInPharmacy(pharmaciesForErecipe.get(i),drugIds,drugQuantities));
+		}
+		return pharmaciesWithTotalPrices;
+	}
+
+	private List<Long> getPharmaciesForErecipe(List<Long> drugIds, List<Integer> drugQuantities) {			
+		List<Long> pharmaciesWithOneDrug = new ArrayList<Long>();
+		List<Long> pharmaciesWithAllDrugs = new ArrayList<Long>();
+		for(int i = 0; i < drugIds.size(); i++){
+			for(DrugInPharmacy drugInPharmacy : drugInPharmacyService.getDrugsInPharmaciesByDrug(drugIds.get(i))) {
+				if(drugInPharmacy.getQuantity() > 0)
+					pharmaciesWithOneDrug.add(drugInPharmacy.getDrugInPharmacyId().getPharmaciId());
+			}
+			if(pharmaciesWithOneDrug.size() == 0) 
+				return null;
+			pharmaciesWithAllDrugs = comparePharmacies(pharmaciesWithOneDrug, pharmaciesWithAllDrugs);
+			if(pharmaciesWithAllDrugs.size() == 0)
+				return null;
+			pharmaciesWithOneDrug = new ArrayList<Long>();
+		}
+		return pharmaciesWithAllDrugs;	
+	}
+	
+	private List<Long> comparePharmacies(List<Long> pharmaciesWithOneDrug,List<Long> pharmaciesWithAllDrugs) {
+		if(pharmaciesWithAllDrugs.size() == 0) 
+			pharmaciesWithAllDrugs = pharmaciesWithOneDrug;
+		else {
+			Iterator<Long> it = pharmaciesWithAllDrugs.iterator();
+			while (it.hasNext()) {
+				Long id = it.next();
+				if(!pharmaciesWithOneDrug.contains(id)) {
+					it.remove();			
+				}
+			}
+		}
+		return pharmaciesWithAllDrugs;
+	}
+	
+	private float getTotalPriceForDrugsInPharmacy(long pharmacyId, List<Long> drugIds, List<Integer> drugQuantities) {
+		float totalPrice = 0;
+		for(DrugInPharmacy drugInPharmacy : drugInPharmacyService.getDrugsInPharmaciesByPharmacy(pharmacyId)){		
+			for(int i = 0; i < drugIds.size(); i++){
+				if(drugInPharmacy.getDrugInPharmacyId().getDrugId() == drugIds.get(i))
+					totalPrice += drugQuantities.get(i) * drugInPharmacy.getPricelist().getPrice();
+			}			
+		}
+		return totalPrice;
+	}
+	
 }

@@ -24,7 +24,9 @@ public class PharmacyAdministratorServiceImpl implements PharmacyAdministratorSe
 	
 	@Override
 	public List<PharmacyAdministrator> findAll() {
-		return this.pharmacyAdministratorRepository.findAll();
+		if(pharmacyAdministratorRepository.findAll().size() != 0)
+			return pharmacyAdministratorRepository.findAll();
+		return null;
 	}
 }
 

@@ -17,9 +17,18 @@ public class PharmacyDTO {
 	}
 	
 
-	public PharmacyDTO(String name, String address,String city,String country) {
-		super();
-		
+	public PharmacyDTO(String name, String address,String city,String country,double pharmacistPrice) {
+		super();		
+		this.name = name;
+		this.address = address;
+		this.city = city;
+		this.country = country;
+		this.pharmacistPrice = pharmacistPrice;
+	}
+	
+	public PharmacyDTO(long id, String name, String address,String city,String country) {
+		super();		
+		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.city = city;
@@ -27,7 +36,7 @@ public class PharmacyDTO {
 	}
 	
 	
-public PharmacyDTO(long id, String name, String address, String city, String country, double rating,
+	public PharmacyDTO(long id, String name, String address, String city, String country, double rating,
 			double pharmacistPrice, String description) {
 		super();
 		this.id = id;

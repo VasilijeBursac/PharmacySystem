@@ -1,6 +1,9 @@
 package ISA.Team54.users.service.interfaces;
 
 import ISA.Team54.drugAndRecipe.dto.DrugWithPharmacyDTO;
+import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
+
+import java.util.HashMap;
 import java.util.List;
 
 import ISA.Team54.users.dto.DermatologistRequestDTO;
@@ -28,4 +31,7 @@ public interface PharmacyService {
 	List<Pharmacy> findAll();
     List<Pharmacy> getPatientPharmacies();
     void updatePharmacyInfo(PharmacyDTO pharmacyDTO);
+    double getPharmacistPriceWithDiscount(double price);
+    HashMap<Long, Float> getPharmaciesWithTotalPrices(List<Long> drugIds, List<Integer> drugQuantities);
+
 }

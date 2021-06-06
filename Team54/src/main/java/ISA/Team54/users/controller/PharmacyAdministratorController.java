@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,11 +50,16 @@ public class PharmacyAdministratorController {
 	}
 	
 	@GetMapping("/allPharmacyAdmins")
-	//@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-	public  List<UserInfoDTO> findAll(){
-		List<UserInfoDTO> userDTOs = new ArrayList<UserInfoDTO>();
-		this.pharmacyAdministratorService.findAll().forEach(systemAdministrator -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(systemAdministrator)));
-		return userDTOs;
+	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
+	public  ResponseEntity<List<UserInfoDTO>> findAll(){
+		try {
+			List<UserInfoDTO> userDTOs = new ArrayList<UserInfoDTO>();
+			this.pharmacyAdministratorService.findAll().forEach(pharmacyAdministrator -> userDTOs.add(UserInfoMapper.UserTOUserInfoDTO(pharmacyAdministrator)));
+			return new ResponseEntity<>(userDTOs,HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
 	}
 	
 }

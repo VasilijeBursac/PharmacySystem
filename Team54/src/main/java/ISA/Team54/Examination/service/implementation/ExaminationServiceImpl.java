@@ -16,7 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ISA.Team54.Examination.dto.DermatologistExaminationDTO;
+import ISA.Team54.drugAndRecipe.dto.DrugDTO;
+import ISA.Team54.drugAndRecipe.model.Drug;
+import ISA.Team54.drugAndRecipe.repository.DrugRepository;
+import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
 import ISA.Team54.Examination.dto.ExaminationInformationDTO;
 import ISA.Team54.Examination.enums.ExaminationStatus;
@@ -27,11 +31,8 @@ import ISA.Team54.Examination.model.Examination;
 import ISA.Team54.Examination.model.Term;
 import ISA.Team54.Examination.repository.ExaminationRepository;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
-import ISA.Team54.drugAndRecipe.dto.DrugDTO;
-import ISA.Team54.drugAndRecipe.model.Drug;
-import ISA.Team54.drugAndRecipe.repository.DrugRepository;
-import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.exceptions.InvalidTimeLeft;
+import ISA.Team54.loyalty.repository.LoyaltyRepository;
 import ISA.Team54.shared.model.DateRange;
 import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.enums.UserRole;
@@ -70,6 +71,8 @@ public class ExaminationServiceImpl implements ExaminationService {
 	private DermatologistWorkScheduleRepository dermatologistWorkScheduleRepository;
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private LoyaltyRepository loyaltyRepository;
 
 	public Long getCurrentEmployedId() {
 		ExaminationType examinaitonType = ExaminationType.DermatologistExamination;
@@ -233,15 +236,15 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
-	public List<DermatologistExaminationDTO> getAllExaminationsForPharmacy(long id, ExaminationType type) {
+	public List<EmployeeExaminationDTO> getAllExaminationsForPharmacy(long id, ExaminationType type) {
 		List<Examination> examinations = examinationRepository.getAllExaminationsForPharmacy(id, type,
 				ExaminationStatus.Unfilled);
 		List<User> employees = new ArrayList<User>();
 		examinations.forEach(e -> employees.add(userRepository.findOneById(e.getEmplyeedId())));
 
-		List<DermatologistExaminationDTO> examinationDTOs = new ArrayList<DermatologistExaminationDTO>();
+		List<EmployeeExaminationDTO> examinationDTOs = new ArrayList<EmployeeExaminationDTO>();
 		for (int i = 0; i < examinations.size(); i++) {
-			examinationDTOs.add(new ExaminationMapper().ExaminationToDermatologistExaminationDTO(examinations.get(i),
+			examinationDTOs.add(new ExaminationMapper().ExaminationToEmployeeExaminationDTO(examinations.get(i),
 					employees.get(i), type));
 		}
 
@@ -249,16 +252,16 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
-	public List<DermatologistExaminationDTO> getExaminationsForPharmacyAndDate(long id, ExaminationType type,
+	public List<EmployeeExaminationDTO> getExaminationsForPharmacyAndDate(long id, ExaminationType type,
 			Date date) {
 		List<Examination> examinations = examinationRepository.getExaminationsForPharmacyForDate(id, type,
 				ExaminationStatus.Unfilled, date);
 		List<User> employees = new ArrayList<User>();
 		examinations.forEach(e -> employees.add(userRepository.findById(e.getEmplyeedId()).orElse(null)));
 
-		List<DermatologistExaminationDTO> examinationDTOs = new ArrayList<DermatologistExaminationDTO>();
+		List<EmployeeExaminationDTO> examinationDTOs = new ArrayList<EmployeeExaminationDTO>();
 		for (int i = 0; i < examinations.size(); i++) {
-			examinationDTOs.add(new ExaminationMapper().ExaminationToDermatologistExaminationDTO(examinations.get(i),
+			examinationDTOs.add(new ExaminationMapper().ExaminationToEmployeeExaminationDTO(examinations.get(i),
 					employees.get(i), type));
 		}
 
@@ -273,8 +276,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 		Examination examination = examinationRepository.findById(id).orElse(null);
 		if (examination != null) {
 			examination.setStatus(ExaminationStatus.Filled);
-			examination.setPatient(patient);
-
+			examination.setPatient(patient);			
 			examinationRepository.save(examination);
 			new Thread(() -> {
 				emailService.sendEmail("tim54isa@gmail.com", "Zakazan pregled", "Uspesno ste zakazali pregled!");
@@ -301,7 +303,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
-	public List<DermatologistExaminationDTO> getFutureExaminations(ExaminationType type) {
+	public List<EmployeeExaminationDTO> getFutureExaminations(ExaminationType type) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
 		List<Examination> examinations = examinationRepository.getFutureExaminations(patient.getId(), type,
@@ -309,9 +311,9 @@ public class ExaminationServiceImpl implements ExaminationService {
 		List<User> employees = new ArrayList<User>();
 		examinations.forEach(e -> employees.add(userRepository.findById(e.getEmplyeedId()).orElse(null)));
 
-		List<DermatologistExaminationDTO> examinationDTOs = new ArrayList<DermatologistExaminationDTO>();
+		List<EmployeeExaminationDTO> examinationDTOs = new ArrayList<EmployeeExaminationDTO>();
 		for (int i = 0; i < examinations.size(); i++) {
-			examinationDTOs.add(new ExaminationMapper().ExaminationToDermatologistExaminationDTO(examinations.get(i),
+			examinationDTOs.add(new ExaminationMapper().ExaminationToEmployeeExaminationDTO(examinations.get(i),
 					employees.get(i), type));
 		}
 
@@ -387,20 +389,28 @@ public class ExaminationServiceImpl implements ExaminationService {
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public List<DermatologistExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type) {
+	public List<EmployeeExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type) {
 		List<Examination> examinations = examinationRepository.getAllFutureExaminationsForPharmacy(id, type, ExaminationStatus.Unfilled);
 		List<User> employees = new ArrayList<User>();
 		examinations.forEach(
 				e -> employees.add(userRepository.findById(e.getEmplyeedId()).orElse(null))
 		);
 
-		List<DermatologistExaminationDTO> examinationDTOs = new ArrayList<DermatologistExaminationDTO>();
+		List<EmployeeExaminationDTO> examinationDTOs = new ArrayList<EmployeeExaminationDTO>();
 		ExaminationMapper mapper = new ExaminationMapper();
 		for(int i = 0; i < examinations.size(); i++) {
-			examinationDTOs.add(mapper.ExaminationToDermatologistExaminationDTO(examinations.get(i), employees.get(i), type));
+			examinations.get(i).setPrice(getExaminationPriceWithDiscount(examinations.get(i).getPrice()));
+			examinationDTOs.add(mapper.ExaminationToEmployeeExaminationDTO(examinations.get(i), employees.get(i), type));
 		}
 
 		return examinationDTOs;
+	}
+	
+	private int getExaminationPriceWithDiscount(int price) {		
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = patientRepository.findById(((Patient) authentication.getPrincipal()).getId());
+		return  (int) (0.01 * price * (100 - loyaltyRepository.getLoyaltyCategory(patient.getLoyaltyPoints()).getDiscount()));
+		    
 	}
 
 	public boolean scheduleExamination(Date start) {

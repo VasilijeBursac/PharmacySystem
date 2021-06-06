@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +32,12 @@ import ISA.Team54.drugAndRecipe.model.DrugReservation;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugReservationService;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
+import ISA.Team54.exceptions.DrugOutOfStockException;
 import ISA.Team54.exceptions.InvalidTimeLeft;
+import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.repository.PharmacyRepository;
+import ISA.Team54.users.service.interfaces.PatientService;
 import ISA.Team54.users.service.interfaces.PharmacyService;
 
 @RestController
@@ -49,18 +54,23 @@ public class DrugReservationController {
     private DrugInPharmacyService drugInPharmacyService;
 
     @Autowired
-    private DrugReservationService drugReservationService;
+    private DrugReservationService drugReservationService; 
     
+    @Autowired
+    private PatientService patientService;
 
     @PostMapping("/reserve")
     @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<String> reserveDrug(@RequestBody DrugReservationRequestDTO drugReservationRequestDTO){
         try{
             drugReservationService.reserveDrug(drugReservationRequestDTO.getDrugInPharmacyId(), drugReservationRequestDTO.getDeadline());
+            patientService.addLoyaltyPointsForReservedDrug(drugReservationRequestDTO.getDrugInPharmacyId().getDrugId());    		
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
-        }
+        } catch (DrugOutOfStockException e) {
+        	return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+		} catch (Exception e){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        } 
     }
 
     @GetMapping("/all")
@@ -103,12 +113,14 @@ public class DrugReservationController {
         for (DrugInPharmacy drugInPharmacy : drugsInPharmacies) {
             long pharmacyId = drugInPharmacy.getDrugInPharmacyId().getPharmaciId();
             Pharmacy pharmacy = pharmacyService.getPharmacyById(pharmacyId);
+            float price = drugService.getDrugPriceWithDiscount(drugInPharmacy);
             drugsWithPharmacies.add(
-                    new DrugWithPharmacyMapper().DrugInPharmacyToDrugWithPharmacyDTO(drugInPharmacy, pharmacy));
+                    new DrugWithPharmacyMapper().DrugInPharmacyToDrugWithPharmacyDTO(drugInPharmacy, pharmacy, price));
         }
 
         return new ResponseEntity<List<DrugWithPharmacyDTO>>(drugsWithPharmacies, HttpStatus.OK);
     }
+   
     
     @GetMapping("reservedDrugs/{drugReservationId}")
     @PreAuthorize("hasAnyRole('DERMATOLOGIST','PHARMACIST')")
@@ -140,5 +152,14 @@ public class DrugReservationController {
     public void penalIfDeadlineOver(){
         drugReservationService.penalIfDeadlineOver();
     }
+    
+    @GetMapping("/checkForComplaint")
+    @PreAuthorize("hasRole('PATIENT')")
+    public ResponseEntity<Boolean> isAnyDrugFromChoosenPharmacySoldToPatient(@RequestParam("patientId") long patientId, @RequestParam("pharmacyId") long pharmacyId){
+        if(drugReservationService.isAnyDrugFromChoosenPharmacySoldToPatient(patientId, pharmacyId))
+        	return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    
 
 }

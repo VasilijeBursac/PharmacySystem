@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
@@ -28,7 +29,7 @@ import ISA.Team54.vacationAndWorkingTime.model.DermatologistWorkSchedule;
 @Entity
 public class Pharmacy {
 	@Id
-	@SequenceGenerator(name = "mySeqGen2", sequenceName = "mySeq2",initialValue = 3,allocationSize = 1)
+	@SequenceGenerator(name = "mySeqGen2", sequenceName = "mySeq2",initialValue = 5,allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGen2")
 	private long id;
 
@@ -60,7 +61,8 @@ public class Pharmacy {
 	 * @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY) public
 	 * List<DrugInPharmacy> drugs = new ArrayList<DrugInPharmacy>();
 	 */
-
+	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public List<Promotion> promotion = new ArrayList<Promotion>();
 
@@ -84,6 +86,10 @@ public class Pharmacy {
 	@JsonManagedReference	
 	@OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Set<Rating> ratings;
+	
+	@JsonBackReference
+	@ManyToMany(fetch = FetchType.LAZY)
+	private List<Patient> patients;
 	
 	public Pharmacy() {
 		super();
@@ -216,9 +222,11 @@ public class Pharmacy {
 	public double getRatings() {
 		double rating = 0;
 		int count = 0;
-		for (Rating r : ratings) {
-			rating += r.getRating();
-			count++;
+		if(ratings != null) {
+			for (Rating r : ratings) {
+				rating += r.getRating();
+				count++;
+			}
 		}
 		return count != 0 ? (double)rating/count : 0;
 	}
@@ -235,5 +243,23 @@ public class Pharmacy {
 		this.pharmacistPrice = pharmacistPrice;
 	}
 
+	public List<DermatologistWorkSchedule> getDermatologistWorkingSchedules() {
+		return dermatologistWorkingSchedules;
+	}
+
+	public void setDermatologistWorkingSchedules(List<DermatologistWorkSchedule> dermatologistWorkingSchedules) {
+		this.dermatologistWorkingSchedules = dermatologistWorkingSchedules;
+	}
+
+	public List<Patient> getPatients() {
+		return patients;
+	}
+
+	public void setPatients(List<Patient> patients) {
+		this.patients = patients;
+	}
+
+
+	
 	
 }
