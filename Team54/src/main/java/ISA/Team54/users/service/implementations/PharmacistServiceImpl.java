@@ -1,11 +1,14 @@
 package ISA.Team54.users.service.implementations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ISA.Team54.users.dto.PharmacistInfoDTO;
 import ISA.Team54.users.dto.PharmacistRequestDTO;
+import ISA.Team54.users.mapper.PharmacistMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +27,7 @@ public class PharmacistServiceImpl implements PharmacistService{
 	}
 	
 	@Override
-	public List<PharmacistRequestDTO> getAllPharmacistsInPharmacy(long pharmacyId) {
-		List<Pharmacist> pharmacistsInPharmacy = pharmacistRepository.findAllByPharmacyId(pharmacyId);
-		return null;
+	public List<Pharmacist> getAllPharmacistsInPharmacy(long pharmacyId) {
+		return pharmacistRepository.findAllByPharmacyId(pharmacyId);
 	}
 }

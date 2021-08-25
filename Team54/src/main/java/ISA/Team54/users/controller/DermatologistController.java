@@ -13,9 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ISA.Team54.users.dto.DermatologistInfoDTO;
 import ISA.Team54.users.dto.DermatologistRequestDTO;
+import ISA.Team54.users.dto.PharmacistInfoDTO;
 import ISA.Team54.users.dto.PharmacistRequestDTO;
 import ISA.Team54.users.dto.UserInfoDTO;
+import ISA.Team54.users.mapper.DermatologistMapper;
+import ISA.Team54.users.mapper.PharmacistMapper;
 import ISA.Team54.users.mappers.UserInfoMapper;
 import ISA.Team54.users.model.Dermatologist;
 import ISA.Team54.users.service.interfaces.DermatologistService;
@@ -46,8 +50,12 @@ public class DermatologistController {
 	}
 	
 	@GetMapping("/byPharmacyId/{pharmacyId}")
-	public List<DermatologistRequestDTO> getAllDermatologistsInPharmacy(@PathVariable Long pharmacyId){
-		//return dermatologistService.getAllDermatologistsInPharmacy(pharmacyId);
-		return null;
+	public List<DermatologistInfoDTO> getAllDermatologistsInPharmacy(@PathVariable Long pharmacyId){
+		List<DermatologistInfoDTO> dermatologistsInPharmacyDTOs = new ArrayList<DermatologistInfoDTO>();
+		
+		dermatologistService.getAllDermatologistsInPharmacy(pharmacyId).forEach(dermatologistInPharmacy -> 
+		dermatologistsInPharmacyDTOs.add(DermatologistMapper.DermatologistToDermatologistInfoDTO(dermatologistInPharmacy)));
+		
+		return dermatologistsInPharmacyDTOs;
 	}
 }

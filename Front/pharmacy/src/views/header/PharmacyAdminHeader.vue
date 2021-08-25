@@ -9,8 +9,8 @@
         <li class="nav-item"><a href="#" class="nav-link">Slobodni termini</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Odsustva</a></li>
         <b-nav-item-dropdown v-bind:text = "pharmacyAdmin.name + ' ' + pharmacyAdmin.surname" right>
-          <b-dropdown-item href="#"><router-link to="/pharmacy-admin-profile">Moj profil</router-link></b-dropdown-item>
-          <b-dropdown-item href="#" @click="logout">Odjava</b-dropdown-item>
+            <b-dropdown-item href="#"><router-link to="/pharmacy-admin-profile">Moj profil</router-link></b-dropdown-item>
+            <b-dropdown-item href="#" @click="logout">Odjava</b-dropdown-item>
         </b-nav-item-dropdown>
     </ul>
 </template>

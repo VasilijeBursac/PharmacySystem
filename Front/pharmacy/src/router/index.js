@@ -237,7 +237,7 @@ const routes = [
     import("../views/patient/drugs/AllDrugs.vue")
   },
   {
-    path: "/drug-informations",
+    path: "/drug-informations/:id/:name",
     name: "DrugInformations",
     component: () =>
     import("../views/patient/drugs/DrugInformations.vue")

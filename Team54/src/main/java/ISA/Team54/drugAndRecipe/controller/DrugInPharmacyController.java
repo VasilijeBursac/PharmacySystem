@@ -45,6 +45,6 @@ public class DrugInPharmacyController {
 	
 	private PharmacyForDrugDTO DrugInPharmacyToPharmacyForDrugDTO(DrugInPharmacy drugInPharmacy) {
 		Pharmacy pharmacy = pharmacyService.getPharmacyById(drugInPharmacy.getDrugInPharmacyId().getPharmaciId());
-		return new PharmacyForDrugDTO(pharmacy.getName(), pharmacy.getAddress(), drugInPharmacy.getPricelist().getPrice());
+		return new PharmacyForDrugDTO(pharmacy.getId(), pharmacy.getName(), pharmacy.getAddress(), drugInPharmacy.getPricelist().getPrice());
 	}
 }

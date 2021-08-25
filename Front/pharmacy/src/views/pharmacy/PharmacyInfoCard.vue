@@ -4,20 +4,28 @@
             <b-row>
                 <b-col cols="6">
                     <div class="pharmacy-info">
-                        <h5 class="h5 text-left font-weight-bold">{{pharmacy.name}}</h5>
-                        <h6 class="h6 text-left font-italic mt-n1">{{pharmacy.address}}, {{pharmacy.city}}, {{pharmacy.country}}</h6>
-                        <p class="h6 text-left mt-4 mb-3">{{pharmacy.description}}</p>
+                        <h5 class="h5 text-left font-weight-bold text-success">
+                            {{pharmacy.name}}
+                        </h5>
+                        <h6 class="h6 text-left font-italic mt-n1">
+                            {{pharmacy.address}}, {{pharmacy.city}}, {{pharmacy.country}}
+                        </h6>
+                        <p class="h6 text-left mt-4 mb-3">
+                            {{pharmacy.description}}
+                        </p>
 
                         <b-button v-if="!subscribed && loggedUserRole != 'ROLE_UNREGISTERED'"  block @click = "subscribeToPromotions">
                             <b-icon icon="bell-fill" aria-hidden="true"></b-icon> Pretplati se na akcije i promocije apoteke
                         </b-button> 
-                        <p id = "subscription" v-if="subscribed" class = "h6 text-left mt-4 mb-3">Pretplaceni ste na akcije i promocije apoteke !</p>          
+                        <p id = "subscription" v-if="subscribed" class = "h6 text-left mt-4 mb-3">Pretplaćeni ste na akcije i promocije apoteke !</p>          
                     </div>
                 </b-col>            
 
                 <b-col cols="2">
                     <div class="pharmacy-rating">
-                    <p class="h6">{{ pharmacy.rating != "0.0" ? pharmacy.rating : "Nema ocena" }} <b-icon icon="star-fill"></b-icon></p>
+                        <p class="h6">
+                            {{ pharmacy.rating != "0.0" ? pharmacy.rating : "Nema ocenu" }} <b-icon icon="star-fill"></b-icon>
+                        </p>
                     </div>
                 </b-col>   
                 <b-col class="mr-4">
@@ -46,6 +54,7 @@ export default {
             .then( res => {
                 this.pharmacy = JSON.parse(JSON.stringify(res.data))
             })
+        
         if(this.loggedUserRole != "ROLE_UNREGISTERED")
             this.$http
                 .get('patient/checkForSubsrciption/' + this.pharmacyId)
@@ -54,8 +63,8 @@ export default {
                 })
     },
     methods:{
-       subscribeToPromotions(){
-          this.$http
+        subscribeToPromotions(){
+            this.$http
             .post('patient/addPharmacyForPromotions/' + this.pharmacyId)
             .then( res => {
                 this.subscribed = true
@@ -67,7 +76,7 @@ export default {
                     this.toast('Greska prikom prijavljivanja na akcije i promocije!','Neuspešno', 'danger')
                 else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
             })
-       },
+        },
         toast(message, title, variant){
             this.$bvToast.toast(message, {
                 title: title,

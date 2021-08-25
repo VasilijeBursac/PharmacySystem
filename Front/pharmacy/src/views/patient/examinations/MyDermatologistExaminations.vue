@@ -22,7 +22,7 @@
         <b-table ref="past" striped hover :items="pastData" :fields="fields">
             <template #cell(akcije)="row">
                 <b-button @click="writeComplaint(row)" size="sm" >
-                    Napisi zalbu
+                    Napiši žalbu
                 </b-button>
             </template>
         </b-table>

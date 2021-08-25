@@ -1,5 +1,6 @@
 package ISA.Team54.users.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import ISA.Team54.users.dto.PharmacistInfoDTO;
 import ISA.Team54.users.dto.PharmacistRequestDTO;
+import ISA.Team54.users.mapper.PharmacistMapper;
 import ISA.Team54.users.model.Pharmacist;
 import ISA.Team54.users.service.interfaces.PharmacistService;
 
@@ -33,7 +35,12 @@ public class PharmacistController {
 	
 	
 	@GetMapping("/byPharmacyId/{pharmacyId}")
-	public List<PharmacistRequestDTO> getAllPharmacistsInPharmacy(@PathVariable Long pharmacyId){
-		return pharmacistService.getAllPharmacistsInPharmacy(pharmacyId);
+	public List<PharmacistInfoDTO> getAllPharmacistsInPharmacy(@PathVariable Long pharmacyId){
+		List<PharmacistInfoDTO> pharmacistsInPharmacyDTOs = new ArrayList<PharmacistInfoDTO>();
+		
+		pharmacistService.getAllPharmacistsInPharmacy(pharmacyId).forEach(pharmacistInPharmacy -> 
+		pharmacistsInPharmacyDTOs.add(PharmacistMapper.PharmacistToPharmacistInfoDTO(pharmacistInPharmacy)));
+		
+		return pharmacistsInPharmacyDTOs;
 	}	
 }
