@@ -38,7 +38,8 @@
                 </template>
 
                 <template #cell(akcije)="row">
-                    <b-button @click="reserveDrug(row)" block size="sm" >
+                    <b-button @click="reserveDrug(row)" block size="sm" variant="success">
+                        <b-icon icon="heart"></b-icon>
                         Rezerviši
                     </b-button>
                 </template>

@@ -4,7 +4,8 @@
         <h5 class="h5 align-middle my-3 text-success">{{this.pharmacy}}</h5>
         <b-table ref="table" striped hover :items="items" :fields="fields">
             <template #cell(akcije)="row">
-                <b-button @click="schedule(row)" size="sm" >
+                <b-button variant="success" @click="schedule(row)" size="sm" >
+					<b-icon icon="calendar2-week"></b-icon>
                     Zakaži pregled
                 </b-button>
             </template>
@@ -18,7 +19,11 @@ export default {
 		return {
 			pharmacy: '',
 			data: [],
-			fields:['termin', 'dermatolog', {key:'ocena', sortable:true}, {key:'cena sa popustom', sortable:true}, 'akcije'],
+			fields: [
+				{key:'termin', sortable:true}, 
+				{key:'dermatolog', sortable:true},  	{key:'ocena', sortable:true}, 
+				{key:'cena sa popustom', sortable:true}, 'akcije'
+			],
 		}
 	},
 	methods:{

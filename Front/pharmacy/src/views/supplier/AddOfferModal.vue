@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal id="offerModal" hide-footer title="Davanje ponude za narudzbenicu">
+    <b-modal id="offerModal" hide-footer title="Davanje ponude za narudžbenicu">
         <b-form @submit="addOffer">
             <b-form-group id="totalPrice-group" label="Unesite ukupnu cenu ponude :" label-for="totalPrice-input" class="text-center">
                 <b-form-input
@@ -19,7 +19,7 @@
             </b-form-group>
             <b-button type = "submit" block variant="success">
                 <b-icon-check></b-icon-check>
-                Posalji ponudu
+                Pošalji ponudu
             </b-button>
             <b-button @click="closeModal" block variant="danger">
                 <b-icon-x></b-icon-x>

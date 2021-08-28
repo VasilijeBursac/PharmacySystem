@@ -1,5 +1,6 @@
 package ISA.Team54.users.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -9,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -29,8 +33,8 @@ public class Dermatologist extends User{
 	@OneToMany(mappedBy="dermatologist",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<DermatologistWorkSchedule> workSchedules;
 		
-	@ManyToMany(fetch = FetchType.LAZY)
-	private List<Pharmacy> pharmacys;
+	@ManyToMany(mappedBy = "dermatologists")
+	private List<Pharmacy> pharmacies;
 	
 	@OneToMany(mappedBy = "dermatologist",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<VacationRequest> vacationRequests;
@@ -73,11 +77,11 @@ public class Dermatologist extends User{
 	}
 
 	public List<Pharmacy> getPharmacy() {
-		return pharmacys;
+		return pharmacies;
 	}
 
-	public void setPharmacy(List<Pharmacy> pharmacy) {
-		this.pharmacys = pharmacy;
+	public void setPharmacy(List<Pharmacy> pharmacies) {
+		this.pharmacies = pharmacies;
 	}
 
 	

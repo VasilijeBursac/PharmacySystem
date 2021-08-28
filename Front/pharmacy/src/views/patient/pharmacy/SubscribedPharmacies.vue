@@ -37,12 +37,12 @@ export default {
                     })
                     this.items = newArray
                     if(res.status == 200)
-                        this.toast('Uspešno ste otkazali pretplatu!', 'Uspešno', 'success')
+                        this.toast('Uspešno ste otkazali pretplatu na akcije i promocije apoteke!', 'Uspešno', 'success')
                 })
                 .catch(error => {
                     if(error.response.status == 400)
-                        this.toast('Greska prilikom otkazivanja pretplate!', 'Neuspesno', 'danger')
-                    else this.toast('Desila se greska!Molimo pokusajte kasnije', 'Neuspesno', 'danger')
+                        this.toast('Greška prilikom otkazivanja pretplate!', 'Neuspešno', 'danger')
+                    else this.toast('Desila se greška! Molimo pokušajte kasnije', 'Neuspešno', 'danger')
                 })       
         },
         toast(message, title, variant){
@@ -63,7 +63,7 @@ export default {
             })
             .catch( (error) => {
                 if(error.response.status == 404)
-                    this.toast('Nemate nijednu apoteku na koju ste pretplaceni!','Neuspešno', 'danger')  
+                    this.toast('Niste pretplaćeni ni na jednu apoteku!','Neuspešno', 'danger')  
             })
     }
 }

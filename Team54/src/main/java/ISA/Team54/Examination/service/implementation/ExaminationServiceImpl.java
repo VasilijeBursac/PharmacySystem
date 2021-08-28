@@ -276,7 +276,8 @@ public class ExaminationServiceImpl implements ExaminationService {
 		Examination examination = examinationRepository.findById(id).orElse(null);
 		if (examination != null) {
 			examination.setStatus(ExaminationStatus.Filled);
-			examination.setPatient(patient);			
+			examination.setPatient(patient);
+			examination.setPrice(getExaminationPriceWithDiscount(examination.getPrice()));
 			examinationRepository.save(examination);
 			new Thread(() -> {
 				emailService.sendEmail("tim54isa@gmail.com", "Zakazan pregled", "Uspesno ste zakazali pregled!");
@@ -398,9 +399,14 @@ public class ExaminationServiceImpl implements ExaminationService {
 
 		List<EmployeeExaminationDTO> examinationDTOs = new ArrayList<EmployeeExaminationDTO>();
 		ExaminationMapper mapper = new ExaminationMapper();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		for(int i = 0; i < examinations.size(); i++) {
-			examinations.get(i).setPrice(getExaminationPriceWithDiscount(examinations.get(i).getPrice()));
-			examinationDTOs.add(mapper.ExaminationToEmployeeExaminationDTO(examinations.get(i), employees.get(i), type));
+			Examination examination = new Examination(examinations.get(i));
+			if (authentication != null && authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_PATIENT"))) 
+				examination.setPrice(getExaminationPriceWithDiscount(examination.getPrice()));
+			
+			examinationDTOs.add(mapper.ExaminationToEmployeeExaminationDTO(examination, employees.get(i), type));
 		}
 
 		return examinationDTOs;

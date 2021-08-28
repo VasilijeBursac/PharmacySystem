@@ -23,8 +23,8 @@
         <h6 class="h6 text-left mt-5 mb-3">Završeni termini</h6>
         <b-table ref="past" striped hover :items="pastData" :fields="fields">
             <template #cell(akcije)="row">
-               <b-button @click="writeComplaint(row)" size="sm" >
-                    Napisi zalbu
+                <b-button @click="writeComplaint(row)" size="sm" >
+                    Napiši žalbu
                 </b-button>
             </template>
         </b-table>

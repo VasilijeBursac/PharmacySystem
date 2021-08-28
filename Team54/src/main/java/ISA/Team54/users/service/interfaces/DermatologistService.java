@@ -10,6 +10,6 @@ public interface DermatologistService {
 
 	List<Dermatologist> findAll();
 	Dermatologist findOneById(Long id);
-	List<DermatologistRequestDTO> getAllDermatologistsInPharmacy(long pharmacyId);
+	List<Dermatologist> getAllDermatologistsInPharmacy(long pharmacyId);
 
 }

@@ -1,5 +1,8 @@
 package ISA.Team54.users.mappers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ISA.Team54.users.dto.PharmacyDTO;
 import ISA.Team54.users.dto.UserRequestDTO;
 import ISA.Team54.users.model.Pharmacy;
@@ -45,5 +48,12 @@ public class PharmacyMapper {
 				pharmacy.getAddress(),
 				pharmacy.getCity(),
 				pharmacy.getCountry());
+	}
+	
+	public static List<PharmacyDTO> PharmaciesToPharmaciesDTOs(List<Pharmacy> pharmacies) {
+		List<PharmacyDTO> pharmaciesDTOs = new ArrayList<PharmacyDTO>();
+		pharmacies.forEach(pharmacy -> pharmaciesDTOs.add(PharmacyMapper.PharmacyToPharmacyDTO(pharmacy)));
+		
+		return pharmaciesDTOs;
 	}
 }

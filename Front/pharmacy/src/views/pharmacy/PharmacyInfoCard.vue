@@ -4,20 +4,34 @@
             <b-row>
                 <b-col cols="6">
                     <div class="pharmacy-info">
-                        <h5 class="h5 text-left font-weight-bold">{{pharmacy.name}}</h5>
-                        <h6 class="h6 text-left font-italic mt-n1">{{pharmacy.address}}, {{pharmacy.city}}, {{pharmacy.country}}</h6>
-                        <p class="h6 text-left mt-4 mb-3">{{pharmacy.description}}</p>
+                        <h5 class="h5 text-left font-weight-bold text-success">
+                            {{pharmacy.name}}
+                        </h5>
+                        <h6 class="h6 text-left font-italic mt-n1">
+                            {{pharmacy.address}}, {{pharmacy.city}}, {{pharmacy.country}}
+                        </h6>
+                        <p class="h6 text-left mt-4 mb-3">
+                            {{pharmacy.description}}
+                        </p>
 
-                        <b-button v-if="!subscribed && loggedUserRole != 'ROLE_UNREGISTERED'"  block @click = "subscribeToPromotions">
-                            <b-icon icon="bell-fill" aria-hidden="true"></b-icon> Pretplati se na akcije i promocije apoteke
-                        </b-button> 
-                        <p id = "subscription" v-if="subscribed" class = "h6 text-left mt-4 mb-3">Pretplaceni ste na akcije i promocije apoteke !</p>          
+
+                        <b-button
+                            v-if="loggedUserRole == 'ROLE_PATIENT'"  
+                            block 
+                            :variant="subscribed ? 'success' : 'secondary'" 
+                            @click = "changePharmacySubscriptionStatus"
+                            >
+                            <b-icon icon="bell-fill" aria-hidden="true"></b-icon>
+                            {{ subscriptionStatusButtonText }}
+                        </b-button>      
                     </div>
                 </b-col>            
 
                 <b-col cols="2">
                     <div class="pharmacy-rating">
-                    <p class="h6">{{ pharmacy.rating != "0.0" ? pharmacy.rating : "Nema ocena" }} <b-icon icon="star-fill"></b-icon></p>
+                        <p class="h6">
+                            {{ pharmacy.rating != "0.0" ? pharmacy.rating : "Nema ocenu" }} <b-icon icon="star-fill"></b-icon>
+                        </p>
                     </div>
                 </b-col>   
                 <b-col class="mr-4">
@@ -40,35 +54,79 @@ export default {
             subscribed : false
         } 
     },
+
+    computed: {
+        subscriptionStatusButtonText() {
+            if (!this.subscribed)
+                return "Pretplati se na akcije i promocije apoteke"
+            else
+                return "Pretplaćeni ste na akcije i promocije apoteke"
+        }
+    },
+
     mounted(){
         this.$http
             .get('/pharmacy/' + this.pharmacyId)
             .then( res => {
                 this.pharmacy = JSON.parse(JSON.stringify(res.data))
             })
-        if(this.loggedUserRole != "ROLE_UNREGISTERED")
-            this.$http
-                .get('patient/checkForSubsrciption/' + this.pharmacyId)
-                .then( () => {
-                    this.subscribed = true
-                })
+        
+        this.getPharmacySubscriptionStatus()
     },
+
     methods:{
-       subscribeToPromotions(){
-          this.$http
+        getPharmacySubscriptionStatus() {
+            if (this.loggedUserRole == "ROLE_PATIENT")
+                this.$http
+                    .get('patient/checkForSubsrciption/' + this.pharmacyId)
+                    .then( () => {
+                        this.subscribed = true
+                    })
+                    .catch(error => {
+                    if(error.response.status == 404)
+                        this.subscribed = false
+                    })  
+        },
+
+        changePharmacySubscriptionStatus() {
+            if (!this.subscribed)
+                this.subscribeToPromotions()
+            else
+                this.unsubscribeFromPromotions()
+        },
+
+        subscribeToPromotions(){
+            this.$http
             .post('patient/addPharmacyForPromotions/' + this.pharmacyId)
             .then( res => {
                 this.subscribed = true
                 if(res.status == 200)
-                    this.toast('Uspesno ste se pretplatili na akcije i promocije!!','Uspesno', 'succes')    
+                    this.toast('success', 'Uspešno', 'Uspešno ste se pretplatili na akcije i promocije apoteke!')    
             })
             .catch( error => {
                 if(error.response.status == 400)
-                    this.toast('Greska prikom prijavljivanja na akcije i promocije!','Neuspešno', 'danger')
-                else this.toast('Desila se greška! Molimo pokušajte kasnije','Neuspešno', 'danger')  
+                    this.toast('danger', 'Neuspešno', 'Greška prilikom prijavljivanja na akcije i promocije!')
+                else this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije!')  
             })
-       },
-        toast(message, title, variant){
+        },
+
+        unsubscribeFromPromotions(){
+            this.$http
+                .delete('patient/deleteSubscribedPharmacy/' + this.pharmacyId)
+                .then( res => {
+                    if(res.status == 200)
+                        this.toast('success', 'Uspešno', 'Uspešno ste otkazali pretplatu na akcije i promocije apoteke!')
+                    
+                    this.getPharmacySubscriptionStatus()
+                })
+                .catch(error => {
+                    if(error.response.status == 400)
+                        this.toast('danger', 'Neuspešno', 'Greška prilikom otkazivanja pretplate!')
+                    else this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije!')
+                })       
+        },
+
+        toast(variant, title, message){
             this.$bvToast.toast(message, {
                 title: title,
                 variant: variant,
@@ -82,7 +140,5 @@ export default {
 }
 </script>
 <style >
-#subscription{
-    color: green;
-}
+
 </style>

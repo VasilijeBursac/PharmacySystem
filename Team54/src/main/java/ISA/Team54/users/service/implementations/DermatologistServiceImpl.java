@@ -32,8 +32,7 @@ public class DermatologistServiceImpl implements DermatologistService {
 	}
 
 	@Override
-	public List<DermatologistRequestDTO> getAllDermatologistsInPharmacy(long pharmacyId) {
-		List<Dermatologist> dermatologistsInPharmacy = pharmacyRepository.findById(pharmacyId).getDermatologists();
-		return null;
+	public List<Dermatologist> getAllDermatologistsInPharmacy(long pharmacyId) {
+		return pharmacyRepository.findById(pharmacyId).getDermatologists();
 	}	
 }
