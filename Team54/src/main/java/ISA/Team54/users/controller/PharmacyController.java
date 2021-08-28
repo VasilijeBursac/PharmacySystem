@@ -148,7 +148,6 @@ public class PharmacyController {
 	}
 
 	@PostMapping("{id}/dermatologist-examinations")
-	@PreAuthorize("hasRole('ROLE_PATIENT')")
 	public  ResponseEntity<List<EmployeeExaminationDTO>> getFreeDermatologistExaminationsForPharmacy(@PathVariable long id, @RequestBody ExaminationTypeDTO type){
 		return new ResponseEntity<List<EmployeeExaminationDTO>>(examinationService.getExaminationsForPharmacy(id, type.getType()), HttpStatus.OK);
 	}

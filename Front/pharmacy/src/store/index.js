@@ -15,7 +15,9 @@ export default new Vuex.Store({
 		userId: localStorage.getItem("UserId"),
 		JWT: localStorage.getItem("JWT"),
 
+		myPharmacyId: null
 	},
+
 	mutations: {
 		setUserRole(state,newRole) {
 			state.userRole = newRole;
@@ -26,13 +28,23 @@ export default new Vuex.Store({
 		setJWT(state,newJWT) {
 			state.JWT = newJWT;
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + newJWT;
+		},
+
+		SET_MY_PHARMACY_ID(state, newPharmacyId) {
+			state.myPharmacyId = newPharmacyId;
 		}
 	},
-	actions: {},
+	actions: {
+		setMyPharmacyId({commit}, myPharmacyId) {
+			commit("SET_MY_PHARMACY_ID", myPharmacyId)
+		}
+	},
 	modules: {},
 	getters:{
 		getUserRole: state => state.userRole,
 		getUserId: state => state.userId,
-		getJWT: state => state.JWT
+		getJWT: state => state.JWT,
+
+		getMyPharmacyId: state => state.myPharmacyId
 	}
 });

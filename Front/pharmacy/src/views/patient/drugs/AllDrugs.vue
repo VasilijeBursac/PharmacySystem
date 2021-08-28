@@ -1,11 +1,15 @@
 <template>
-    <div class="container">
-        <b-row class="mt-4">
-            <b-col cols="4">                
+    <div class="container mt-4">
+        <div class="title-options clearfix">
+            <h5 class="h5 float-left mb-4">Lekovi</h5>
+        </div>
+        
+        <b-row>
+            <b-col cols="3">                
                 <DrugsFilters />
             </b-col>
             <b-col>
-                <DrugsTable class="mt-5" />
+                <DrugsTable  />
             </b-col>
         </b-row>
     </div>
@@ -13,7 +17,7 @@
 </template>
 
 <script>
-import DrugsFilters from './DrugsFilters.vue'
+import DrugsFilters from '../../../components/filters/DrugsFilters.vue'
 import DrugsTable from './DrugsTable.vue'
 
 export default {

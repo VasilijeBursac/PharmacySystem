@@ -87,6 +87,21 @@ public class Examination {
 		this.drugs = drugs;
 	}
 
+	public Examination(Examination examination) {
+		super();
+		this.id = examination.id;
+		this.diagnose = examination.diagnose;
+		this.price = examination.price;
+		this.therapyDuration = examination.therapyDuration;
+		this.type = examination.type;
+		this.status = examination.status;
+		this.emplyeedId = examination.emplyeedId;
+		this.patient = examination.patient;
+		this.term = examination.term;
+		this.pharmacy = examination.pharmacy;
+		this.drugs = examination.drugs;
+	}
+	
 	public Examination() {
 		super();
 	}

@@ -1,23 +1,23 @@
 <template>
  <div>
-      <h3 id = "h3" class="h3 align-middle ">Sve narudzbenice</h3>     
+      <h3 id = "h3" class="h3 align-middle ">Sve narudžbenice</h3>     
       <div id="show-orders">
             <div v-for = "order in orders" :key="order.orderId" class = "single-order">
                 <b-row>
-                    <label class="float-left  ml-3">Narudzbenica za apoteku : {{order.pharmacyName}}</label>
+                    <label class="float-left  ml-3">Narudžbenica za apoteku : {{order.pharmacyName}}</label>
                 </b-row>
                 <b-row>
                     <label class="float-left ml-3">Rok za isporuku : {{new Date(order.deadline).toLocaleString()}}</label>        
                 </b-row>
                 <b-row>
-                    <label class="float-left ml-3">Status narudzbenice : {{order.status == "Waiting" ? "Ceka ponude" : "Obradjena"}}</label>        
+                    <label class="float-left ml-3">Status narudžbenice : {{order.status == "Waiting" ? "Čeka ponude" : "Obradjena"}}</label>        
                 </b-row>
                 <b-table id = "table"  hover :items="order.drugsInOrder" :fields="fields" :tbody-transition-props="transProps">
                 </b-table>     
                 <div id = "button">                        
                     <b-button  variant="success" @click="openModal(order.orderId, order.deadline)">
                         <b-icon-pencil-square></b-icon-pencil-square>
-                        Napisi ponudu
+                        Napiši ponudu
                     </b-button>   
                 </div>                                                                             
             </div>

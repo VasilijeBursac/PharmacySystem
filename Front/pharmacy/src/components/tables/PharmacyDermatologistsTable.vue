@@ -1,5 +1,5 @@
 <template>
-    <div class="pharmacy-pharmacists">
+    <div class="pharmacy-dermatologists">
         <b-table striped hover :busy="isBusy" :items="items | formatRating" :fields="fields" class="text-middle mt-2">
 			<template #table-busy>
 				<div class="text-center text-danger my-2">
@@ -8,8 +8,17 @@
 				</div>
 			</template>
             
+            <template #cell(displayPharmacies)="row">
+                <b-dropdown v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId" text="Prikaži apoteke" size="sm" >
+                    <b-dropdown-item v-for="pharmacy in row.item.pharmacies" :key="pharmacy.id" 
+                    :to="{name: 'PharmacyProfile', params: { id: pharmacy.id }}" class="my-0">
+                        {{ pharmacy.name }}
+                    </b-dropdown-item>
+                </b-dropdown>
+			</template>
+
             <template #cell(actions)="row">
-				<b-button v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN'"
+                <b-button v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId"
                 size="sm" variant="danger" @click="displayDrugInformations(row.item)">
                     <b-icon icon="x"></b-icon>
 					Ukloni
@@ -20,6 +29,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
     props: ['pharmacyId'],
     data: function() {
@@ -32,11 +43,15 @@ export default {
             isBusy: true
         }
     },
+
+    computed: {
+        ...mapState(['myPharmacyId'])
+    },
     
     mounted(){
-        this.getPharmacistsInPharmacy()
+        this.getDermatologistsInPharmacy()
 
-        if (this.loggedUserRole == 'ROLE_PHARMACY_ADMIN')
+        if (this.loggedUserRole == 'ROLE_PHARMACY_ADMIN' && this.myPharmacyId == this.pharmacyId)
             this.fields = [
                 { key: 'name', label: 'Ime', sortable: true}, 
                 { key: 'surname', label: 'Prezime', sortable: true}, 
@@ -44,6 +59,7 @@ export default {
                 { key: 'phoneNumber', label: 'Broj telefona', sortable: true},
                 { key: 'rating', label: 'Ocena', sortable: true},
                 { key: 'price', label: 'Cena pregleda', sortable: true},
+                { key: 'displayPharmacies', label: 'Apoteke u kojima je zaposlen'},
                 { key: 'actions', label: 'Akcije'}
             ]
         else
@@ -56,9 +72,9 @@ export default {
     },
 
     methods: {
-        getPharmacistsInPharmacy() {
+        getDermatologistsInPharmacy() {
             this.$http
-                .get('/pharmacist/byPharmacyId/' + this.pharmacyId)
+                .get('/dermatologist/byPharmacyId/' + this.pharmacyId)
                 .then( res => {
                     this.isBusy = false
 

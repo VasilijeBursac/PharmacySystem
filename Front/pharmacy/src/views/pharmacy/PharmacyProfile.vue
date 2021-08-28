@@ -5,7 +5,7 @@
             
             <AddComplaintModal/>
                 
-            <div class="pharmacy-admin-actions-buttons text-right" v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN'" >
+            <div class="pharmacy-admin-actions-buttons text-right" v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId" >
                 <b-button variant="success" class="mt-n2 mb-3 ml-2"
                     @click="$router.push({name: 'PharmacyReports', params: { id: pharmacyId }})">
                     <b-icon-graph-up shift-h="-3"></b-icon-graph-up>
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import PharmacyInfoCard from "@/views/pharmacy/PharmacyInfoCard.vue";
 import PharmacyTablesCard from "@/views/pharmacy/PharmacyTablesCard.vue";
 import AddComplaintModal from "../patient/AddComplaintModal.vue";
@@ -68,6 +69,11 @@ export default {
 
         } 
     },
+
+    computed: {
+        ...mapState(['myPharmacyId'])
+    },
+
     mounted(){
         this.$http
             .get('/pharmacy/' + this.pharmacyId)
@@ -76,6 +82,7 @@ export default {
             })
             this.isAnyDrugFromChoosenPharmacySoldToPatient();
     },
+
     methods:{
         openModal(){
             this.$root.$emit('show-complaint-modal', {
@@ -99,6 +106,7 @@ export default {
             
         }
     },
+
     components:{
         PharmacyInfoCard,
         PharmacyTablesCard,

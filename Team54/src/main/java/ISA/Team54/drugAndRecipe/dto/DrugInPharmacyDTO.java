@@ -11,13 +11,17 @@ public class DrugInPharmacyDTO {
 	private int quantity;
 	private float price;
 	private double rating;
+	private String type;
+	private String shape;
+	private String manufacturer;
+	private String additionalInfo;
 	
 	public DrugInPharmacyDTO() {
 		super();
 	}
 
 	public DrugInPharmacyDTO(long pharmacyId, long drugId, String drugName, String drugCode, int loyaltyPoints,
-			int quantity, float price, double rating) {
+			int quantity, float price, double rating, String type, String shape, String manufacturer, String additionalInfo) {
 		super();
 		this.pharmacyId = pharmacyId;
 		this.drugId = drugId;
@@ -27,6 +31,10 @@ public class DrugInPharmacyDTO {
 		this.quantity = quantity;
 		this.price = price;
 		this.rating = rating;
+		this.type = type;
+		this.shape = shape;
+		this.manufacturer = manufacturer;
+		this.additionalInfo = additionalInfo;
 	}
 
 
@@ -93,6 +101,38 @@ public class DrugInPharmacyDTO {
 
 	public void setRating(double rating) {
 		this.rating = rating;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getShape() {
+		return shape;
+	}
+
+	public void setShape(String shape) {
+		this.shape = shape;
+	}
+
+	public String getManufacturer() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+
+	public String getAdditionalInfo() {
+		return additionalInfo;
+	}
+
+	public void setAdditionalInfo(String additionalInfo) {
+		this.additionalInfo = additionalInfo;
 	}
 
 	

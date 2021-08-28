@@ -1,6 +1,6 @@
 <template>    
     <ul class="nav navbar-nav">
-        <li class="nav-item active"><a href="#" class="nav-link"><router-link to="orders">Narudzbenice</router-link></a></li>
+        <li class="nav-item active"><a href="#" class="nav-link"><router-link to="orders">Narudžbenice</router-link></a></li>
         <li class="nav-item"><a href="#" class="nav-link"><router-link to="supplier-drugs">Moji lekovi</router-link></a></li>
         <li class="nav-item"><a href="#" class="nav-link"><router-link to="supplier-offers">Moje Ponude</router-link></a></li>
         <b-nav-item-dropdown text="Profil" right>

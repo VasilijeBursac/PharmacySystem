@@ -21,14 +21,22 @@
                     <PharmacyDermatologistsTable :pharmacyId="pharmacyId" />
                 </b-col>
             </b-row>
+
+            <b-row>
+                <b-col>
+                    <h5 class="h5 mt-5 text-left">Slobodni termini pregleda kod dermatologa</h5>
+                    <PharmacyDermatologistsExaminationsTable :pharmacyId="pharmacyId" />
+                </b-col>
+            </b-row>
         </b-card>
     </div>
 </template>
 
 <script>
-import PharmacyDrugsTable from "@/views/pharmacy/PharmacyDrugsTable.vue";
-import PharmacyPharmacistsTable from "@/views/pharmacy/PharmacyPharmacistsTable.vue"
-import PharmacyDermatologistsTable from "@/views/pharmacy/PharmacyDermatologistsTable.vue"
+import PharmacyDrugsTable from "@/components/tables/PharmacyDrugsTable.vue";
+import PharmacyPharmacistsTable from "@/components/tables/PharmacyPharmacistsTable.vue"
+import PharmacyDermatologistsTable from "@/components/tables/PharmacyDermatologistsTable.vue"
+import PharmacyDermatologistsExaminationsTable from "@/components/tables/PharmacyDermatologistsExaminationsTable.vue"
 
 export default {
     props: ['pharmacyId'],
@@ -45,7 +53,8 @@ export default {
     components:{
         PharmacyDrugsTable,
         PharmacyPharmacistsTable,
-        PharmacyDermatologistsTable
+        PharmacyDermatologistsTable,
+        PharmacyDermatologistsExaminationsTable
     }
 }
 </script>

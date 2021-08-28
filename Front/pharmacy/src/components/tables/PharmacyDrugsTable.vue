@@ -2,7 +2,7 @@
     <div class="pharmacy-drugs">
         <PharmacyReserveDrugModal :pharmacyId="pharmacyId" :drug="selectedDrug" />
 
-        <b-table striped hover :busy="isBusy" :items="items | formatRating" :fields="fields"  class="text-middle mt-2">
+        <b-table striped hover :busy="isBusy" :items="items | formatRating" :fields="fields"  class="text-middle mt-0">
             <template #table-busy>
 				<div class="text-center text-danger my-2">
 					<b-spinner class="align-middle"></b-spinner>
@@ -15,11 +15,11 @@
 					Prikaži detaljnije
 				</b-button>
 
-                <b-button 
+                <!-- <b-button 
                 size="sm" variant="primary" class="ml-2" @click="displayDrugInformations(row.item)">
                     <b-icon icon="question-circle"></b-icon>
 					Proveri dostupnost
-				</b-button>
+				</b-button> -->
 
                 <b-button v-if="loggedUserRole == 'ROLE_PATIENT'"
                     size="sm" variant="success" class="ml-2" @click="selectDrugForReservation(row.item)">
@@ -27,8 +27,8 @@
                     Rezerviši
                 </b-button>
 
-                <b-button v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN'"
-                size="sm" variant="danger" class="ml-2" @click="displayDrugInformations(row.item)">
+                <b-button v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId"
+                size="sm" variant="danger" class="ml-2" @click="removeDrugFromPharmacy(row.item)">
                     <b-icon icon="x"></b-icon>
 					Ukloni
 				</b-button>
@@ -38,20 +38,36 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
     props: ['pharmacyId'],
     data: function() {
         return{
             loggedUserRole: this.$store.getters.getUserRole,
 
-            items: [],
+            data: [],
             fields: [],
 
             isBusy: true,
 
-            selectedDrug: {}
+            selectedDrug: {},
+
+            nameFilter: '',
+			ratingFilter: 5,
         } 
     },
+
+    computed:{
+        ...mapState(['myPharmacyId']),
+        
+		items(){
+			return this.nameFilter != '' || this.ratingFilter != 0 ? 
+						this.data.filter( e => e.drugName.toLowerCase().includes(this.nameFilter.toLowerCase()) && 
+										( e.rating >= 0 && e.rating <= this.ratingFilter)) 
+					: this.data
+		}
+	},
 
     mounted(){
         this.getDrugsInPharmacy()
@@ -60,11 +76,19 @@ export default {
             this.getDrugsInPharmacy()
         })
 
+        this.$root.$on('drug-name', (name) => {
+			this.nameFilter = name
+		})
+
+		this.$root.$on('drug-rating', (rating) => {
+			this.ratingFilter = rating
+		})
+
         if (this.loggedUserRole == 'ROLE_PHARMACY_ADMIN')
             this.fields = [
                 { key: 'drugName', label: 'Naziv leka', sortable: true}, 
                 { key: 'drugCode', label: 'Šifra leka', sortable: true}, 
-                { key: 'loyaltyPoints', label: 'Broj Loyalty poena', sortable: true}, 
+                { key: 'loyaltyPoints', label: 'Loyalty poena', sortable: true}, 
                 { key: 'quantity', label: 'Količina na stanju', sortable: true},
                 { key: 'rating', label: 'Ocena', sortable: true},
                 { key: 'price', label: 'Cena', sortable: true},
@@ -73,7 +97,7 @@ export default {
         else
             this.fields = [
                 { key: 'drugName', label: 'Naziv leka', sortable: true}, 
-                { key: 'loyaltyPoints', label: 'Broj Loyalty poena', sortable: true}, 
+                { key: 'loyaltyPoints', label: 'Loyalty poena', sortable: true}, 
                 { key: 'rating', label: 'Ocena', sortable: true},
                 { key: 'price', label: 'Cena', sortable: true},
                 { key: 'actions', label: 'Akcije'}
@@ -87,7 +111,7 @@ export default {
                 .then( res => {
                     this.isBusy = false
 
-                    this.items = res.data
+                    this.data = res.data
                     console.log(this.items)
                 })
                 .catch((error) => {
@@ -95,6 +119,26 @@ export default {
                     
                     console.log(error)
                     this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
+                })
+        },
+
+        removeDrugFromPharmacy(drug){
+            this.$http
+                .delete('/drugInPharmacy/removeFromPharmacy/' + drug.drugId + '/' + this.pharmacyId)
+                .then( res => {
+                    console.log(res)
+                    this.toast('success', 'Uspešno', 'Uspešno ste uklonili lek iz apoteke!')
+                    this.getDrugsInPharmacy()
+                })
+                .catch((error) => {
+                    console.log(error)
+
+                    if (error.response.status == 403)
+                        this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+                    else if (error.response.status == 400)
+                        this.toast('danger', 'Neuspešno', 'Nije moguće ukloniti lek. Lek je rezervisan, a korisnik ga još nije preuzeo.')
+                    else 
+                        this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
                 })
         },
 
@@ -114,12 +158,11 @@ export default {
                 variant: variant,
                 autoHideDelay: 5000
             })
-            scroll(0,0)
         }
     },
 
     components:{
-        PharmacyReserveDrugModal: () => import('./PharmacyReserveDrugModal.vue')
+        PharmacyReserveDrugModal: () => import('../../views/pharmacy/PharmacyReserveDrugModal.vue')
     }
 }
 </script>

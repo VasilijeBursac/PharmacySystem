@@ -2,15 +2,16 @@
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
         <div class="container">
             <div class="navbar-header">                
-            <a class="navbar-brand" href="#"><router-link to="/">Apoteka Isabela</router-link></a>
-            </div>        
-            <SupplierHeader v-if="userRole == 'ROLE_SUPPLIER'" />
-            <PatientHeader v-else-if="userRole == 'ROLE_PATIENT'" />
-            <DermatologistHeader v-else-if="userRole == 'ROLE_DERMATOLOGIST'" />
-            <PharmacistHeader v-else-if="userRole == 'ROLE_PHARMACIST'" />
-            <UnregisteredHeader v-else-if="userRole == 'ROLE_UNREGISTERED'" />
-            <PharmacyAdminHeader v-else-if="userRole == 'ROLE_PHARMACY_ADMIN'" />
-            <SystemAdminHeader v-else-if="userRole == 'ROLE_SYSTEM_ADMIN'" />
+                <a class="navbar-brand" href="#"><router-link to="/">Apoteka Isabela</router-link></a>
+            </div>
+
+                <SupplierHeader v-if="userRole == 'ROLE_SUPPLIER'" />
+                <PatientHeader v-else-if="userRole == 'ROLE_PATIENT'" />
+                <DermatologistHeader v-else-if="userRole == 'ROLE_DERMATOLOGIST'" />
+                <PharmacistHeader v-else-if="userRole == 'ROLE_PHARMACIST'" />
+                <UnregisteredHeader v-else-if="userRole == 'ROLE_UNREGISTERED'" />
+                <PharmacyAdminHeader v-else-if="userRole == 'ROLE_PHARMACY_ADMIN'" />
+                <SystemAdminHeader v-else-if="userRole == 'ROLE_SYSTEM_ADMIN'" />
         </div>
     </nav>
 </template>
@@ -31,6 +32,7 @@ export default {
             userRole: 'ROLE_UNREGISTERED'
         }
     },
+
 	components: {
         PatientHeader,
         SupplierHeader,
@@ -40,12 +42,13 @@ export default {
         PharmacistHeader,
         DermatologistHeader
     },
+
     mounted(){
         this.userRole = localStorage.getItem("UserRole");
         if(localStorage.getItem("UserRole") == null){
             localStorage.setItem("UserRole", "ROLE_UNREGISTERED")
         }
-    }
+    },
 };
 </script>
 

@@ -62,26 +62,26 @@ export default {
                 this.toast('danger', 'Neuspešno', 'Rok za preuzimanje ne može biti pre današnjeg dana!')
                 return;
             }
-            else {
-                this.$http
-                .post('reservation/reserve', {
-                    drugInPharmacyId: {pharmaciId: this.drug.pharmacyId, drugId: this.drug.drugId},
-                    deadline: new Date(this.date + ' 00:00').getTime()
-                })
-                .then( res => {
-                    if(res.status == 200){
-                        this.toast('success', 'Uspešno', 'Uspešno ste rezervisali lek! Uskoro ćete primiti email.')
-                        this.closeModal();
-                        this.$root.$emit('update-pharmacy-drugs')
-                    }        
-                })
-                .catch( (error) => {
-                    if(error.response.status != 403)
-                        this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije') 
-                    else 
-                        this.toast('danger', 'Neuspešno', 'Nažalost, izabranog leka više nema stanju!','Neuspešno') 
-                })
-            }
+            
+            this.$http
+            .post('reservation/reserve', {
+                drugInPharmacyId: {pharmaciId: this.drug.pharmacyId, drugId: this.drug.drugId},
+                deadline: new Date(this.date + ' 00:00').getTime()
+            })
+            .then( res => {
+                if(res.status == 200){
+                    this.toast('success', 'Uspešno', 'Uspešno ste rezervisali lek! Uskoro ćete primiti email.')
+                    this.closeModal();
+                    this.$root.$emit('update-pharmacy-drugs')
+                }        
+            })
+            .catch( (error) => {
+                if(error.response.status != 403)
+                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije') 
+                else 
+                    this.toast('danger', 'Neuspešno', 'Nažalost, izabranog leka više nema stanju!','Neuspešno') 
+            })
+            
         },
 
         closeModal(){
