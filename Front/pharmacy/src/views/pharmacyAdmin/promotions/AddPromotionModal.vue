@@ -71,6 +71,10 @@ export default {
                 this.toast('danger', 'Neuspešno', 'Datum kraja promocije ne može biti pre datuma početka promocije!')
                 return;
             }
+            if(new Date(this.startDate).getTime() < new Date().getTime()){
+                this.toast('danger', 'Neuspešno', 'Datum početka promocije ne može biti pre današnjeg datuma!')
+                return;
+            }
             
             this.$http
             .post('promotion/', {
