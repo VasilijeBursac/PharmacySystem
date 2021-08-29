@@ -66,8 +66,8 @@ public class Pharmacy {
 	@OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public List<Promotion> promotion = new ArrayList<Promotion>();
 
-	@ManyToMany
-	@JoinTable(name = "prescriptedPatientsToPharmacies", joinColumns = @JoinColumn(name = "pharmacy_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "dermatologist_id", referencedColumnName = "id"))
+	@ManyToMany(mappedBy="subscribedPharmacies")
+//	@JoinTable(name = "prescriptedPatientsToPharmacies", joinColumns = @JoinColumn(name = "pharmacy_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "dermatologist_id", referencedColumnName = "id"))
 	public List<Patient> subscribedPatients = new ArrayList<Patient>();
 
 	@JsonManagedReference

@@ -15,8 +15,19 @@
                 </router-link>
             </a>
         </li>
-        <li class="nav-item"><a href="#" class="nav-link">Narudžbenice</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Akcije</a></li>
+
+        <li class="nav-item">
+            <a href="#" class="nav-link">Narudžbenice</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <router-link to="/promotions">
+                    Promocije
+                </router-link>
+            </a>
+        </li>
+
         <li class="nav-item"><a href="#" class="nav-link">Farmaceuti</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Dermatolozi</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Slobodni termini</a></li>
