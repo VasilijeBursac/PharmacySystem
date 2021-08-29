@@ -57,23 +57,23 @@ export default {
 
     methods: {
         getDrugsForImport() {
-            this.$http
-            .get('/drugInPharmacy/removeFromPharmacy/' + this.myPharmacyId)
-            .then( res => {
-                console.log(res)
-                this.toast('success', 'Uspešno', 'Uspešno ste uklonili lek iz apoteke!')
-                this.getDrugsInPharmacy()
-            })
-            .catch((error) => {
-                console.log(error)
+            // this.$http
+            // .get('/drugInPharmacy/removeFromPharmacy/' + this.myPharmacyId)
+            // .then( res => {
+            //     console.log(res)
+            //     this.toast('success', 'Uspešno', 'Uspešno ste uklonili lek iz apoteke!')
+            //     this.getDrugsInPharmacy()
+            // })
+            // .catch((error) => {
+            //     console.log(error)
 
-                if (error.response.status == 403)
-                    this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
-                else if (error.response.status == 400)
-                    this.toast('danger', 'Neuspešno', 'Nije moguće ukloniti lek. Lek je rezervisan, a korisnik ga još nije preuzeo.')
-                else 
-                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
-            })
+            //     if (error.response.status == 403)
+            //         this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+            //     else if (error.response.status == 400)
+            //         this.toast('danger', 'Neuspešno', 'Nije moguće ukloniti lek. Lek je rezervisan, a korisnik ga još nije preuzeo.')
+            //     else 
+            //         this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
+            // })
         },
 
         importDrugToPharmacy() {

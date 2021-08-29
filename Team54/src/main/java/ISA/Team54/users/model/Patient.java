@@ -50,7 +50,7 @@ public class Patient extends User {
 	@OneToMany(mappedBy="patient",cascade = CascadeType.ALL,fetch = FetchType.LAZY)	
 	private List<DrugReservation> drugReservations;	
 	
-	@ManyToMany(mappedBy= "subscribedPatients")
+	@ManyToMany//(mappedBy= "subscribedPatients")
 	private List<Pharmacy> prescriptionsPharmacies;
 	
 	@JsonManagedReference
@@ -60,7 +60,7 @@ public class Patient extends User {
 	@JsonManagedReference
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "subscribedPharmacies", joinColumns = @JoinColumn(name = "patient_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pharmacy_id", referencedColumnName = "id"))
-	private List<Pharmacy> subscribedPharmacies;
+	private List<Pharmacy> subscribedPharmacies = new ArrayList<Pharmacy>();
 	
 	public Patient() {
 		super();

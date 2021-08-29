@@ -65,16 +65,20 @@ export default {
     },
 
     mounted(){
-        this.$http
-            .get('/pharmacy/' + this.pharmacyId)
-            .then( res => {
-                this.pharmacy = JSON.parse(JSON.stringify(res.data))
-            })
+        this.getPharmacy()
         
         this.getPharmacySubscriptionStatus()
     },
 
     methods:{
+        getPharmacy() {
+            this.$http
+            .get('/pharmacy/' + this.pharmacyId)
+            .then( res => {
+                this.pharmacy = JSON.parse(JSON.stringify(res.data))
+            })
+        },
+
         getPharmacySubscriptionStatus() {
             if (this.loggedUserRole == "ROLE_PATIENT")
                 this.$http
@@ -99,9 +103,11 @@ export default {
             this.$http
             .post('patient/addPharmacyForPromotions/' + this.pharmacyId)
             .then( res => {
-                this.subscribed = true
+                // this.subscribed = true
                 if(res.status == 200)
-                    this.toast('success', 'Uspešno', 'Uspešno ste se pretplatili na akcije i promocije apoteke!')    
+                    this.toast('success', 'Uspešno', 'Uspešno ste se pretplatili na akcije i promocije apoteke!')
+                
+                this.getPharmacySubscriptionStatus()
             })
             .catch( error => {
                 if(error.response.status == 400)

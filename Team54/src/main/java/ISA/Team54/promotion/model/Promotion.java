@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -22,7 +23,8 @@ import ISA.Team54.users.model.Pharmacy;
 public class Promotion {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "promotionSeqGen", sequenceName = "promotionSeq",initialValue = 5,allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "promotionSeqGen")
 	private long id;
 	
 	@Column(nullable = false)
@@ -43,6 +45,13 @@ public class Promotion {
 	public Promotion(long id, String description, DateRange dateInterval, Pharmacy pharmacy) {
 		super();
 		this.id = id;
+		this.description = description;
+		this.dateInterval = dateInterval;
+		this.pharmacy = pharmacy;
+	}
+	
+	public Promotion(String description, DateRange dateInterval, Pharmacy pharmacy) {
+		super();
 		this.description = description;
 		this.dateInterval = dateInterval;
 		this.pharmacy = pharmacy;

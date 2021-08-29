@@ -240,6 +240,12 @@ const routes = [
     name: "DrugsInPharmacy",
     component: () =>
     import("../views/pharmacyAdmin/drugs/DrugsInPharmacy.vue")
+  },
+  {
+    path: "/promotions",
+    name: "Promotions",
+    component: () =>
+    import("../views/pharmacyAdmin/promotions/Promotions.vue")
   }
 ];
 
