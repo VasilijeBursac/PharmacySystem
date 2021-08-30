@@ -100,5 +100,31 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 		
 //		drugRepository.findAll().forEach(drug -> if());
 		return null;
+	}
+
+	@Transactional
+	@Override
+	public void addDrugToPharmacy(DrugInPharmacy newDrugInPharmacy, boolean isInOrder) {
+		DrugInPharmacy existingDrugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(newDrugInPharmacy.getDrugInPharmacyId().getDrugId(), newDrugInPharmacy.getDrugInPharmacyId().getPharmaciId());
+		
+		if(existingDrugInPharmacy == null) {
+			if (isInOrder)
+				newDrugInPharmacy.setQuantity(0);
+			
+			drugsInPharmacyRepository.save(newDrugInPharmacy);
+		} else {
+			if(existingDrugInPharmacy.getQuantity() == -1) {
+				if (isInOrder)
+					existingDrugInPharmacy.setQuantity(0);
+				else
+					existingDrugInPharmacy.setQuantity(newDrugInPharmacy.getQuantity());
+			}
+			else {
+				if (!isInOrder)
+					existingDrugInPharmacy.setQuantity(existingDrugInPharmacy.getQuantity() + newDrugInPharmacy.getQuantity());
+			}
+				
+			drugsInPharmacyRepository.save(existingDrugInPharmacy);
+		}
 	} 
 }

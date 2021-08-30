@@ -31,16 +31,16 @@ export default {
         ...mapState(['myPharmacyId'])
     },
 
-    components: {
-        PharmacyPromotionsTable,
-        AddPromotionModal
-    },
-
     methods: {
         openAddPromotionModal() {
             this.$bvModal.show('add-promotion-modal')
         }
     },
+
+    components: {
+        PharmacyPromotionsTable,
+        AddPromotionModal
+    }
 }
 </script>
 

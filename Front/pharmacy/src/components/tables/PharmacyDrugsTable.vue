@@ -2,7 +2,7 @@
     <div class="pharmacy-drugs">
         <PharmacyReserveDrugModal :pharmacyId="pharmacyId" :drug="selectedDrug" />
 
-        <b-table striped hover :busy="isBusy" :items="items | formatRating" :fields="fields"  class="text-middle mt-0">
+        <b-table striped hover :busy="isBusy" :items="items | formatRating | formatPrice" :fields="fields"  class="text-middle mt-0">
             <template #table-busy>
 				<div class="text-center text-danger my-2">
 					<b-spinner class="align-middle"></b-spinner>
@@ -118,7 +118,8 @@ export default {
                     this.isBusy = false
                     
                     console.log(error)
-                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
+                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
+                    window.location.reload()  
                 })
         },
 

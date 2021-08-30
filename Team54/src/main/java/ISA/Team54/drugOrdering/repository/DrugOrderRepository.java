@@ -10,4 +10,7 @@ import ISA.Team54.drugOrdering.model.DrugsOrder;
 public interface DrugOrderRepository extends JpaRepository<DrugsOrder, Long>{
 	@Query("SELECT do FROM DrugsOrder do WHERE do.status = 'Waiting'")
 	List<DrugsOrder> findAllWaitingOrders();
+	
+	@Query("SELECT do FROM DrugsOrder do WHERE do.administrator.pharmacy.id = ?1")
+	List<DrugsOrder> getAllDrugOrdersForPharmacy(long pharmacyId);
 }

@@ -1,12 +1,13 @@
 <template>
-    <b-modal id="import-drug-modal" hide-footer title="Dodavanje leka u apoteku">
-        <b-form>
+    <b-modal id="import-drug-modal" hide-footer title="Dodavanje leka u apoteku" @hide="resetFields">
+        <b-form @submit.stop.prevent>
             <b-form-group id="drug-group">
                 <label for="drug-select">Lek:</label>
 
                 <b-form-select id="drug-select" v-model="selectedDrug" >
-                    <b-form-select-option v-for="drug in drugsForImport" :key="drug.id">
-                        <!-- {{ drug.name }} -->
+                    <b-form-select-option :value="null" disabled>Izaberite lek</b-form-select-option>
+                    <b-form-select-option v-for="drug in drugs" :key="drug.id" :value="drug">
+                        {{drug.name}}
                     </b-form-select-option>
                 </b-form-select>
             </b-form-group>
@@ -39,11 +40,12 @@
 import { mapState } from 'vuex';
 
 export default {
+    props: ['pharmacyId'],
     data: function() {
         return {
-            drugsForImport: [],
-            selectedDrug: {},
-            quantity: 1
+            drugs: [],
+            selectedDrug: null,
+            quantity: ""
         }
     },
 
@@ -52,32 +54,59 @@ export default {
     },
 
     mounted() {
-        this.getDrugsForImport()
+        this.getAllDrugs()
     },
 
     methods: {
-        getDrugsForImport() {
-            // this.$http
-            // .get('/drugInPharmacy/removeFromPharmacy/' + this.myPharmacyId)
-            // .then( res => {
-            //     console.log(res)
-            //     this.toast('success', 'Uspešno', 'Uspešno ste uklonili lek iz apoteke!')
-            //     this.getDrugsInPharmacy()
-            // })
-            // .catch((error) => {
-            //     console.log(error)
-
-            //     if (error.response.status == 403)
-            //         this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
-            //     else if (error.response.status == 400)
-            //         this.toast('danger', 'Neuspešno', 'Nije moguće ukloniti lek. Lek je rezervisan, a korisnik ga još nije preuzeo.')
-            //     else 
-            //         this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
-            // })
+        getAllDrugs() {
+            this.$http
+			.get('drugs/')
+			.then( res => {
+				if(res.status == 200)
+                    console.log(res.data)
+					this.drugs = res.data                      
+			})
+			.catch( (error) => {
+                if(error.response.status == 404)
+                    this.toast('danger', 'Neuspešno', 'Trenutno ne postoji nijedan lek u sistemu!')
+                else 
+                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
+			})
         },
 
         importDrugToPharmacy() {
-            this.$root.$emit('update-pharmacy-drugs')
+            if (this.quantity == "" || this.selectedDrug == null) {
+                this.toast('danger', 'Neuspešno', 'Morate uneti lek i količinu!')
+                return;
+            }
+
+            console.log(this.pharmacyId)
+
+            this.$http
+			.post('/drugInPharmacy/addToPharmacy', {
+                pharmacyId: this.pharmacyId,
+                drugId: this.selectedDrug.id,
+                quantity: this.quantity
+            })
+			.then( res => {
+                console.log(res.data)
+                this.toast('success', 'Uspešno', 'Uspešno ste dodali lek u apoteku.') 
+                this.closeModal();
+                this.$root.$emit('update-pharmacy-drugs')
+			})
+			.catch( (error) => {
+                if (error.response.status == 403 || error.response.status == 401)
+                    this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+                else if(error.response.status == 404)
+                    this.toast('danger', 'Neuspešno', 'Trenutno ne postoji nijedan lek u sistemu!')
+                else 
+                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
+			})
+        },
+
+        resetFields(){
+            this.selectedDrug = null
+            this.quantity = ""
         },
 
         closeModal(){

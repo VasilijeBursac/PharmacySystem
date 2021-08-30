@@ -45,6 +45,14 @@ public class DrugsOrder {
 		this.status = status;
 		this.administrator = administrator;
 	}
+	
+	public DrugsOrder(Date deadline, OrderStatus status,
+			PharmacyAdministrator administrator) {
+		super();
+		this.deadline = deadline;
+		this.status = status;
+		this.administrator = administrator;
+	}
 
 	public long getId() {
 		return id;

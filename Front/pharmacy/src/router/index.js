@@ -246,7 +246,14 @@ const routes = [
     name: "Promotions",
     component: () =>
     import("../views/pharmacyAdmin/promotions/Promotions.vue")
+  },
+  {
+    path: "/pharmacy-orders",
+    name: "PharmacyOrders",
+    component: () =>
+    import("../views/pharmacyAdmin/orders/PharmacyOrders.vue")
   }
+
 ];
 
 const router = new VueRouter({
