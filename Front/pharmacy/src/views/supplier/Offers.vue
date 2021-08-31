@@ -8,9 +8,9 @@
                     :aria-describedby="ariaDescribedby"
                     name="flavour-2"
                 >
-                    <b-form-checkbox value="Prihvacena">Prihvaćena</b-form-checkbox>
+                    <b-form-checkbox value="Prihvaćena">Prihvaćena</b-form-checkbox>
                     <b-form-checkbox value="Odbijena">Odbijena</b-form-checkbox>
-                    <b-form-checkbox value="Ceka na odgovor">Čeka na odgovor</b-form-checkbox>
+                    <b-form-checkbox value="Čeka na odgovor">Čeka na odgovor</b-form-checkbox>
                 </b-form-checkbox-group>               
             </b-form-group>
         <b-table   striped hover :items="data" :fields="fields">

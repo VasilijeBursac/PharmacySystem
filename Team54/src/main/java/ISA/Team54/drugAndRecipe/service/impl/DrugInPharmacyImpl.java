@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PessimisticLockingFailureException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +19,10 @@ import ISA.Team54.drugAndRecipe.repository.DrugRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugReservationRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugsInPharmacyRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
+import ISA.Team54.drugOrdering.model.DrugInOrder;
 import ISA.Team54.exceptions.DrugOutOfStockException;
 import ISA.Team54.exceptions.DrugReservedInFutureException;
+import ISA.Team54.users.model.PharmacyAdministrator;
 @Transactional(readOnly = true)
 @Service
 public class DrugInPharmacyImpl implements DrugInPharmacyService {
@@ -94,14 +98,6 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 		drugsInPharmacyRepository.save(drugInPharmacy); 
 	}
 
-	@Override
-	public List<Drug> getDrugsForImportToPharmacy(long pharmacyId) {
-		List<Drug> drugsForImport = new ArrayList<Drug>();
-		
-//		drugRepository.findAll().forEach(drug -> if());
-		return null;
-	}
-
 	@Transactional
 	@Override
 	public void addDrugToPharmacy(DrugInPharmacy newDrugInPharmacy, boolean isInOrder) {
@@ -126,5 +122,19 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 				
 			drugsInPharmacyRepository.save(existingDrugInPharmacy);
 		}
+	}
+
+	@Override
+	public void updateDrugsQuantities(List<DrugInOrder> drugsInOrder) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		long pharmacyId = ((PharmacyAdministrator) authentication.getPrincipal()).getPharmacy().getId();
+		
+		for (DrugInOrder drugInOrder : drugsInOrder) {
+			System.out.println("GLEDAJ VAMO: " + drugInOrder.getId().getDrugId());
+			DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(drugInOrder.getId().getDrugId(), pharmacyId);
+			drugInPharmacy.setQuantity(drugInOrder.getQuantity());
+			drugsInPharmacyRepository.save(drugInPharmacy);
+		}
+		
 	} 
 }

@@ -5,12 +5,14 @@ import java.util.Date;
 import ISA.Team54.drugOrdering.enums.OfferStatus;
 
 public class OfferDTO {
-
+	
+	private long offerId;
 	private String pharmacyName;
 	private Date deliveryDeadline;
 	private double totalPrice;
 	private long orderId;
 	private String offerStatus;
+	private String supplierFullName;
 	
 	
 	public OfferDTO() {
@@ -18,13 +20,16 @@ public class OfferDTO {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public OfferDTO(double totalPrice, Date deliveryDeadline,String offerStatus,
-			String pharmacyName) {
+	public OfferDTO(long offerId, double totalPrice, Date deliveryDeadline,String offerStatus,
+			String pharmacyName, String supplierFullName, long orderId) {
 		super();
+		this.offerId = offerId;
 		this.totalPrice = totalPrice;
 		this.deliveryDeadline = deliveryDeadline;
 		this.offerStatus = offerStatus;
 		this.pharmacyName = pharmacyName;
+		this.supplierFullName = supplierFullName;
+		this.orderId = orderId;
 	}
 
 	public OfferDTO(double totalPrice, Date deliveryDeadline, long orderId) {
@@ -72,6 +77,22 @@ public class OfferDTO {
 
 	public void setPharmacyName(String pharmacyName) {
 		this.pharmacyName = pharmacyName;
+	}
+
+	public String getSupplierFullName() {
+		return supplierFullName;
+	}
+
+	public void setSupplierFullName(String supplierFullName) {
+		this.supplierFullName = supplierFullName;
+	}
+
+	public long getOfferId() {
+		return offerId;
+	}
+
+	public void setOfferId(long offerId) {
+		this.offerId = offerId;
 	}
 	
 	

@@ -84,17 +84,4 @@ public class DrugInPharmacyController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
 		}
 	} 
-	
-	@GetMapping("/unavailableDrugsForPharmacy/{pharmacyId}")
-	public ResponseEntity<List<DrugDTO>> getUnavailableDrugsForPharmacy(@PathVariable long pharmacyId){
-		try {
-//			List<PharmacyForDrugDTO> pharmacyForDrugDTOs = new ArrayList<PharmacyForDrugDTO>();
-//			this.drugInPharmacyService.getDrugsInPharmaciesByDrug(drugId).forEach(drugInPharmacy -> 
-//				pharmacyForDrugDTOs.add(DrugInPharmacyToPharmacyForDrugDTO(drugInPharmacy)));
-//			return new ResponseEntity<>(pharmacyForDrugDTOs,HttpStatus.OK);
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
 }

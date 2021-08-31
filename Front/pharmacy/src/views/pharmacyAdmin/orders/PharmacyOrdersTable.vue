@@ -1,5 +1,7 @@
 <template>
     <div>
+        <AddEditOrderModal :pharmacyId="pharmacyId" :mode="modalMode" :order="selectedOrder" />
+
         <b-table striped hover :busy="isBusy" :items="items | formatDate | formatOrderStatus" 
         :fields="fields" class="text-middle mt-0">
             <template #table-busy>
@@ -9,9 +11,21 @@
 				</div>
 			</template>
 
+
             <template #cell(actions)="row">
                 <b-button
-                    size="sm" variant="danger" class="ml-2" @click="deletePromotion(row.item)">
+                    size="sm" variant="secondary" class="" @click="showOrderWithOffers(row.item)">
+                    Prikaži narudžbenicu i ponude
+                </b-button>
+
+                <b-button v-if="row.item.status != 'Fulfilled'"
+                    size="sm" variant="secondary" class="ml-2" @click="editOrder(row.item)">
+                    <b-icon icon="pencil-square"></b-icon>
+                    Izmeni
+                </b-button>
+
+                <b-button v-if="row.item.status != 'Fulfilled'"
+                    size="sm" variant="danger" class="ml-2" @click="deleteOrder(row.item)">
                     <b-icon icon="x"></b-icon>
                     Ukloni
                 </b-button>
@@ -21,6 +35,8 @@
 </template>
 
 <script>
+import AddEditOrderModal from "./AddEditOrderModal.vue"
+
 export default {
     props: ['pharmacyId'],
     data: function() {
@@ -37,7 +53,10 @@ export default {
 
             isBusy: true,
 
-            orderStatusFilter: ""
+            orderStatusFilter: "",
+
+            modalMode: "",
+            selectedOrder: {}
         } 
     },
 
@@ -58,6 +77,12 @@ export default {
 
         this.$root.$on('filter-orders', (orderStatus) => {
             this.orderStatusFilter = orderStatus
+        })
+
+        this.$root.$on('show-add-order-modal', () => {
+            this.selectedOrder = {}
+            this.modalMode = "ADD"
+            this.$bvModal.show('add-order-modal')
         })
     },
 
@@ -86,20 +111,33 @@ export default {
                 }) 
         },
 
-        deletePromotion(promotion) {
-            this.$http
-                .delete('/promotion/' + promotion.id)
-                .then( () => {
-                    this.getPromotionsForPharmacy()
-                    this.toast('success', 'Uspešno', 'Uspešno ste uklonili promociju.')
-                })
-                .catch((error) => {
-                    console.log(error)
-                    if (error.response.status == 403 || error.response.status == 401)
-                        this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
-                    else 
-                        this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
-                }) 
+        showOrderWithOffers(order) {
+            this.selectedOrder = order
+            this.modalMode = "SHOW"
+            this.$bvModal.show('add-order-modal')
+        },
+
+        editOrder(order) {
+            this.selectedOrder = order
+            this.modalMode = "EDIT"
+            this.$bvModal.show('add-order-modal')
+        },
+
+        deleteOrder(order) {
+            this.selectedOrder = order
+            // this.$http
+            //     .delete('/promotion/' + promotion.id)
+            //     .then( () => {
+            //         this.getPromotionsForPharmacy()
+            //         this.toast('success', 'Uspešno', 'Uspešno ste uklonili promociju.')
+            //     })
+            //     .catch((error) => {
+            //         console.log(error)
+            //         if (error.response.status == 403 || error.response.status == 401)
+            //             this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+            //         else 
+            //             this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
+            //     }) 
         },
 
         toast(variant, title, message){
@@ -139,6 +177,10 @@ export default {
             return items
         }
     },
+
+    components: {
+        AddEditOrderModal
+    }
 }
 </script>
 

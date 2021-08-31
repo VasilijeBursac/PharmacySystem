@@ -2,7 +2,7 @@
     <div class="pharmacy-dermatologists-examinations">
         <b-table ref="table" striped hover :busy="isBusy" 
         :items="items"
-        :fields="loggedUserRole == 'ROLE_PATIENT' ?fieldsPatient : fields " 
+        :fields="loggedUserRole == 'ROLE_PATIENT' ? fieldsPatient : fields" 
         class="text-middle mt-0">
             <template #table-busy>
 				<div class="text-center text-danger my-2">
