@@ -1,6 +1,6 @@
 <template>
     <div class="container mt-4">
-        <ImportDrugToPharmacyModal />
+        <ImportDrugToPharmacyModal :pharmacyId="myPharmacyId" />
 
         <div class="title-options clearfix">
             <h5 class="h5 float-left mb-4">Lekovi u apoteci</h5>

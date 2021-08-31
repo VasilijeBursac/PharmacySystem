@@ -12,19 +12,21 @@ public class DrugOrderDTO {
 	private OrderStatus status;
 	private String pharmacyName;
 	private List<DrugInOrderDTO> drugsInOrder;
+	private String pharmacyAdminFullName;
 	
 	public DrugOrderDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public DrugOrderDTO(long orderId, Date deadline, OrderStatus status, String pharmacyName, List<DrugInOrderDTO> drugsInOrder) {
+	public DrugOrderDTO(long orderId, Date deadline, OrderStatus status, String pharmacyName, List<DrugInOrderDTO> drugsInOrder, String pharmacyAdminFullName) {
 		super();
 		this.orderId = orderId;
 		this.deadline = deadline;
 		this.status = status;
 		this.pharmacyName = pharmacyName;
 		this.drugsInOrder = drugsInOrder;
+		this.pharmacyAdminFullName = pharmacyAdminFullName;
 	}
 
 	public Date getDeadline() {
@@ -65,6 +67,14 @@ public class DrugOrderDTO {
 
 	public void setOrderId(long orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getPharmacyAdminFullName() {
+		return pharmacyAdminFullName;
+	}
+
+	public void setPharmacyAdminFullName(String pharmacyAdminFullName) {
+		this.pharmacyAdminFullName = pharmacyAdminFullName;
 	}
 	
 	

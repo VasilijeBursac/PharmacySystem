@@ -11,14 +11,21 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ISA.Team54.drugAndRecipe.dto.DrugDTO;
+import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyRequestDTO;
 import ISA.Team54.drugAndRecipe.dto.PharmacyForDrugDTO;
+import ISA.Team54.drugAndRecipe.mapper.DrugInPharmacyMapper;
 import ISA.Team54.drugAndRecipe.mapper.DrugMapper;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
+import ISA.Team54.drugOrdering.dto.DrugOrderRequestDTO;
+import ISA.Team54.drugOrdering.model.DrugInOrder;
+import ISA.Team54.drugOrdering.model.DrugInOrderId;
 import ISA.Team54.exceptions.DrugOutOfStockException;
 import ISA.Team54.exceptions.DrugReservedInFutureException;
 import ISA.Team54.users.model.Pharmacy;
@@ -65,6 +72,18 @@ public class DrugInPharmacyController {
 	    }
 		
 	}
+	
+	@PostMapping("/addToPharmacy")
+	@PreAuthorize("hasRole('PHARMACY_ADMIN')")
+	public  ResponseEntity<String> addDrugToPharmacy(@RequestBody DrugInPharmacyRequestDTO drugInPharmacyRequestDTO){
+		try {
+			DrugInPharmacy drugInPharmacy = DrugInPharmacyMapper.DrugInPharmacyRequestDTOToDrugInPharmacy(drugInPharmacyRequestDTO);
+			drugInPharmacyService.addDrugToPharmacy(drugInPharmacy, false);
+			return new ResponseEntity<>( HttpStatus.OK);	
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
+		}
+	} 
 	
 	@GetMapping("/unavailableDrugsForPharmacy/{pharmacyId}")
 	public ResponseEntity<List<DrugDTO>> getUnavailableDrugsForPharmacy(@PathVariable long pharmacyId){

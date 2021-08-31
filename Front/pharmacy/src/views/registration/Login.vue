@@ -122,7 +122,7 @@ export default {
                 this.$router.push("systemAdminsPage");
             }
             if (response.data.role === "ROLE_PHARMACY_ADMIN") {
-                this.$router.push("patient-profile");
+                this.$router.push("pharmacy-admin-profile");
             }
             if (response.data.role === "ROLE_DERMATOLOGIST") {
                 this.$router.push("dermatologist-profile");
