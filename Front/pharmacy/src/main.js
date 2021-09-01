@@ -31,7 +31,7 @@ Vue.filter('formatRating', function (items) {
 
 Vue.filter('formatPrice', function (items) {
 	items.forEach((item, index) => {
-		let formatedPrice = item.price == -1 ? "Nije uneta" : item.price+ " din"
+		let formatedPrice = item.price == -1 ? "Nije uneta" : item.price + " din"
 		items[index] = {...items[index], price: formatedPrice}
 	})
 

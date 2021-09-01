@@ -1,30 +1,11 @@
 <template>
     <div class="container mt-4">
-        <AddEditOrderModal :pharmacyId="myPharmacyId" />
-
         <div class="title-options clearfix">
             <h5 class="h5 float-left mb-4">Narudžbenice apoteke</h5>
             
                 
             <div class="float-right d-flex">
-                <!-- <b-form-group id = "order-filters" class="float-right text-right" v-slot="{ ariaDescribedby }">
-                    <b-form-checkbox-group
-                        id="checkbox-group"
-                        v-model="orderStatus"
-                        :aria-describedby="ariaDescribedby"
-                        name="flavour-2"
-                    >
-                        <b-form-checkbox value="Na čekanju" unchecked-value="">
-                            Na čekanju
-                        </b-form-checkbox>
-                        <b-form-checkbox value="Obrađena" unchecked-value="">
-                            Obrađene
-                        </b-form-checkbox>
-                    </b-form-checkbox-group>               
-                </b-form-group> -->
-
-                
-                <b-form inline>
+                <b-form inline @submit.stop.prevent>
                     <b-form-select
                     v-model="statusFilter" 
                     size="sm" class="float-right text-right mt-n3">
@@ -60,7 +41,6 @@
 <script>
 import { mapState } from 'vuex';
 import PharmacyOrdersTable from "./PharmacyOrdersTable.vue"
-import AddEditOrderModal from "./AddEditOrderModal.vue"
 
 export default {
     data: function() {
@@ -85,13 +65,12 @@ export default {
 
     methods: {
         openAddOrderModal() {
-            this.$bvModal.show('add-order-modal')
+            this.$root.$emit('show-add-order-modal')
         }
     },
 
     components: {
-        PharmacyOrdersTable,
-        AddEditOrderModal
+        PharmacyOrdersTable
     }
 }
 </script>

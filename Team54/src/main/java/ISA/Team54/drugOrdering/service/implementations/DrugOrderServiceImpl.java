@@ -15,11 +15,15 @@ import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
 import ISA.Team54.drugOrdering.dto.DrugInOrderRequestDTO;
 import ISA.Team54.drugOrdering.dto.DrugOrderRequestDTO;
 import ISA.Team54.drugOrdering.enums.OrderStatus;
+import ISA.Team54.drugOrdering.exceptions.OrderAlreadyFulfilledException;
+import ISA.Team54.drugOrdering.exceptions.OrderHasOffersException;
 import ISA.Team54.drugOrdering.model.DrugInOrder;
 import ISA.Team54.drugOrdering.model.DrugsOrder;
 import ISA.Team54.drugOrdering.repository.DrugInOrderRepository;
 import ISA.Team54.drugOrdering.repository.DrugOrderRepository;
+import ISA.Team54.drugOrdering.repository.OfferRepository;
 import ISA.Team54.drugOrdering.service.interfaces.DrugOrderService;
+import ISA.Team54.exceptions.DrugReservedInFutureException;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.PharmacyAdministrator;
 import ISA.Team54.users.repository.PharmacyAdministratorRepository;
@@ -35,6 +39,9 @@ public class DrugOrderServiceImpl implements DrugOrderService{
 	
 	@Autowired
 	private PharmacyAdministratorRepository pharmacyAdminRepository;
+	
+	@Autowired
+	private OfferRepository offerRepository;
 	
 	@Autowired
 	private DrugInPharmacyService drugInPharmacyService;
@@ -66,13 +73,68 @@ public class DrugOrderServiceImpl implements DrugOrderService{
 		DrugsOrder drugOrder = new DrugsOrder(deadline, OrderStatus.Waiting, pharmacyAdministrator);
 		drugOrder = drugOrderRepository.save(drugOrder);
 		
+		addDrugsToOrderAndPharmacy(drugsInOrder, drugOrder.getId(), pharmacyAdministrator.getPharmacy().getId());
+	}
+
+	public void deleteDrugOrder(long orderId) throws Exception{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		PharmacyAdministrator pharmacyAdministrator = pharmacyAdminRepository.findOneById(((PharmacyAdministrator) authentication.getPrincipal()).getId());
+		
+		DrugsOrder drugOrder = drugOrderRepository.findOneById(orderId);
+		
+		if(drugOrder.getStatus() == OrderStatus.Fulfilled)
+			throw new OrderAlreadyFulfilledException();
+		
+		if(checkIfOrderHasOffers(orderId))
+			throw new OrderHasOffersException();
+		
+		drugOrderRepository.deleteById(orderId);
+		
+		List<DrugInOrder> existingDrugsInOrder = drugInOrderRepository.findAllByIdOrderId(orderId);
+		removeDrugsFromOrderAndPharmacy(existingDrugsInOrder, orderId, pharmacyAdministrator.getPharmacy().getId());
+	}
+	
+	@Override
+	public void editDrugOrder(long orderId, Date deadline, List<DrugInOrder> drugsInOrder) throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		PharmacyAdministrator pharmacyAdministrator = pharmacyAdminRepository.findOneById(((PharmacyAdministrator) authentication.getPrincipal()).getId());
+		
+		DrugsOrder drugOrder = drugOrderRepository.findOneById(orderId);
+		
+		if(drugOrder.getStatus() == OrderStatus.Fulfilled)
+			throw new OrderAlreadyFulfilledException();
+		
+		if(checkIfOrderHasOffers(orderId))
+			throw new OrderHasOffersException();
+		
+		drugOrder.setDeadline(deadline);
+		drugOrderRepository.save(drugOrder);
+		
+		List<DrugInOrder> existingDrugsInOrder = drugInOrderRepository.findAllByIdOrderId(orderId);
+
+		removeDrugsFromOrderAndPharmacy(existingDrugsInOrder, orderId, pharmacyAdministrator.getPharmacy().getId());
+		addDrugsToOrderAndPharmacy(drugsInOrder, orderId, pharmacyAdministrator.getPharmacy().getId());
+	}
+
+	public void addDrugsToOrderAndPharmacy(List<DrugInOrder> drugsInOrder, long orderId, long pharmacyId) {
 		for(DrugInOrder drugInOrder : drugsInOrder) {
-			drugInOrder.getId().setOrderId(drugOrder.getId());
-			drugInPharmacyService.addDrugToPharmacy(new DrugInPharmacy(new DrugInPharmacyId(pharmacyAdministrator.getPharmacy().getId(), drugInOrder.getId().getDrugId()),
+			drugInOrder.getId().setOrderId(orderId);
+			drugInPharmacyService.addDrugToPharmacy(new DrugInPharmacy(new DrugInPharmacyId(pharmacyId, drugInOrder.getId().getDrugId()),
 					drugInOrder.getQuantity()), true);
 		}
 		
 		drugInOrderRepository.saveAll(drugsInOrder);
 	}
-
+	
+	public void removeDrugsFromOrderAndPharmacy(List<DrugInOrder> drugsInOrder, long orderId, long pharmacyId) {
+		for(DrugInOrder drugInOrder : drugsInOrder) {
+			drugInPharmacyService.removeOrderedDrugFromPharmacy(drugInOrder.getId().getDrugId(), pharmacyId);
+		}
+		
+		drugInOrderRepository.deleteAll(drugsInOrder);
+	}
+	
+	public boolean checkIfOrderHasOffers(long orderId) {
+		return !offerRepository.findAllByOrderId(orderId).isEmpty();
+	}
 }

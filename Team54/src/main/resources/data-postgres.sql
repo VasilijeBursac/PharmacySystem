@@ -110,6 +110,11 @@ insert into pharmacy_administrator(id,address, city, country, email, name, passw
 values (13,'Balzakova 1','Novi Sad','Srbija','milena@gmail.com','Milena','$2y$10$7u1AWYA7wW3UkcB2PchaTOnenZwVo0TTSbL9w2I68feFLt/u9vI8G',
 		'061385600','Kovacevic', 1, false, true);
 		
+/* dragisa@gmail.com, dragisa */
+insert into pharmacy_administrator(id,address, city, country, email, name, password, phone_number, surname, pharmacy_id, confirmed, activated) 
+values (20,'Ćirpanova 12','Novi Sad','Srbija','dragisa@gmail.com','Dragiša','$2a$10$ltTDdNAKxp0Rwxfv2koKfeVOi00FYjnKLZrDg7hMzqTbxnVWZhCOG',
+		'061333633','Dragić', 1, true, true);
+		
 /* denis@gmail.com, denis */
 insert into pharmacy_administrator(id,address, city, country, email, name, password, phone_number, surname, pharmacy_id, confirmed, activated) 
 values (14,'Somborski bulevar 90','Zrenjanin','Srbija','denis@gmail.com','Denis','$2y$10$ihpttwUywTQ2Iw2FBXYfGueEACL239/xdGRguelnU/3GsS4sPxQja',
@@ -120,17 +125,17 @@ values (14,'Somborski bulevar 90','Zrenjanin','Srbija','denis@gmail.com','Denis'
 		
 /* jovan@gmail.com, jovan */
 insert into supplier(id,address, city, confirmed, country, email, name, password, phone_number, surname, activated) 
-values (15,'Balzakova 2','Novi Sad', true,'Srbija','jovan@gmail.com','Jovan','$2y$10$GnY077C6faJvHeE8nfEr.e3rFBxQfaY7mz62ChyKiRp/Nchpglw4m',
+values (15,'Balzakova 2','Novi Sad', true,'Srbija','vasilijebursac@gmail.com','Jovan','$2y$10$GnY077C6faJvHeE8nfEr.e3rFBxQfaY7mz62ChyKiRp/Nchpglw4m',
 		'061385600','Cvijovic', true);
 		
 /* danijel@gmail.com, danijel */
 insert into supplier(id,address, city,confirmed, country, email, name, password, phone_number, surname, activated) 
-values (16,'Somborski bulevar 91','Zrenjanin', true,'Srbija','danijel@gmail.com','Danijel','$2y$10$tmCL0qXq3J797yMJtd9xmuaaeOVYolsFPZfSPbhm/1rcoJL7DMDZO',
+values (16,'Somborski bulevar 91','Zrenjanin', true,'Srbija','vasilijebursac@gmail.com','Danijel','$2y$10$tmCL0qXq3J797yMJtd9xmuaaeOVYolsFPZfSPbhm/1rcoJL7DMDZO',
 		'062981622','Novakovic', true);
 		
 /* natasa@gmail.com, nata */
 insert into supplier(id,address, city, confirmed, country, email, name, password, phone_number, surname, activated) 
-values (19,'Somborski bulevar 99','Zrenjanin', true,'Srbija','natasa@gmail.com','Natasa','$2y$10$SDsigowv761RRb9KIuiYwedVzSWvI05uIiR1o7MTp9QcaXS3fgS/.',
+values (19,'Somborski bulevar 99','Zrenjanin', true,'Srbija','vasilijebursac@gmail.com','Natasa','$2y$10$SDsigowv761RRb9KIuiYwedVzSWvI05uIiR1o7MTp9QcaXS3fgS/.',
 		'062941622','Subotic', true);
 
 		
@@ -154,7 +159,8 @@ insert into user_authority( user_id, authority_id) values (13,3);
 insert into user_authority( user_id, authority_id) values (14,3);
 insert into user_authority( user_id, authority_id) values (15,6);
 insert into user_authority( user_id, authority_id) values (16,6);
-insert into user_authority( user_id, authority_id) values (19,6);		
+insert into user_authority( user_id, authority_id) values (19,6);
+insert into user_authority( user_id, authority_id) values (20,3);
 
 insert into drug_specification(id, suggested_dose) values (1, '20mg');
 insert into drug_specification(id, suggested_dose) values (2, '300mg');
@@ -265,29 +271,64 @@ insert into supplier_drugs_in_storage( supplier_id, drugs_in_storage_id) values 
 insert into supplier_drugs_in_storage( supplier_id, drugs_in_storage_id) values ( 19, 8);
 insert into supplier_drugs_in_storage( supplier_id, drugs_in_storage_id) values ( 19, 9);
 
-insert into orders( deadline, status, administrator_id) values ( '2021-10-17', 'Waiting', 13);
+insert into orders( deadline, status, administrator_id) values ( '2021-10-17', 'Fulfilled', 13);
 insert into orders( deadline, status, administrator_id) values ( '2021-10-22', 'Waiting', 13);
 insert into orders( deadline, status, administrator_id) values ( '2021-10-08', 'Waiting', 14);
 insert into orders( deadline, status, administrator_id) values ( '2021-10-22', 'Fulfilled', 14);
 insert into orders( deadline, status, administrator_id) values ( '2021-12-11', 'Fulfilled', 14);
+insert into orders( deadline, status, administrator_id) values ( '2021-08-30', 'Waiting', 20);
+insert into orders( deadline, status, administrator_id) values ( '2021-08-29', 'Fulfilled', 13);
+insert into orders( deadline, status, administrator_id) values ( '2021-08-28', 'Waiting', 13);
+insert into orders( deadline, status, administrator_id) values ( '2021-09-30', 'Waiting', 13);
+insert into orders( deadline, status, administrator_id) values ( '2021-10-01', 'Waiting', 13);
 /*-- 3-1400 1-1450 2-1500 --*/
 
 insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
 		values ( '2021-09-11', 'Accepted', 3350, 1, 15);
 insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
-		values ( '2021-09-11', 'Declined', 3350, 2, 15);
+		values ( '2021-09-11', 'Waiting', 3350, 2, 15);
 insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
 		values ( '2021-09-11', 'Waiting', 6700, 3, 15);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-09-01', 'Waiting', 1500, 6, 15);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-09-02', 'Waiting', 1850, 6, 16);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-08-31', 'Accepted', 2000, 7, 15);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-09-01', 'Declined', 2300, 7, 16);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-09-02', 'Declined', 2450, 7, 19);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-08-29', 'Waiting', 2900, 8, 15);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-08-30', 'Waiting', 3100, 8, 16);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-09-01', 'Waiting', 2950, 8, 19);
+insert into offer(delivery_deadline, status, total_price, order_id, supplier_id) 
+		values ( '2021-10-03', 'Waiting', 3700, 10, 15);
+
 
 insert into drug_in_order( drug_id, order_id, quantity) values ( 1, 1, 10);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 2, 1, 20);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 1, 15);
-insert into drug_in_order( drug_id, order_id, quantity) values ( 1, 2, 10);
-insert into drug_in_order( drug_id, order_id, quantity) values ( 2, 2, 9);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 5, 2, 9);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 2, 2);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 1, 3, 5);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 2, 3, 6);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 3, 19);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 5, 6, 10);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 6, 15);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 5, 7, 20);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 7, 30);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 4, 7, 10);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 8, 5);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 4, 8, 15);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 5, 8, 35);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 4, 9, 10);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 5, 9, 25);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 10, 20);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 4, 10, 20);
 
 /*-- DERMATOLOGISTS IN PHARMACY --*/
 

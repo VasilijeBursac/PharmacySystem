@@ -86,7 +86,7 @@ export default {
                 pharmacyId: this.pharmacyId,
             })
             .then( () => {
-                this.toast('success', 'Uspešno', 'Uspešno ste dodali novu promociju. Svi pretplaćeni korisnici će dobiti email.')
+                this.toast('success', 'Uspešno', 'Uspešno ste dodali novu promociju. Svi pretplaćeni korisnici će biti obavešteni email-om.')
                 this.closeModal();
                 this.$root.$emit('update-pharmacy-promotions')
                     

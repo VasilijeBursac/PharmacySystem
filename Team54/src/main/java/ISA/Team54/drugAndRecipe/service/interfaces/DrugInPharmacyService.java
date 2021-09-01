@@ -7,6 +7,7 @@ import org.springframework.dao.PessimisticLockingFailureException;
 import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
+import ISA.Team54.drugOrdering.model.DrugInOrder;
 import ISA.Team54.exceptions.DrugOutOfStockException;
 import ISA.Team54.exceptions.DrugReservedInFutureException;
 
@@ -17,6 +18,7 @@ public interface DrugInPharmacyService {
 	List<DrugInPharmacy> getAllDrugsInPharmacy();
 	void decreaseDrugQuantities(List<Long> drugIds, long pharmacyId, List<Integer> quantities) throws DrugOutOfStockException;
 	void removeDrugFromPharmacy(long drugId, long pharmacyId) throws DrugReservedInFutureException;
-	List<Drug> getDrugsForImportToPharmacy(long pharmacyId);
+	void removeOrderedDrugFromPharmacy(long drugId, long pharmacyId);
 	void addDrugToPharmacy(DrugInPharmacy newDrugInPharmacy, boolean isInOrder);
+	void updateDrugsQuantities(List<DrugInOrder> drugsInOrder);
 }

@@ -8,4 +8,6 @@ import ISA.Team54.drugOrdering.model.Offer;
 public interface OfferService {
 	void addOffer(Offer offer) throws NotEnoughDrugsInStorageException;
 	List<Offer> findAllOffersForSupplier();
+	List<Offer> getAllOffersForOrder(long orderId);
+	void acceptOffer(long offerId) throws Exception;
 }

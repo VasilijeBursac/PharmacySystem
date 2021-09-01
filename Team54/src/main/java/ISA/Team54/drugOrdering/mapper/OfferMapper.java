@@ -14,17 +14,21 @@ public class OfferMapper {
 		String status = "";
 		switch(offer.getStatus()) {
 			case Accepted:
-				status = "Prihvacena";
+				status = "Prihvaćena";
 				break;
 			case Waiting:
-				status = "Ceka na odgovor";
+				status = "Čeka na odgovor";
 				break;
 			default:
 				status = "Odbijena";
 		}
-		return new OfferDTO(offer.getTotalPrice(),
+		return new OfferDTO(
+							offer.getId(),
+							offer.getTotalPrice(),
 							offer.getDeliveryDeadline(),
 							status,
-							offer.getOrder().getAdministrator().getPharmacy().getName());
+							offer.getOrder().getAdministrator().getPharmacy().getName(),
+							offer.getSupplier().getName() + " " + offer.getSupplier().getSurname(),
+							offer.getOrder().getId());
 	}
 }
