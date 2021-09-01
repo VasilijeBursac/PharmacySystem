@@ -485,4 +485,10 @@ public class ExaminationServiceImpl implements ExaminationService {
 		return examinationsForCalendar;
 	}
 
+	@Override
+	public boolean checkIfEmployeeHasScheduledExaminationsInFuture(long pharmacistId) {
+		return !examinationRepository.getAllFutureExaminationsForEmployee(pharmacistId).isEmpty();
+	}
+
+	
 }

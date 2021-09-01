@@ -89,6 +89,11 @@ values (17,'Bulevar Mihajla Pupina 11','Zrenjanin','Srbija','mario@gmail.com','M
 insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date,start_date,pharmacy_id,confirmed, activated) 
 values (18,'Ruzveltova 21','Zrenjanin','Srbija','mihajlo@gmail.com','Ivica','$2y$10$cavm.nwcllSXz6W8aPjtKuYrkafL9nSPaKDz45LVaHWmRMWJBZXp2',
 		'01147881','Novakov','2021-06-29','2021-01-21', 2, false, true);
+		
+/* brankica@gmail.com, brankica */
+insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date,start_date,pharmacy_id,confirmed, activated) 
+values (21,'Gagarinova 12','Temerin','Srbija','brankica@gmail.com','Brankica','$2a$10$syfyVc6Xz1H7STXNR6YIDuVF54lpVU70co6LR9xaH/zk2rLP6tknO',
+		'01155555','Brankovic','2021-06-29','2021-01-21', 1, true, true);
 
 		
 /* --- SYSTEM_ADMINISTRATORS --- */
@@ -161,6 +166,7 @@ insert into user_authority( user_id, authority_id) values (15,6);
 insert into user_authority( user_id, authority_id) values (16,6);
 insert into user_authority( user_id, authority_id) values (19,6);
 insert into user_authority( user_id, authority_id) values (20,3);
+insert into user_authority( user_id, authority_id) values (21,5);
 
 insert into drug_specification(id, suggested_dose) values (1, '20mg');
 insert into drug_specification(id, suggested_dose) values (2, '300mg');

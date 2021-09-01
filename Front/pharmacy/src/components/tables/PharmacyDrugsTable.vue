@@ -118,8 +118,14 @@ export default {
                     this.isBusy = false
                     
                     console.log(error)
-                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
-                    window.location.reload()  
+                    if (error.response.status == 403 || error.response.status == 401)
+                        this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+                    else if (error.response.status == 404)
+                        this.toast('danger', 'Neuspešno', 'Trenutno nema lekova u sistemu.')
+                    else {
+                        this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
+                        window.location.reload() 
+                    } 
                 })
         },
 

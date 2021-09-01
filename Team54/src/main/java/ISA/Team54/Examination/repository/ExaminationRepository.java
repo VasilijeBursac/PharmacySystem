@@ -56,4 +56,7 @@ public interface ExaminationRepository extends JpaRepository<Examination, Long> 
 
 	@Query("SELECT e FROM Examination e where pharmacy_id = ?1 and type = ?2 and status = ?3 and start > CURRENT_TIMESTAMP ")
 	List<Examination> getAllFutureExaminationsForPharmacy(long id, ExaminationType type, ExaminationStatus status);
+	
+	@Query("SELECT e FROM Examination e where emplyeed_id = ?1 and start > CURRENT_TIMESTAMP")
+	List<Examination> getAllFutureExaminationsForEmployee(long employeeId);
 }

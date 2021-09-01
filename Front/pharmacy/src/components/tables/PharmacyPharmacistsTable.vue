@@ -1,6 +1,6 @@
 <template>
     <div class="pharmacy-pharmacists">
-        <b-table striped hover :busy="isBusy" :items="items | formatRating | formatPrice" :fields="fields" class="text-middle mt-2">
+        <b-table striped hover :busy="isBusy" :items="items | formatRating | formatPrice" :fields="fields" class="text-middle mt-0">
 			<template #table-busy>
 				<div class="text-center text-danger my-2">
 					<b-spinner class="align-middle"></b-spinner>
@@ -10,7 +10,7 @@
             
             <template #cell(actions)="row">
 				<b-button v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId"
-                size="sm" variant="danger" @click="displayDrugInformations(row.item)">
+                size="sm" variant="danger" @click="removePharmacistFromPharmacy(row.item)">
                     <b-icon icon="x"></b-icon>
 					Ukloni
 				</b-button>
@@ -23,24 +23,46 @@
 import { mapState } from 'vuex';
 
 export default {
-    props: ['pharmacyId'],
+    props: {
+        pharmacyId: {
+            default: null
+        },
+        isTableOnPharmacyProfile: {
+            type: Boolean,
+            default: false
+        }
+    },
     data: function() {
         return{
             loggedUserRole: this.$store.getters.getUserRole,
 
-            items: [],
+            data: [],
             fields: [],
 
-            isBusy: true
+            isBusy: true,
+
+            nameFilter: '',
+            surnameFilter: '',
+            pharmacyNameFilter: '',
+			ratingFilter: 5,
         }
     },
 
     computed: {
-        ...mapState(['myPharmacyId'])
+        ...mapState(['myPharmacyId']),
+
+        items() {
+            return this.nameFilter != '' || this.surnameFilter != '' || this.pharmacyNameFilter != '' || this.ratingFilter != 0 ? 
+						this.data.filter( e => e.name.toLowerCase().includes(this.nameFilter.toLowerCase()) && 
+                                        e.surname.toLowerCase().includes(this.surnameFilter.toLowerCase()) && 
+                                        e.pharmacyName.toLowerCase().includes(this.pharmacyNameFilter.toLowerCase()) &&
+										( e.rating >= 0 && e.rating <= this.ratingFilter)) 
+					: this.data
+        }
     },
     
     mounted(){
-        this.getPharmacistsInPharmacy()
+        this.getPharmacists()
 
         if (this.loggedUserRole == 'ROLE_PHARMACY_ADMIN' && this.myPharmacyId == this.pharmacyId)
             this.fields = [
@@ -55,28 +77,78 @@ export default {
         else
             this.fields = [
                 { key: 'name', label: 'Ime', sortable: true}, 
-                { key: 'surname', label: 'Prezime', sortable: true}, 
+                { key: 'surname', label: 'Prezime', sortable: true},
                 { key: 'rating', label: 'Ocena', sortable: true},
-                { key: 'price', label: 'Cena pregleda', sortable: true}
+                { key: 'price', label: 'Cena pregleda', sortable: true},
+                { key: 'pharmacyName', label: 'Apoteka u kojoj je zaposlen', sortable: true}
             ]
+
+        this.$root.$on('update-pharmacy-pharmacists', () => {
+            this.getPharmacists()
+        })
+
+        this.$root.$on('pharmacist-name', (name) => {
+			this.nameFilter = name
+		})
+
+        this.$root.$on('pharmacist-surname', (surname) => {
+			this.surnameFilter = surname
+		})
+
+        this.$root.$on('pharmacy-name', (pharmacyName) => {
+			this.pharmacyNameFilter = pharmacyName
+		})
+
+		this.$root.$on('pharmacist-rating', (rating) => {
+			this.ratingFilter = rating
+		})
+
     },
 
     methods: {
-        getPharmacistsInPharmacy() {
+        getPharmacists() {
+            let pharmacistsPath
+            if(this.loggedUserRole == 'ROLE_PHARMACY_ADMIN' || this.isTableOnPharmacyProfile)
+                pharmacistsPath = '/pharmacist/byPharmacyId/' + this.pharmacyId
+            else
+                pharmacistsPath = '/pharmacist'
+
             this.$http
-                .get('/pharmacist/byPharmacyId/' + this.pharmacyId)
+                .get(pharmacistsPath)
                 .then( res => {
                     this.isBusy = false
 
-                    this.items = res.data
+                    this.data = res.data
                     console.log(this.items)
                 })
                 .catch((error) => {
                     this.isBusy = false
                     
                     console.log(error)
-                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
+                    if (error.response.status == 403 || error.response.status == 401)
+                        this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+                    else if (error.response.status == 404)
+                        this.toast('danger', 'Neuspešno', 'Trenutno nema farmaceuta u sistemu.')
+                    else 
+                        this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
                 })
+        },
+
+        removePharmacistFromPharmacy(pharmacist) {
+            this.$http
+            .delete('pharmacist/removeFromPharmacy/' + pharmacist.id)
+            .then( () => {
+                this.toast('success', 'Uspešno', 'Uspešno ste uklonili farmaceuta.')
+                this.getPharmacists()
+            })
+            .catch( (error) => {
+                if (error.response.status == 403 || error.response.status == 401)
+                    this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+                else if (error.response.status == 400)
+                    this.toast('danger', 'Neuspešno', 'Nije moguće ukloniti farmaceuta. Farmaceut ima zakazana savetovanja koja treba da održi.')
+                else 
+                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
+            })
         },
 
         toast(variant, title, message){
@@ -85,7 +157,6 @@ export default {
                 variant: variant,
                 autoHideDelay: 5000
             })
-            scroll(0,0)
         },
     }
 }
