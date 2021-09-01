@@ -97,6 +97,17 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 		drugInPharmacy.setQuantity(-1);
 		drugsInPharmacyRepository.save(drugInPharmacy); 
 	}
+	
+	@Transactional//(readOnly = false)
+	@Override
+	public void removeOrderedDrugFromPharmacy(long drugId, long pharmacyId){
+		DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(drugId, pharmacyId);
+		
+		if(drugInPharmacy.getQuantity() == 0 && drugInPharmacy.getPricelist() == null) {
+			drugInPharmacy.setQuantity(-1);
+			drugsInPharmacyRepository.save(drugInPharmacy); 
+		}
+	}
 
 	@Transactional
 	@Override
@@ -124,15 +135,15 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public void updateDrugsQuantities(List<DrugInOrder> drugsInOrder) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		long pharmacyId = ((PharmacyAdministrator) authentication.getPrincipal()).getPharmacy().getId();
 		
 		for (DrugInOrder drugInOrder : drugsInOrder) {
-			System.out.println("GLEDAJ VAMO: " + drugInOrder.getId().getDrugId());
 			DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(drugInOrder.getId().getDrugId(), pharmacyId);
-			drugInPharmacy.setQuantity(drugInOrder.getQuantity());
+			drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() + drugInOrder.getQuantity());
 			drugsInPharmacyRepository.save(drugInPharmacy);
 		}
 		

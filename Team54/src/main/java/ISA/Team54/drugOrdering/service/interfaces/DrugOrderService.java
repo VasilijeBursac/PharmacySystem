@@ -11,4 +11,6 @@ public interface DrugOrderService {
 	DrugsOrder findById(long id);
 	List<DrugsOrder> getAllOrdersForPharmacy(long pharmacyId);
 	void addNewDrugOrder(Date deadline, List<DrugInOrder> drugsInOrder); //throws Exception;
+	void editDrugOrder(long orderId, Date deadline, List<DrugInOrder> drugsInOrder) throws Exception;
+	void deleteDrugOrder(long orderId) throws Exception;
 }

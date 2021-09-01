@@ -18,6 +18,7 @@ public interface DrugInPharmacyService {
 	List<DrugInPharmacy> getAllDrugsInPharmacy();
 	void decreaseDrugQuantities(List<Long> drugIds, long pharmacyId, List<Integer> quantities) throws DrugOutOfStockException;
 	void removeDrugFromPharmacy(long drugId, long pharmacyId) throws DrugReservedInFutureException;
+	void removeOrderedDrugFromPharmacy(long drugId, long pharmacyId);
 	void addDrugToPharmacy(DrugInPharmacy newDrugInPharmacy, boolean isInOrder);
 	void updateDrugsQuantities(List<DrugInOrder> drugsInOrder);
 }

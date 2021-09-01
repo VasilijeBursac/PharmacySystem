@@ -32,7 +32,7 @@ public class DrugInOrderId implements Serializable {
 	public void setDrugId(long drugId) {
 		this.drugId = drugId;
 	}
-	public long getOrdeId() {
+	public long getOrderId() {
 		return orderId;
 	}
 	public void setOrderId(long orderId) {

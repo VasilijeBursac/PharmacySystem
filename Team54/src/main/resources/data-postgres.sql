@@ -325,7 +325,7 @@ insert into drug_in_order( drug_id, order_id, quantity) values ( 4, 7, 10);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 8, 5);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 4, 8, 15);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 5, 8, 35);
-insert into drug_in_order( drug_id, order_id, quantity) values ( 2, 9, 10);
+insert into drug_in_order( drug_id, order_id, quantity) values ( 4, 9, 10);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 5, 9, 25);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 3, 10, 20);
 insert into drug_in_order( drug_id, order_id, quantity) values ( 4, 10, 20);

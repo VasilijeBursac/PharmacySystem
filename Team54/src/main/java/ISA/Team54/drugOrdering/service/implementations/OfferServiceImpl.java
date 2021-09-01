@@ -113,10 +113,11 @@ public class OfferServiceImpl implements OfferService{
 			else 
 				offer.setStatus(OfferStatus.Declined);
 			
+			String pharmacyName = offer.getOrder().getAdministrator().getPharmacy().getName();
 			new Thread(() -> {
 				emailService.sendEmail(offer.getSupplier().getEmail(), 
 						 "Obrađena ponuda za narudžbenicu",
-						 "Vaša ponuda za narudžbenicu apoteke " + offer.getOrder().getAdministrator().getPharmacy().getName()
+						 "Vaša ponuda za narudžbenicu apoteke " + pharmacyName
 						 + " je " + (offer.getStatus() == OfferStatus.Accepted ? "prihvaćena." : "odbijena."));
 			}).start();
 		}
@@ -125,7 +126,7 @@ public class OfferServiceImpl implements OfferService{
 		selectedOffer.getOrder().setStatus(OrderStatus.Fulfilled);
 		drugOrderRepository.save(selectedOffer.getOrder());
 		
-//		drugInPharmacyService.updateDrugsQuantities(drugInOrderRepository.findAllByIdOrderId(selectedOffer.getOrder().getId()));
+		drugInPharmacyService.updateDrugsQuantities(drugInOrderRepository.findAllByIdOrderId(selectedOffer.getOrder().getId()));
 	}
 }
 

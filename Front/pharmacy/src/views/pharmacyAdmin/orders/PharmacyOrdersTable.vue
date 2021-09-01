@@ -124,20 +124,20 @@ export default {
         },
 
         deleteOrder(order) {
-            this.selectedOrder = order
-            // this.$http
-            //     .delete('/promotion/' + promotion.id)
-            //     .then( () => {
-            //         this.getPromotionsForPharmacy()
-            //         this.toast('success', 'Uspešno', 'Uspešno ste uklonili promociju.')
-            //     })
-            //     .catch((error) => {
-            //         console.log(error)
-            //         if (error.response.status == 403 || error.response.status == 401)
-            //             this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
-            //         else 
-            //             this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
-            //     }) 
+            this.$http
+            .delete('orders/' + order.orderId)
+            .then( () => {
+                this.toast('success', 'Uspešno', 'Uspešno ste obrisali narudžbenicu.')
+                this.getOrdersForPharmacy()
+            })
+            .catch( (error) => {
+                if (error.response.status == 403 || error.response.status == 401)
+                    this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+                else if (error.response.status == 400)
+                    this.toast('danger', 'Neuspešno', error.response.data)
+                else 
+                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
+            })
         },
 
         toast(variant, title, message){

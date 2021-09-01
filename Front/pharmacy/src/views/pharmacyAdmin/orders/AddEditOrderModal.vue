@@ -1,6 +1,5 @@
 <template>
-    <b-modal id="add-order-modal" size="lg" scrollable hide-footer 
-        :title="mode=='SHOW' ? 'Prikaz narudžbenice i ponuda' : 'Dodaj narudžbenicu'" 
+    <b-modal id="add-order-modal" size="lg" scrollable hide-footer :title="modalTitle" 
         @hide="resetFields" @show="setDataForTables">
         <b-form>
             <div v-if="mode=='SHOW'" class="order-info mb-3">
@@ -54,7 +53,9 @@
                 <hr>
                 <p class="mt-4">Ponude dobavljača: </p>
                 <p v-if="offers.length === 0">Trenutno nema ponuda dobavljača za ovu narudžbenicu.</p>
-                <b-table v-else striped hover :items="offers | formatDate | formatPrice" :fields="fieldsOffer"  class="text-middle mt-0">
+                <b-table v-else striped hover :items="offers | formatDate | formatPrice" 
+                :fields="order.status == 'Čeka ponude' ? fieldsOffer : fieldsOfferReadOnly"  
+                class="text-middle mt-0">
                     <template #cell(actions)="row">
                         <b-button size="sm" variant="success" @click="acceptOffer(row.item)">
                             Prihvati ponudu
@@ -64,7 +65,7 @@
             </div>
 
             <div class="buttons mt-5">
-                <b-button v-if="mode!='SHOW' || isEditingAllowed" variant="success" block @click="addNewOrder">
+                <b-button v-if="mode!='SHOW' || isEditingAllowed" variant="success" block @click="saveOrder">
                     {{ mode=='ADD' ? 'Dodaj narudžbenicu' : 'Izmeni narudžbenicu'}}
                 </b-button>
 
@@ -122,7 +123,13 @@ export default {
                 {key:'totalPrice', label: 'Cena', sortable:true}, 
 				{key:'offerStatus', label: 'Status ponude', sortable:true},
                 {key:'actions', label: 'Akcije'}
-            ]
+            ],
+            fieldsOfferReadOnly: [
+                {key:'supplierFullName', label: 'Dobavljač', sortable:true}, 
+				{key:'deliveryDeadline', label: 'Rok za dostavu', sortable:true},
+                {key:'totalPrice', label: 'Cena', sortable:true}, 
+				{key:'offerStatus', label: 'Status ponude', sortable:true},
+            ],
         }
     },
 
@@ -130,7 +137,16 @@ export default {
         ...mapState(['myPharmacyId']),
 
         isEditingAllowed(){
-            return this.mode=="EDIT" && this.offers.length !=0
+            return this.mode=="EDIT" && this.offers.length == 0
+        },
+
+        modalTitle(){
+            if (this.mode == "ADD")
+                return "Kreiranje narudžbenice" 
+            else if (this.mode == "EDIT")
+                return "Izmena narudžbenice"
+            else
+                return 'Prikaz narudžbenice i ponuda'
         }
     },
 
@@ -179,6 +195,13 @@ export default {
             this.drugsInOrder.splice(row.index, 1)
         },
 
+        saveOrder() {
+            if (this.mode == "ADD")
+                this.addNewOrder()
+            else
+                this.editSelectedOrder()
+        },
+
         addNewOrder() {
             if(this.deadlineDate == null){
                 this.toast('danger', 'Neuspešno', 'Morate uneti rok za slanje ponuda!')
@@ -193,6 +216,7 @@ export default {
                 return;
             }
             
+
             this.$http
             .post('orders/', {
                 deadline: this.deadlineDate,
@@ -206,6 +230,43 @@ export default {
             .catch( (error) => {
                 if (error.response.status == 403 || error.response.status == 401)
                     this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+                else if (error.response.status == 400)
+                    this.toast('danger', 'Neuspešno', error.response.data)
+                else 
+                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
+            })
+        },
+
+        editSelectedOrder() {
+            if(this.deadlineDate == null){
+                this.toast('danger', 'Neuspešno', 'Morate uneti rok za slanje ponuda!')
+                return;
+            }
+            if(new Date(this.deadlineDate).getTime() < new Date().getTime()){
+                this.toast('danger', 'Neuspešno', 'Rok za slanje ponuda ne može biti pre današnjeg datuma!')
+                return;
+            }
+            if(this.drugsInOrder.length == 0){
+                this.toast('danger', 'Neuspešno', 'Morate uneti barem jedan lek u narudžbenicu!')
+                return;
+            }
+            
+
+            this.$http
+            .put('orders/' + this.order.orderId, {
+                deadline: this.deadlineDate,
+                drugsInOrder: this.drugsInOrder
+            })
+            .then( () => {
+                this.toast('success', 'Uspešno', 'Uspešno ste izmenili narudžbenicu.')
+                this.closeModal();
+                this.$root.$emit('update-pharmacy-orders')
+            })
+            .catch( (error) => {
+                if (error.response.status == 403 || error.response.status == 401)
+                    this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+                else if (error.response.status == 400)
+                    this.toast('danger', 'Neuspešno', error.response.data)
                 else 
                     this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
             })
@@ -233,7 +294,7 @@ export default {
             .post('offers/acceptOffer/' + offer.offerId, {
             })
             .then( () => {
-                this.toast('success', 'Uspešno', 'Uspešno ste odabrali ponudu za narudžbenicu.')
+                this.toast('success', 'Uspešno', 'Uspešno ste odabrali ponudu za narudžbenicu. Svi dobavljači koji su slali ponude će biti obavešteni email-om.')
                 this.closeModal();
                 this.$root.$emit('update-pharmacy-orders')
             })
@@ -248,6 +309,20 @@ export default {
             })
         },
 
+        setDataForTables(){
+            if(this.mode == "ADD")
+                this.drugsInOrder = []
+            else{
+                this.drugsInOrder = [...this.order.drugsInOrder]
+                this.getAllOffersForOrder()
+            }
+            
+            if (this.mode == "EDIT"){
+                var dateParts = this.order.deadline.split("/");
+                this.deadlineDate = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+            }
+        },
+
         resetDrugInputFields() {
             this.selectedDrug = null
             this.quantity = ""
@@ -257,15 +332,6 @@ export default {
             this.resetDrugInputFields()
             this.deadlineDate = null
             this.drugsInOrder = []
-        },
-
-        setDataForTables(){
-            if(this.mode == "ADD")
-                this.drugsInOrder = []
-            else{
-                this.drugsInOrder = [...this.order.drugsInOrder]
-                this.getAllOffersForOrder()
-            }   
         },
 
         closeModal(){
