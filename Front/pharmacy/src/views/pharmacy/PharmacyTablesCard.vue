@@ -11,7 +11,7 @@
             <b-row>
                 <b-col>
                     <h5 class="h5 mt-5 text-left">Farmaceuti u apoteci</h5>
-                    <PharmacyPharmacistsTable :pharmacyId="pharmacyId" />
+                    <PharmacyPharmacistsTable :pharmacyId="pharmacyId" :isTableOnPharmacyProfile="true" />
                 </b-col>
             </b-row>
 

@@ -36,6 +36,7 @@ import ISA.Team54.users.mappers.PharmacyMapper;
 import ISA.Team54.users.mappers.UserMapper;
 import ISA.Team54.users.repository.DermatologistRepository;
 import ISA.Team54.users.repository.PatientRepository;
+import ISA.Team54.users.repository.PharmacistRepository;
 import ISA.Team54.users.repository.PharmacyAdministratorRepository;
 import ISA.Team54.users.repository.PharmacyRepository;
 import ISA.Team54.users.repository.SupplierRepository;
@@ -57,6 +58,9 @@ public class PharmacyServiceImpl implements PharmacyService {
 	
 	@Autowired
 	private DermatologistRepository dermatologistRepository;
+	
+	@Autowired
+	private PharmacistRepository pharmacistRepository;
 	
 	@Autowired
 	private SupplierRepository supplierRepository;
@@ -146,8 +150,13 @@ public class PharmacyServiceImpl implements PharmacyService {
 
 	@Override
 	public Pharmacist addPharmacist(PharmacistRequestDTO pharmacistRequestDTO) {
-		// TODO Auto-generated method stub
-		return null;
+		Pharmacist pharmacist = UserMapper.PharmacistRequestDTOToPharmacist(pharmacistRequestDTO);
+		pharmacist.setPassword(passwordEncoder.encode(pharmacistRequestDTO.getPassword()));
+		List<Authority> auth = authService.findByname("ROLE_PHARMACIST");
+		Pharmacy pharmacy = pharmacyRepository.findById(pharmacistRequestDTO.getPharmacyId());
+		pharmacist.setAuthorities(auth);
+		pharmacist.setPharmacy(pharmacy);
+		return pharmacistRepository.save(pharmacist);	
 	}
 
 	@Override

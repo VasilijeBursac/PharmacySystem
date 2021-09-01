@@ -1,6 +1,6 @@
 <template>
     <div class="pharmacy-dermatologists">
-        <b-table striped hover :busy="isBusy" :items="items | formatRating | formatPrice" :fields="fields" class="text-middle mt-2">
+        <b-table striped hover :busy="isBusy" :items="items | formatRating | formatPrice" :fields="fields" class="text-middle mt-0">
 			<template #table-busy>
 				<div class="text-center text-danger my-2">
 					<b-spinner class="align-middle"></b-spinner>
@@ -9,7 +9,7 @@
 			</template>
             
             <template #cell(displayPharmacies)="row">
-                <b-dropdown v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId" text="Prikaži apoteke" size="sm" >
+                <b-dropdown text="Prikaži apoteke" size="sm" >
                     <b-dropdown-item v-for="pharmacy in row.item.pharmacies" :key="pharmacy.id" 
                     :to="{name: 'PharmacyProfile', params: { id: pharmacy.id }}" class="my-0">
                         {{ pharmacy.name }}
@@ -67,7 +67,8 @@ export default {
                 { key: 'name', label: 'Ime', sortable: true}, 
                 { key: 'surname', label: 'Prezime', sortable: true}, 
                 { key: 'rating', label: 'Ocena', sortable: true},
-                { key: 'price', label: 'Cena pregleda', sortable: true}
+                { key: 'price', label: 'Cena pregleda', sortable: true},
+                { key: 'displayPharmacies', label: 'Apoteke u kojima je zaposlen'},
             ]
     },
 
@@ -85,7 +86,12 @@ export default {
                     this.isBusy = false
                     
                     console.log(error)
-                    this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')  
+                    if (error.response.status == 403 || error.response.status == 401)
+                        this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
+                    else if (error.response.status == 404)
+                        this.toast('danger', 'Neuspešno', 'Trenutno nema dermatologa u sistemu.')
+                    else 
+                        this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
                 })
         },
 
@@ -95,7 +101,6 @@ export default {
                 variant: variant,
                 autoHideDelay: 5000
             })
-            scroll(0,0)
         },
     }
 }

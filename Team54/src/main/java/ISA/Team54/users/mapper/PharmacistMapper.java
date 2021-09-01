@@ -6,6 +6,7 @@ import ISA.Team54.users.model.Pharmacist;
 public class PharmacistMapper {
 	public static PharmacistInfoDTO PharmacistToPharmacistInfoDTO(Pharmacist pharmacist) {
 		return new PharmacistInfoDTO(
+				pharmacist.getId(),
 				pharmacist.getName(),
 				pharmacist.getSurname(),
 				pharmacist.getEmail(),
@@ -15,7 +16,8 @@ public class PharmacistMapper {
 				pharmacist.getCountry(),
 				pharmacist.getRatings(),
 				pharmacist.getPharmacy().getId(),
-				pharmacist.getPharmacy().getPharmacistPrice()
+				pharmacist.getPharmacy().getPharmacistPrice(),
+				pharmacist.getPharmacy().getName()
 		);
 	}
 }

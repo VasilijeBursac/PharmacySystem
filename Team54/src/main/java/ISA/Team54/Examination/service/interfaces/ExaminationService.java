@@ -40,4 +40,6 @@ public interface ExaminationService {
 	List<Examination> getPatientExaminationsByType(ExaminationType type);
 
 	List<EmployeeExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type);
+	
+	boolean checkIfEmployeeHasScheduledExaminationsInFuture(long pharmacistId);
 }
