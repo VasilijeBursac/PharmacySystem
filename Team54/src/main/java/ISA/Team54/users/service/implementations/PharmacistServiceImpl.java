@@ -46,10 +46,11 @@ public class PharmacistServiceImpl implements PharmacistService{
 
 	@Override
 	public void removePharmacistFromPharmacy(long pharmacistId) throws Exception {
-		if (examinationService.checkIfEmployeeHasScheduledExaminationsInFuture(pharmacistId))
+		Pharmacist pharmacist = pharmacistRepository.findOneById(pharmacistId);
+		
+		if (examinationService.checkIfEmployeeHasScheduledExaminationsInFuture(pharmacistId, pharmacist.getPharmacy().getId()))
 			throw new EmployeeHasScheduledExaminationsException();
 		
-		Pharmacist pharmacist = pharmacistRepository.findOneById(pharmacistId);
 		pharmacist.setPharmacy(null);
 		pharmacistRepository.save(pharmacist);
 	}

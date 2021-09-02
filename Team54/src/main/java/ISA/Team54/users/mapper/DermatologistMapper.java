@@ -7,6 +7,7 @@ import ISA.Team54.users.model.Dermatologist;
 public class DermatologistMapper {
 	public static DermatologistInfoDTO DermatologistToDermatologistInfoDTO(Dermatologist dermatologist) {
 		return new DermatologistInfoDTO(
+				dermatologist.getId(),
 				dermatologist.getName(),
 				dermatologist.getSurname(),
 				dermatologist.getEmail(),

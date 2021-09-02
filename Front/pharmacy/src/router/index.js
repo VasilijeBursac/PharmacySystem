@@ -258,6 +258,12 @@ const routes = [
     name: "Pharmacists",
     component: () =>
     import("../views/pharmacyAdmin/pharmacists/Pharmacists.vue")
+  },
+  {
+    path: "/dermatologists",
+    name: "Dermatologists",
+    component: () =>
+    import("../views/pharmacyAdmin/dermatologists/Dermatologists.vue")
   }
 
 ];

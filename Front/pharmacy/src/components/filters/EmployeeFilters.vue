@@ -2,9 +2,9 @@
     <div class="pharmacy-wrapper">
         <div class="pharmacy-filters">        
             <b-card>
-                <h6 class="h6 text-left mb-3">Pretraga farmaceuta</h6>
+                <h6 class="h6 text-left mb-3">Pretraga zaposlenih</h6>
                 <b-form class="text-left">
-                    <b-form-group id="name-group" label="Ime farmaceuta:" label-for="name-input">
+                    <b-form-group id="name-group" label="Ime:" label-for="name-input">
                         <b-form-input
                             id="name-input"
                             v-model="name"
@@ -13,7 +13,7 @@
                         </b-form-input>
                     </b-form-group>
 
-                    <b-form-group id="surname-group" label="Prezime farmaceuta:" label-for="surname-input">
+                    <b-form-group id="surname-group" label="Prezime:" label-for="surname-input">
                         <b-form-input
                             id="surname-input"
                             v-model="surname"
@@ -22,7 +22,7 @@
                         </b-form-input>
                     </b-form-group>
 
-                    <b-form-group id="pharmacy-name-group" label="Ime apoteke:" label-for="pharmacy-name-input">
+                    <b-form-group id="pharmacy-name-group" label="Ime apoteke u kojoj je zaposlen:" label-for="pharmacy-name-input">
                         <b-form-input
                             id="name-input"
                             v-model="pharmacyName"
@@ -54,16 +54,16 @@ export default {
     },
     watch:{
         name: function(){
-            this.$root.$emit('pharmacist-name', this.name)
+            this.$root.$emit('employee-name', this.name)
         },
         surname: function(){
-            this.$root.$emit('pharmacist-surname', this.surname)
+            this.$root.$emit('employee-surname', this.surname)
         },
         pharmacyName: function(){
             this.$root.$emit('pharmacy-name', this.pharmacyName)
         },
         rating: function(){
-            this.$root.$emit('pharmacist-rating', this.rating)
+            this.$root.$emit('employee-rating', this.rating)
         }
     }
 }

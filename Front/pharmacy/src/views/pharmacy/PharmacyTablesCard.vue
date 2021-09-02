@@ -18,7 +18,7 @@
             <b-row>
                 <b-col>
                     <h5 class="h5 mt-3 text-left">Dermatolozi u apoteci</h5>
-                    <PharmacyDermatologistsTable :pharmacyId="pharmacyId" />
+                    <PharmacyDermatologistsTable :pharmacyId="pharmacyId" :isTableOnPharmacyProfile="true" />
                 </b-col>
             </b-row>
 

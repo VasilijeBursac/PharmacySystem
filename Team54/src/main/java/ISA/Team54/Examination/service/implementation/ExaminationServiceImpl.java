@@ -486,8 +486,8 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
-	public boolean checkIfEmployeeHasScheduledExaminationsInFuture(long pharmacistId) {
-		return !examinationRepository.getAllFutureExaminationsForEmployee(pharmacistId).isEmpty();
+	public boolean checkIfEmployeeHasScheduledExaminationsInFuture(long employeeId, long pharmacyId) {
+		return !examinationRepository.getAllFutureExaminationsInPharmacyForEmployee(employeeId, pharmacyId).isEmpty();
 	}
 
 	
