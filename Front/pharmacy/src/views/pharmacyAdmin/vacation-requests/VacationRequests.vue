@@ -1,7 +1,9 @@
 <template>
     <div class="container mt-4">
         <div class="title-options clearfix">
-            <h5 class="h5 float-left mb-4">Zahtevi za godišnje odmore i odsustva</h5>
+            <h5 class="h5 float-left mb-4">
+                {{ "Zahtevi za godišnje odmore i odsustva " + (this.loggedUserRole == 'ROLE_PHARMACY_ADMIN' ? "farmaceuta u apoteci" : "dermatologa") }} 
+            </h5>
         </div>
 
         <b-row>
@@ -19,7 +21,7 @@ import PharmacyVacationRequestsTable from "./PharmacyVacationRequestsTable.vue"
 export default {
     data: function() {
         return {
-
+            loggedUserRole: this.$store.getters.getUserRole
         }
     },
 

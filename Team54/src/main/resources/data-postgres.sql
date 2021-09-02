@@ -252,6 +252,7 @@ insert into vacation_request( response_message, status, end_date, start_date, de
 insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values (null, 'Created','2021-10-15', '2021-09-26', 2, null);
 insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values (null, 'Approved','2021-03-22', '2021-02-19', null, 17);
 insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values ('Neozbiljan radnik.', 'Rejected','2021-04-25', '2021-03-25', null, 10);
+insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values ('Neozbiljan radnik.', 'Rejected','2021-10-20', '2021-09-25', 3, null);
 
 insert into promotion(id, end_date, start_date, description, pharmacy_id) values (1,'2021-03-22', '2021-02-19', '20 posto popusta', 1);
 insert into promotion(id, end_date, start_date, description, pharmacy_id) values (2,'2021-05-01', '2021-04-20','10 posto popusta' , 1);

@@ -46,25 +46,16 @@ public class VacatoinRequestServiceImpl implements VacationRequestService {
 				vacationRequestRepository.save(new VacationRequest(dateRange,VacationRequestStatus.Created,dermatologist,null));
 		}
 	}
+	
 	@Override
-	public List<VacationRequest> getAllVacationRequestsForPharmacy(long pharmacyId) {
-		List<VacationRequest> vacationRequestsForPharmacy = new ArrayList<VacationRequest>();
-		List<VacationRequest> allVacationRequests =  vacationRequestRepository.findAll();
-		
-		for(VacationRequest vacationRequest : allVacationRequests) {
-			if(vacationRequest.getPharmacist() != null) {
-				if(vacationRequest.getPharmacist().getPharmacy().getId() == pharmacyId)
-					vacationRequestsForPharmacy.add(vacationRequest);
-			} else {
-				for (Pharmacy pharmacy : vacationRequest.getDermatologist().getPharmacy())
-					if(pharmacy.getId() == pharmacyId)
-						vacationRequestsForPharmacy.add(vacationRequest);
-			}
-		}
-		
-		return vacationRequestsForPharmacy;
+	public List<VacationRequest> getAllPharmacistsVacationRequestsForPharmacy(long pharmacyId) {
+		return vacationRequestRepository.getPharmacistsVacationRequestsByPharmacyId(pharmacyId);
 	}
 	
+	@Override
+	public List<VacationRequest> getAllDermatologistsVacationRequests() {
+		return vacationRequestRepository.getDermatologistsVacationRequests();
+	}
 	
 	@Override
 	public void respondToVacationRequest(long vacationRequestId, boolean isApproved, String responseMessage) {

@@ -40,12 +40,25 @@ public class VacationRequestController {
 		}
 	}
 	
-	@GetMapping("/byPharmacyId/{pharmacyId}")
+	@GetMapping("/pharmacists/byPharmacyId/{pharmacyId}")
 	@PreAuthorize("hasRole('ROLE_PHARMACY_ADMIN')")
-	public ResponseEntity<List<VacationRequestDTO>> getAllVacationRequestsForPharmacy(@PathVariable Long pharmacyId){
+	public ResponseEntity<List<VacationRequestDTO>> getAllPharmacistsVacationRequestsForPharmacy(@PathVariable Long pharmacyId){
 		try {
 			List<VacationRequestDTO> vacationRequestsDTOs = new ArrayList<VacationRequestDTO>();
-			vacationRequestService.getAllVacationRequestsForPharmacy(pharmacyId).forEach(vacationRequest -> 
+			vacationRequestService.getAllPharmacistsVacationRequestsForPharmacy(pharmacyId).forEach(vacationRequest -> 
+			vacationRequestsDTOs.add(VacationRequestMapper.VacationRequestToVacationRequestDTO(vacationRequest)));
+			return new ResponseEntity<>(vacationRequestsDTOs,HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/dermatologists")
+	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
+	public ResponseEntity<List<VacationRequestDTO>> getAllDermatologistsVacationRequests(){
+		try {
+			List<VacationRequestDTO> vacationRequestsDTOs = new ArrayList<VacationRequestDTO>();
+			vacationRequestService.getAllDermatologistsVacationRequests().forEach(vacationRequest -> 
 			vacationRequestsDTOs.add(VacationRequestMapper.VacationRequestToVacationRequestDTO(vacationRequest)));
 			return new ResponseEntity<>(vacationRequestsDTOs,HttpStatus.OK);
 		} catch (Exception e) {
@@ -54,7 +67,7 @@ public class VacationRequestController {
 	}
 	
 	@PostMapping("/respond/{vacationRequestId}")
-	@PreAuthorize("hasRole('ROLE_PHARMACY_ADMIN')")
+	@PreAuthorize("hasAnyRole('ROLE_PHARMACY_ADMIN','SYSTEM_ADMIN')")
 	public ResponseEntity<String> respondToVacationRequest(@RequestBody VacationRequestResponseDTO vacationRequestResponseDTO, @PathVariable Long vacationRequestId){
 		try {
 			vacationRequestService.respondToVacationRequest(vacationRequestId, vacationRequestResponseDTO.isApproved(), vacationRequestResponseDTO.getResponseMessage());

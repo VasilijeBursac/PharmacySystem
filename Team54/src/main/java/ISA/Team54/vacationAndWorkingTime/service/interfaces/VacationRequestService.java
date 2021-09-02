@@ -7,6 +7,7 @@ import ISA.Team54.vacationAndWorkingTime.model.VacationRequest;
 
 public interface VacationRequestService {
 	void scheduleVacation(DateRange dateRange);
-	List<VacationRequest> getAllVacationRequestsForPharmacy(long pharmacyId);
+	List<VacationRequest> getAllPharmacistsVacationRequestsForPharmacy(long pharmacyId);
+	List<VacationRequest> getAllDermatologistsVacationRequests();
 	void respondToVacationRequest(long vacationRequestId, boolean isApproved, String responseMessage);
 }

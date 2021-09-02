@@ -73,8 +73,14 @@ export default {
 
     methods: {
         getVacationRequests() {
+            let vacationRequestsPath
+            if(this.loggedUserRole == 'ROLE_PHARMACY_ADMIN')
+                vacationRequestsPath = 'vacation/pharmacists/byPharmacyId/' + this.pharmacyId
+            else
+                vacationRequestsPath = 'vacation/dermatologists'
+
             this.$http
-                .get("/vacation/byPharmacyId/" + this.pharmacyId)
+                .get(vacationRequestsPath)
                 .then( res => {
                     this.isBusy = false
 
