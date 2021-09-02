@@ -1,13 +1,18 @@
 package ISA.Team54.vacationAndWorkingTime.service.implementation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import ISA.Team54.shared.model.DateRange;
+import ISA.Team54.shared.service.interfaces.EmailService;
 import ISA.Team54.users.model.Dermatologist;
 import ISA.Team54.users.model.Pharmacist;
+import ISA.Team54.users.model.Pharmacy;
 import ISA.Team54.users.repository.DermatologistRepository;
 import ISA.Team54.users.repository.PharmacistRepository;
 import ISA.Team54.vacationAndWorkingTime.enums.VacationRequestStatus;
@@ -24,6 +29,10 @@ public class VacatoinRequestServiceImpl implements VacationRequestService {
 	private PharmacistRepository pharmacistRepository;
 	@Autowired
 	private DermatologistRepository dermatologistRepository;
+	@Autowired 
+	private EmailService emailService;
+	
+	
 	@Override
 	public void scheduleVacation(DateRange dateRange) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -36,5 +45,54 @@ public class VacatoinRequestServiceImpl implements VacationRequestService {
 			if(dermatologist !=null)
 				vacationRequestRepository.save(new VacationRequest(dateRange,VacationRequestStatus.Created,dermatologist,null));
 		}
+	}
+	@Override
+	public List<VacationRequest> getAllVacationRequestsForPharmacy(long pharmacyId) {
+		List<VacationRequest> vacationRequestsForPharmacy = new ArrayList<VacationRequest>();
+		List<VacationRequest> allVacationRequests =  vacationRequestRepository.findAll();
+		
+		for(VacationRequest vacationRequest : allVacationRequests) {
+			if(vacationRequest.getPharmacist() != null) {
+				if(vacationRequest.getPharmacist().getPharmacy().getId() == pharmacyId)
+					vacationRequestsForPharmacy.add(vacationRequest);
+			} else {
+				for (Pharmacy pharmacy : vacationRequest.getDermatologist().getPharmacy())
+					if(pharmacy.getId() == pharmacyId)
+						vacationRequestsForPharmacy.add(vacationRequest);
+			}
+		}
+		
+		return vacationRequestsForPharmacy;
+	}
+	
+	
+	@Override
+	public void respondToVacationRequest(long vacationRequestId, boolean isApproved, String responseMessage) {
+		VacationRequest vacationRequest = vacationRequestRepository.findOneById(vacationRequestId);
+		
+		String employeeEmail;
+		String emailMessage;
+		
+		if (isApproved) {
+			vacationRequest.setStatus(VacationRequestStatus.Approved);
+			emailMessage = "Vaš zahtev za odsustvo ili godišnji odmor je prihvaćen.";
+		} else {
+			vacationRequest.setStatus(VacationRequestStatus.Rejected);
+			vacationRequest.setResponseMessage(responseMessage);
+			emailMessage = "Vaš zahtev za odsustvo ili godišnji odmor je odbijen." 
+							+ " Razlog odbijanja: " + responseMessage;
+		}
+		
+		if(vacationRequest.getPharmacist() != null)
+			employeeEmail = vacationRequest.getPharmacist().getEmail();
+		else
+			employeeEmail = vacationRequest.getDermatologist().getEmail();
+		
+		
+		new Thread(() -> {
+			emailService.sendEmail(employeeEmail, "Obrađen zahtev za odsustvo", emailMessage);
+		}).start();
+		
+		vacationRequestRepository.save(vacationRequest);
 	}
 }

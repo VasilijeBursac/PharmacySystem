@@ -49,7 +49,15 @@
         </li>
         
         <li class="nav-item"><a href="#" class="nav-link">Slobodni termini</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Odsustva</a></li>
+        
+
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <router-link to="/vacation-requests">
+                    Odsustva
+                </router-link>
+            </a>
+        </li>
 
         
         <b-nav-item-dropdown v-bind:text = "pharmacyAdmin.name + ' ' + pharmacyAdmin.surname" right>
