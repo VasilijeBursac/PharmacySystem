@@ -53,10 +53,10 @@ export default {
 
         items() {
             return this.nameFilter != '' || this.surnameFilter != '' || this.pharmacyNameFilter != '' || this.ratingFilter != 0 ? 
-						this.data.filter( e => e.name.toLowerCase().includes(this.nameFilter.toLowerCase()) && 
-                                        e.surname.toLowerCase().includes(this.surnameFilter.toLowerCase()) && 
-                                        e.pharmacyName.toLowerCase().includes(this.pharmacyNameFilter.toLowerCase()) &&
-										( e.rating >= 0 && e.rating <= this.ratingFilter)) 
+                    this.data.filter( e => e.name.toLowerCase().includes(this.nameFilter.toLowerCase()) && 
+                                    e.surname.toLowerCase().includes(this.surnameFilter.toLowerCase()) && 
+                                    e.pharmacyName.toLowerCase().includes(this.pharmacyNameFilter.toLowerCase()) &&
+                                    ( e.rating >= 0 && e.rating <= this.ratingFilter)) 
 					: this.data
         }
     },
@@ -69,7 +69,7 @@ export default {
                 { key: 'name', label: 'Ime', sortable: true}, 
                 { key: 'surname', label: 'Prezime', sortable: true}, 
                 { key: 'email', label: 'Email', sortable: true}, 
-                { key: 'phoneNumber', label: 'Broj telefona', sortable: true},
+                // { key: 'phoneNumber', label: 'Broj telefona', sortable: true},
                 { key: 'rating', label: 'Ocena', sortable: true},
                 { key: 'price', label: 'Cena pregleda', sortable: true},
                 { key: 'actions', label: 'Akcije'}
@@ -80,18 +80,18 @@ export default {
                 { key: 'surname', label: 'Prezime', sortable: true},
                 { key: 'rating', label: 'Ocena', sortable: true},
                 { key: 'price', label: 'Cena pregleda', sortable: true},
-                { key: 'pharmacyName', label: 'Apoteka u kojoj je zaposlen', sortable: true}
+                { key: 'pharmacyName', label: 'Apoteka u kojoj radi', sortable: true}
             ]
 
         this.$root.$on('update-pharmacy-pharmacists', () => {
             this.getPharmacists()
         })
 
-        this.$root.$on('pharmacist-name', (name) => {
+        this.$root.$on('employee-name', (name) => {
 			this.nameFilter = name
 		})
 
-        this.$root.$on('pharmacist-surname', (surname) => {
+        this.$root.$on('employee-surname', (surname) => {
 			this.surnameFilter = surname
 		})
 
@@ -99,7 +99,7 @@ export default {
 			this.pharmacyNameFilter = pharmacyName
 		})
 
-		this.$root.$on('pharmacist-rating', (rating) => {
+		this.$root.$on('employee-rating', (rating) => {
 			this.ratingFilter = rating
 		})
 

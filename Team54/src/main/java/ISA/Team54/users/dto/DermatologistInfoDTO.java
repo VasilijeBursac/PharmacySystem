@@ -5,6 +5,7 @@ import java.util.List;
 import ISA.Team54.users.model.Pharmacy;
 
 public class DermatologistInfoDTO {
+	long id;
 	String name;
 	String surname;
 	String email;
@@ -21,9 +22,10 @@ public class DermatologistInfoDTO {
 		super();
 	}
 
-	public DermatologistInfoDTO(String name, String surname, String email, String phoneNumber, String address,
+	public DermatologistInfoDTO(long id, String name, String surname, String email, String phoneNumber, String address,
 			String city, String country, double price, double rating, List<PharmacyDTO> pharmacies) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
@@ -114,6 +116,14 @@ public class DermatologistInfoDTO {
 
 	public void setRating(double rating) {
 		this.rating = rating;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	

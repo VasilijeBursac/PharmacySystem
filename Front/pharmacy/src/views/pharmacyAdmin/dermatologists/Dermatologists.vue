@@ -1,17 +1,17 @@
 <template>
     <div class="container mt-4">
-        <RegisterPharmacistModal :pharmacyId="myPharmacyId" />
+        <AddDermatologistToPharmacyModal :pharmacyId="myPharmacyId" />
 
         <div class="title-options clearfix">
             <h5 class="h5 float-left mb-4">
-                {{ loggedUserRole == "ROLE_PHARMACY_ADMIN" ? 'Farmaceuti u apoteci' : 'Farmaceuti'}}
+                {{ loggedUserRole == "ROLE_PHARMACY_ADMIN" ? 'Dermatolozi u apoteci' : 'Dermatolozi'}}
             </h5>
                 
             <div class="float-right d-flex">
                 <b-button v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN'" variant="success" class=" mt-n2 mb-3 ml-2" 
-                    @click="openRegisterPharmacistModal">
+                    @click="openAddDermatologistToPharmacyModal">
                     <b-icon icon="plus-circle"></b-icon>
-                    Dodaj farmaceuta
+                    Dodaj dermatologa
                 </b-button>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 <EmployeeFilters />
             </b-col>
             <b-col>
-                <PharmacyPharmacistsTable :pharmacyId="myPharmacyId" />
+                <PharmacyDermatologistsTable :pharmacyId="myPharmacyId" />
             </b-col>
         </b-row>
     </div>
@@ -30,8 +30,8 @@
 <script>
 import { mapState } from 'vuex';
 import EmployeeFilters from "@/components/filters/EmployeeFilters.vue"
-import PharmacyPharmacistsTable from "@/components/tables/PharmacyPharmacistsTable.vue"
-import RegisterPharmacistModal from "./RegisterPharmacistModal.vue"
+import PharmacyDermatologistsTable from "@/components/tables/PharmacyDermatologistsTable.vue"
+import AddDermatologistToPharmacyModal from "./AddDermatologistToPharmacyModal.vue"
 
 export default {
     data: function () {
@@ -45,15 +45,15 @@ export default {
     },
 
     methods: {
-        openRegisterPharmacistModal() {
-            this.$bvModal.show('register-pharmacist-modal')
+        openAddDermatologistToPharmacyModal() {
+            this.$bvModal.show('add-dermatologist-modal')
         }
     },
 
     components:{
         EmployeeFilters,
-        PharmacyPharmacistsTable,
-        RegisterPharmacistModal
+        PharmacyDermatologistsTable,
+        AddDermatologistToPharmacyModal
     }
 }
 </script>
