@@ -24,6 +24,9 @@ public class VacationRequest {
 	
 	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Pharmacist pharmacist;
+	
+	@Column(unique = false,nullable = true)
+	protected String responseMessage;
 
 	public VacationRequest() {
 		super();
@@ -78,4 +81,13 @@ public class VacationRequest {
 		this.pharmacist = pharmacist;
 	}
 
+	public String getResponseMessage() {
+		return responseMessage;
+	}
+
+	public void setResponseMessage(String responseMessage) {
+		this.responseMessage = responseMessage;
+	}
+
+	
 }

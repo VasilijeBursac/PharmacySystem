@@ -20,7 +20,7 @@ values (1,'Jovana Ducica 22','Beograd','Srbija','pera@gmail.com','Pera','$2y$10$
 		
 /* zika@gmail.com, zika */
 insert into dermatologist(id,address, city, country, email, name, password, phone_number, surname, price, confirmed, activated) 
-values (2,'Janka Cmelika 9','Novi Sad','Srbija','zika@gmail.com','Zika','$2y$10$MN616XcMIPO4vqY2bjNEQO97f9mmT6fbFuinbLLylKr0QrJoIJSWm',
+values (2,'Janka Cmelika 9','Novi Sad','Srbija','vasilijebursac@gmail.com','Zika','$2y$10$MN616XcMIPO4vqY2bjNEQO97f9mmT6fbFuinbLLylKr0QrJoIJSWm',
 		'0617788996','Zikic', 2000, false, true);
 		
 /* marko@gmail.com, marko */
@@ -72,7 +72,7 @@ insert into subscribed_pharmacies(patient_id, pharmacy_id) values (6, 1);
 		
 /* dimitrije@gmail.com, dimi */
 insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date, start_date, pharmacy_id, confirmed, activated) 
-values (9,'Bulevar Mihajla Pupina 2','Zitiste','Srbija','dimitrije@gmail.com','Dimitrije','$2y$10$3vrKs8fQ4UL9h93TCSfOPOGsGYks8rKmvkUPHgwonIfv.8Jl1yQhi',
+values (9,'Bulevar Mihajla Pupina 2','Zitiste','Srbija','vasilijebursac@gmail.com','Dimitrije','$2y$10$3vrKs8fQ4UL9h93TCSfOPOGsGYks8rKmvkUPHgwonIfv.8Jl1yQhi',
 		'061985022','Bulaja','2021-03-15','2021-03-01', 1, false, true);
 		
 /* mihajlo@gmail.com, mika */
@@ -82,7 +82,7 @@ values (10,'Ruzveltova 21','Zrenjanin','Srbija','mihajlo@gmail.com','Mihajlo','$
 
 /* mario@gmail.com, kima */		
 insert into pharmacist(id,address, city, country, email, name, password, phone_number, surname, end_date, start_date, pharmacy_id, confirmed, activated) 
-values (17,'Bulevar Mihajla Pupina 11','Zrenjanin','Srbija','mario@gmail.com','Mario','$2y$10$zbIaMV.WAa0D4vj7kS274O8awW6OJoC1KIUBiJ3NpgdAjBGtefcy2',
+values (17,'Bulevar Mihajla Pupina 11','Zrenjanin','Srbija','vasilijebursac@gmail.com','Mario','$2y$10$zbIaMV.WAa0D4vj7kS274O8awW6OJoC1KIUBiJ3NpgdAjBGtefcy2',
 		'061985022','Petromanjanc','2021-09-11','2021-02-11', 1, false, true);
 		
 /* ivica@gmail.com, ivica */
@@ -248,9 +248,11 @@ insert into examination_loyalty_points(type, points) values ('DermatologistExami
 insert into examination_loyalty_points(type, points) values ('PharmacistExamiantion', 10);
 
 
-insert into vacation_request( status, end_date, start_date, dermatologist_id, pharmacist_id) values ('Created','2021-09-11', '2021-08-21', 1, 9);
-insert into vacation_request( status, end_date, start_date, dermatologist_id, pharmacist_id) values ('Created','2021-10-15', '2021-09-26', 2, 10);
-insert into vacation_request( status, end_date, start_date, dermatologist_id, pharmacist_id) values ('Approved','2021-03-22', '2021-02-19', 3, 17);
+insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values (null, 'Created','2021-09-11', '2021-09-07', null, 9);
+insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values (null, 'Created','2021-10-15', '2021-09-26', 2, null);
+insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values (null, 'Approved','2021-03-22', '2021-02-19', null, 17);
+insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values ('Neozbiljan radnik.', 'Rejected','2021-04-25', '2021-03-25', null, 10);
+insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values ('Neozbiljan radnik.', 'Rejected','2021-10-20', '2021-09-25', 3, null);
 
 insert into promotion(id, end_date, start_date, description, pharmacy_id) values (1,'2021-03-22', '2021-02-19', '20 posto popusta', 1);
 insert into promotion(id, end_date, start_date, description, pharmacy_id) values (2,'2021-05-01', '2021-04-20','10 posto popusta' , 1);

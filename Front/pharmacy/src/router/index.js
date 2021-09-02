@@ -264,6 +264,12 @@ const routes = [
     name: "Dermatologists",
     component: () =>
     import("../views/pharmacyAdmin/dermatologists/Dermatologists.vue")
+  },
+  {
+    path: "/vacation-requests",
+    name: "VacationRequests",
+    component: () =>
+    import("../views/pharmacyAdmin/vacation-requests/VacationRequests.vue")
   }
 
 ];
