@@ -1,7 +1,5 @@
 <template>
     <div class="pharmacy-wrapper">
-        <h5 class="h5 text-left mb-4">Lekovi</h5>
-
         <div class="pharmacy-filters">        
             <b-card>
                 <h6 class="h6 text-left mb-3">Pretraga lekova</h6>
@@ -22,7 +20,7 @@
                 </b-form>
 
             </b-card>
-         </div>
+        </div>
     </div>
 </template>
 

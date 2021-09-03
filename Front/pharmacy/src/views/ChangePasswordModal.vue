@@ -130,7 +130,7 @@ export default {
         },
         
 
-         toast(variant, title, message){
+        toast(variant, title, message){
             this.$bvToast.toast(message, {
                 title: title,
                 variant: variant,

@@ -3,9 +3,12 @@ package ISA.Team54.Examination.mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
+import ISA.Team54.Examination.dto.EmployeeExaminationTermRequestDTO;
 import ISA.Team54.Examination.dto.ExaminationDTO;
+import ISA.Team54.Examination.dto.ExaminationReportDTO;
 import ISA.Team54.Examination.enums.ExaminationType;
 import ISA.Team54.Examination.model.Examination;
+import ISA.Team54.Examination.model.Term;
 import ISA.Team54.users.model.Dermatologist;
 import ISA.Team54.users.model.Pharmacist;
 import ISA.Team54.users.model.User;
@@ -43,6 +46,16 @@ public class ExaminationMapper {
 			
 		}
 		return null;
-		}
+	}
 
+	public static Examination EmployeeExaminationTermRequestToExamination(EmployeeExaminationTermRequestDTO employeeExaminationTermRequestDTO) {
+		return new Examination (employeeExaminationTermRequestDTO.getEmployeeId(),
+								new Term(employeeExaminationTermRequestDTO.getTermStart(), employeeExaminationTermRequestDTO.getDuration()),
+								employeeExaminationTermRequestDTO.getPrice());
+	}
+	
+	
+	public static ExaminationReportDTO ExaminationToExaminationReportDTO(Examination examination) {
+		return new ExaminationReportDTO(examination.getTerm().getStart());
+	}
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal id="offerModal" hide-footer title="Davanje ponude za narudzbenicu">
+    <b-modal id="offerModal" hide-footer title="Davanje ponude za narudžbenicu">
         <b-form @submit="addOffer">
             <b-form-group id="totalPrice-group" label="Unesite ukupnu cenu ponude :" label-for="totalPrice-input" class="text-center">
                 <b-form-input
@@ -19,7 +19,7 @@
             </b-form-group>
             <b-button type = "submit" block variant="success">
                 <b-icon-check></b-icon-check>
-                Posalji ponudu
+                Pošalji ponudu
             </b-button>
             <b-button @click="closeModal" block variant="danger">
                 <b-icon-x></b-icon-x>
@@ -56,7 +56,7 @@ export default {
                     this.toast('Morate izabrati datum i vreme!', 'Neuspešno', 'danger')
                     return;
                 }
-                 if(new Date(this.date + ' ' + this.time).getTime() < new Date()){
+                if(new Date(this.date + ' ' + this.time).getTime() < new Date()){
                     this.toast('Rok isporuke ne moze biti pre danasnjeg datuma!', 'Neuspešno', 'danger')
                     return;
                 }
@@ -91,7 +91,7 @@ export default {
                 autoHideDelay: 5000
             })
         },
-     
+    
         closeModal(){
             this.$bvModal.hide('offerModal')
             this.date = ''

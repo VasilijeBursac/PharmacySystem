@@ -1,6 +1,6 @@
 <template>
     <div class="drugs-table">
-        <b-table  striped hover :busy="isBusy" :items="items" :fields="fields">
+        <b-table  striped hover :busy="isBusy" :items="items" :fields="fields" class="text-middle mt-0">
 			<template #table-busy>
 				<div class="text-center text-danger my-2">
 					<b-spinner class="align-middle"></b-spinner>

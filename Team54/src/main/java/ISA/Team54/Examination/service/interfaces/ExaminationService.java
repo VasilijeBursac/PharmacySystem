@@ -40,4 +40,8 @@ public interface ExaminationService {
 	List<Examination> getPatientExaminationsByType(ExaminationType type);
 
 	List<EmployeeExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type);
+	
+	boolean checkIfEmployeeHasScheduledExaminationsInFuture(long pharmacistId, long pharmacyId);
+	void addDermatologistExaminationTerm(Examination examination) throws Exception;
+	List<Examination> getFinishedExaminationReportData(String reportType, long pharmacyId, Date startDate, Date endDate);
 }

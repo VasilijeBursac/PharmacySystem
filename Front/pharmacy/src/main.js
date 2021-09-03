@@ -20,6 +20,25 @@ Vue.use(BootstrapVueIcons)
 Vue.prototype.$http = axios
 Vue.config.productionTip = false;
 
+
+Vue.filter('formatRating', function (items) {
+	items.forEach((item, index) => {
+		items[index] = {...items[index], rating: item.rating == 0 ? 'Nema ocenu' : item.rating}
+	})
+
+	return items
+})
+
+Vue.filter('formatPrice', function (items) {
+	items.forEach((item, index) => {
+		let formatedPrice = item.price == -1 ? "Nije uneta" : item.price + " din"
+		items[index] = {...items[index], price: formatedPrice}
+	})
+
+	return items
+})
+
+
 new Vue({
 	router,
 	store,
@@ -33,8 +52,8 @@ new Vue({
 			localStorage.removeItem("JWT")
 		}
 
-		axios.defaults.baseURL = 'https://team54-pharmacy-backend.herokuapp.com/';
-		//axios.defaults.baseURL = 'http://localhost:9001/';
+		// axios.defaults.baseURL = 'https://team54-pharmacy-backend.herokuapp.com/';
+		axios.defaults.baseURL = 'http://localhost:9001/';
 		axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getJWT;
 
 		

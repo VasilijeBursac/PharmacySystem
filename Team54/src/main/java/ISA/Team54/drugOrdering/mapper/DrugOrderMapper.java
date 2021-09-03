@@ -13,6 +13,7 @@ public class DrugOrderMapper {
 								drugOrder.getDeadline(),
 								drugOrder.getStatus(),
 								drugOrder.getAdministrator().getPharmacy().getName(),
-								drugsInOrder);
+								drugsInOrder,
+								drugOrder.getAdministrator().getName() + " " + drugOrder.getAdministrator().getSurname());
 	}
 }

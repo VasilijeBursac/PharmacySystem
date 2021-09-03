@@ -46,6 +46,13 @@ public class DermatologistWorkSchedule {
 		this.dermatologist = dermatologist;
 		this.pharmacy = pharmacy;
 	}
+	
+	public DermatologistWorkSchedule(DateRange timePeriod, Dermatologist dermatologist, Pharmacy pharmacy) {
+		super();
+		this.timePeriod = timePeriod;
+		this.dermatologist = dermatologist;
+		this.pharmacy = pharmacy;
+	}
 
 	public DateRange getTimePeriod() {
 		return timePeriod;

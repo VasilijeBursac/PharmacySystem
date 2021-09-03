@@ -32,6 +32,7 @@ import ISA.Team54.security.TokenUtils;
 import ISA.Team54.security.UserTokenState;
 import ISA.Team54.security.auth.JwtAuthenticationRequestDTO;
 import ISA.Team54.users.dto.DermatologistRequestDTO;
+import ISA.Team54.users.dto.PharmacistRequestDTO;
 import ISA.Team54.users.dto.PharmacyAdministratorRequestDTO;
 import ISA.Team54.users.dto.UserRequestDTO;
 import ISA.Team54.users.enums.UserRole;
@@ -176,6 +177,23 @@ public class AuthenticationController {
 		return new ResponseEntity<>(user, HttpStatus.CREATED); 
 	} 
 
+	
+	@PostMapping("/signupPharmacist")
+	@PreAuthorize("hasRole('ROLE_PHARMACY_ADMIN')")
+	public ResponseEntity<User> addPharmacist(@RequestBody PharmacistRequestDTO pharmacistRequestDTO, UriComponentsBuilder ucBuilder) {
+
+		User existUser = this.userService.findByUsername(pharmacistRequestDTO.getEmail());
+		if (existUser != null) {
+			throw new ResourceConflictException((long)0, "Username already exists");
+		}
+		
+		User user = this.pharmacyService.addPharmacist(pharmacistRequestDTO);	
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setLocation(ucBuilder.path("/api/user/{userId}").buildAndExpand(user.getId()).toUri()); 
+		return new ResponseEntity<>(user, HttpStatus.CREATED); 
+	}
+	
 
 	@PostMapping("/signupDermatologist")
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")

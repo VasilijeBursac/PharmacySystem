@@ -92,7 +92,7 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 		drugInPharmacyRepository.save(drugInPharmacy);
 
 		new Thread(() -> {
-			emailService.sendEmail("tim54isa@gmail.com","Zakazana rezervacija leka","Uspesno ste rezervisali lek." +
+			emailService.sendEmail("tim54isa@gmail.com","Zakazana rezervacija leka","Uspešno ste rezervisali lek." +
 					" Broj Vaše rezervacije s kojim ćete preuzeti lek je: " + drugReservation.getId());
 		}).start();
 	}
@@ -145,6 +145,7 @@ public class DrugReservationServiceImpl implements DrugReservationService {
 			DrugInPharmacy drugInPharmacy = drugInPharmacyRepository.findDrugInPharmacyById(drugReservation.getReservedDrug().getDrugInPharmacyId().getDrugId(),drugReservation.getReservedDrug().getDrugInPharmacyId().getPharmaciId());
 			drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() - 1);
 			drugReservation.setStatus(ReservationStatus.Sold);
+			drugReservation.setSellingPrice(drugInPharmacy.getPricelist().getPrice());
 			drugReservationRepository.save(drugReservation);
 		}catch(Exception e) {
 			throw new Exception();

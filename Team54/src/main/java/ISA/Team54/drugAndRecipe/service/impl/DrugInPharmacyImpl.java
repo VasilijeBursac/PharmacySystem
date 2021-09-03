@@ -5,17 +5,27 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PessimisticLockingFailureException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyDTO;
+import ISA.Team54.drugAndRecipe.enums.ReservationStatus;
 import ISA.Team54.drugAndRecipe.mapper.DrugInPharmacyMapper;
 import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
+import ISA.Team54.drugAndRecipe.model.DrugInPharmacyId;
+import ISA.Team54.drugAndRecipe.model.Pricelist;
 import ISA.Team54.drugAndRecipe.repository.DrugRepository;
+import ISA.Team54.drugAndRecipe.repository.DrugReservationRepository;
 import ISA.Team54.drugAndRecipe.repository.DrugsInPharmacyRepository;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugInPharmacyService;
+import ISA.Team54.drugOrdering.model.DrugInOrder;
 import ISA.Team54.exceptions.DrugOutOfStockException;
+import ISA.Team54.exceptions.DrugReservedInFutureException;
+import ISA.Team54.shared.model.DateRange;
+import ISA.Team54.users.model.PharmacyAdministrator;
 @Transactional(readOnly = true)
 @Service
 public class DrugInPharmacyImpl implements DrugInPharmacyService {
@@ -24,6 +34,8 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 	private DrugsInPharmacyRepository drugsInPharmacyRepository;
 	@Autowired
 	private DrugRepository drugRepository;
+	@Autowired
+	private DrugReservationRepository drugReservationRepository;
 
 	
 	@Override
@@ -60,7 +72,6 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 		return null;
 	}
 
-	
 	@Override
 	@Transactional(readOnly = false, rollbackFor = DrugOutOfStockException.class )
 	public void decreaseDrugQuantities(List<Long> drugIds, long pharmacyId, List<Integer> quantities) throws DrugOutOfStockException{
@@ -75,6 +86,80 @@ public class DrugInPharmacyImpl implements DrugInPharmacyService {
 				}
 			}
 		}
+	}
+
+	@Transactional//(readOnly = false)
+	@Override
+	public void removeDrugFromPharmacy(long drugId, long pharmacyId) throws DrugReservedInFutureException {
+		boolean isDrugReserved = !drugReservationRepository.getAllReservationsForDrugInPharmacyByStatus(drugId, pharmacyId, ReservationStatus.Reserved).isEmpty();
+
+		if(isDrugReserved) 
+			throw new DrugReservedInFutureException();
+			
+		DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(drugId, pharmacyId);
+		drugInPharmacy.setQuantity(-1);
+		drugsInPharmacyRepository.save(drugInPharmacy); 
+	}
+	
+	@Transactional//(readOnly = false)
+	@Override
+	public void removeOrderedDrugFromPharmacy(long drugId, long pharmacyId){
+		DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(drugId, pharmacyId);
+		
+		if(drugInPharmacy.getQuantity() == 0 && drugInPharmacy.getPricelist() == null) {
+			drugInPharmacy.setQuantity(-1);
+			drugsInPharmacyRepository.save(drugInPharmacy); 
+		}
+	}
+
+	@Transactional
+	@Override
+	public void addDrugToPharmacy(DrugInPharmacy newDrugInPharmacy, boolean isInOrder) {
+		DrugInPharmacy existingDrugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(newDrugInPharmacy.getDrugInPharmacyId().getDrugId(), newDrugInPharmacy.getDrugInPharmacyId().getPharmaciId());
+		
+		if(existingDrugInPharmacy == null) {
+			if (isInOrder)
+				newDrugInPharmacy.setQuantity(0);
+			
+			drugsInPharmacyRepository.save(newDrugInPharmacy);
+		} else {
+			if(existingDrugInPharmacy.getQuantity() == -1) {
+				if (isInOrder)
+					existingDrugInPharmacy.setQuantity(0);
+				else
+					existingDrugInPharmacy.setQuantity(newDrugInPharmacy.getQuantity());
+			}
+			else {
+				if (!isInOrder)
+					existingDrugInPharmacy.setQuantity(existingDrugInPharmacy.getQuantity() + newDrugInPharmacy.getQuantity());
+			}
+				
+			drugsInPharmacyRepository.save(existingDrugInPharmacy);
+		}
+	}
+
+	@Transactional
+	@Override
+	public void updateDrugsQuantities(List<DrugInOrder> drugsInOrder) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		long pharmacyId = ((PharmacyAdministrator) authentication.getPrincipal()).getPharmacy().getId();
+		
+		for (DrugInOrder drugInOrder : drugsInOrder) {
+			DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(drugInOrder.getId().getDrugId(), pharmacyId);
+			drugInPharmacy.setQuantity(drugInPharmacy.getQuantity() + drugInOrder.getQuantity());
+			drugsInPharmacyRepository.save(drugInPharmacy);
+		}
 		
 	}
+
+	@Transactional(readOnly = false)
+	@Override
+	public void editDrugInPharmacyPrice(DrugInPharmacyId drugInPharmacyId, DateRange priceValidDateRange, float price) {
+		DrugInPharmacy drugInPharmacy = drugsInPharmacyRepository.findByDrugIdAndPharmacyId(drugInPharmacyId.getDrugId(), drugInPharmacyId.getPharmaciId());
+		
+		Pricelist pricelist = new Pricelist(drugInPharmacy, priceValidDateRange, price);
+		drugInPharmacy.setPricelist(pricelist);
+		
+		drugsInPharmacyRepository.save(drugInPharmacy);
+	} 
 }

@@ -8,21 +8,31 @@ import javax.persistence.Embeddable;
 public class DrugInOrderId implements Serializable {
 	private long drugId;
 	private long orderId;
+	
+	
 	public DrugInOrderId() {
 		super();
 	}
+	
 	public DrugInOrderId(long drugId, long orderId) {
 		super();
 		this.drugId = drugId;
 		this.orderId = orderId;
 	}
+	
+	public DrugInOrderId(long drugId) {
+		super();
+		this.drugId = drugId;
+	}
+	
+	
 	public long getDrugId() {
 		return drugId;
 	}
 	public void setDrugId(long drugId) {
 		this.drugId = drugId;
 	}
-	public long getOrdeId() {
+	public long getOrderId() {
 		return orderId;
 	}
 	public void setOrderId(long orderId) {

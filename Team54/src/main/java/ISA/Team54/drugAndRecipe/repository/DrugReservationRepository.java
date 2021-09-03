@@ -29,4 +29,7 @@ public interface DrugReservationRepository extends JpaRepository<DrugReservation
     List<DrugReservation> getPassedReservations(ReservationStatus status);
     
     DrugReservation findOneByPatientIdAndStatusAndReservedDrugDrugInPharmacyIdPharmaciId(long patientId, ReservationStatus sold, long pharmacyId);
+    
+    @Query("select r from DrugReservation r where reserved_drug_drug_id = ?1 and reserved_drug_pharmaci_id = ?2 and status = ?3")
+    List<DrugReservation> getAllReservationsForDrugInPharmacyByStatus(long drugId, long pharmacyId, ReservationStatus status);
 }

@@ -41,15 +41,6 @@ const routes = [
     component: MyCalendar
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  },
-  {
     path: "/myPatients",
     name: "myPatients",
     // route level code-splitting
@@ -57,7 +48,8 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/dermatologistAndPharmacist/dermatologist/MyPatients.vue")
-  }, {
+  }, 
+  {
     path: "/searchedPatients",
     name: "searchedPatients",
     // route level code-splitting
@@ -70,13 +62,11 @@ const routes = [
     path: "/examination",
     name: "startExamination",
     component: Examination
-
   },
   {
     path: "/vacation",
     name: "scheduleVacation",
     component: Vacation
-
   },
   {
     path: "/newExamination",
@@ -99,7 +89,6 @@ const routes = [
     component: () =>
       import("../views/pharmacy/DermatologistExaminations.vue")
   },
-
   {
     path: "/systemAdminsPage",
     name: "SystemAdminsPage",
@@ -124,7 +113,6 @@ const routes = [
     component: () =>
       import("../views/systemAdmin/users/SuppliersPage.vue")
   },
-
   {
     path: "/myexaminations",
     name: "MyExaminations",
@@ -157,14 +145,12 @@ const routes = [
     name: "Pharmacies",
     component: () =>
       import("../views/systemAdmin/PharmacyPage.vue")
-
   }, 
   {
     path: "/drugsPage",
     name: "Drugs",
     component: () =>
       import("../views/systemAdmin/DrugsPage.vue")
-
   },
   {
     path: "/pharmacy/:id",
@@ -182,42 +168,37 @@ const routes = [
     path: "/reports-for-pharmacy/:id",
     name: "PharmacyReports",
     component: () =>
-      import("../views/pharmacy/PharmacyReports.vue")
+      import("../views/pharmacy/pharmacy-reports/PharmacyReports.vue")
   },
   {
     path: "/ratings",
     name: "Rating",
     component: () =>
       import("../views/patient/rating/Rating.vue")
-
   },
   {
     path: "/complaints",
     name: "Complaints",
     component: () =>
       import("../views/systemAdmin/Complaints.vue")
-
   },
   {
     path: "/orders",
     name: "Orders",
     component: () =>
       import("../views/supplier/Orders.vue")
-
   },
   {
     path: "/supplier-drugs",
     name: "DrugsInStorage",
     component: () =>
       import("../views/supplier/DrugsInStorage.vue")
-
   },
   {
     path: "/supplier-offers",
     name: "Offers",
     component: () =>
       import("../views/supplier/Offers.vue")
-
   },
   {
     path: "/supplier-profile",
@@ -231,13 +212,13 @@ const routes = [
     import("../views/patient/pharmacy/SubscribedPharmacies.vue")
   },
   {
-    path: "/all-drugs",
+    path: "/drugs",
     name: "AllDrugs",
     component: () =>
     import("../views/patient/drugs/AllDrugs.vue")
   },
   {
-    path: "/drug-informations",
+    path: "/drug-informations/:id/:name",
     name: "DrugInformations",
     component: () =>
     import("../views/patient/drugs/DrugInformations.vue")
@@ -253,8 +234,50 @@ const routes = [
     name: "ERecipesPage",
     component: () =>
     import("../views/patient/eRecipe/ERecipesPage.vue")
-  }
-  
+  },
+  {
+    path: "/pharmacy-drugs",
+    name: "DrugsInPharmacy",
+    component: () =>
+    import("../views/pharmacyAdmin/drugs/DrugsInPharmacy.vue")
+  },
+  {
+    path: "/promotions",
+    name: "Promotions",
+    component: () =>
+    import("../views/pharmacyAdmin/promotions/Promotions.vue")
+  },
+  {
+    path: "/pharmacy-orders",
+    name: "PharmacyOrders",
+    component: () =>
+    import("../views/pharmacyAdmin/orders/PharmacyOrders.vue")
+  },
+  {
+    path: "/pharmacists",
+    name: "Pharmacists",
+    component: () =>
+    import("../views/pharmacyAdmin/pharmacists/Pharmacists.vue")
+  },
+  {
+    path: "/dermatologists",
+    name: "Dermatologists",
+    component: () =>
+    import("../views/pharmacyAdmin/dermatologists/Dermatologists.vue")
+  },
+  {
+    path: "/vacation-requests",
+    name: "VacationRequests",
+    component: () =>
+    import("../views/pharmacyAdmin/vacation-requests/VacationRequests.vue")
+  },
+  {
+    path: "/pharmacy-examinations",
+    name: "PharmacyExaminations",
+    component: () =>
+    import("../views/pharmacyAdmin/examinations/PharmacyExaminations.vue")
+  },
+
 ];
 
 const router = new VueRouter({
