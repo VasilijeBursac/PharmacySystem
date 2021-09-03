@@ -4,7 +4,7 @@
         <b-form>
             <b-form-group id="drug-price-group">
                 <label for="price-input">Cena leka:</label>
-                <b-form-input v-model="drugPrice" id="price-input" 
+                <b-form-input v-model="drugPrice" id="price-input" placeholder="Unesite novu cenu leka"
                 type="number" min="0">
                 </b-form-input>
             </b-form-group>
