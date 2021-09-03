@@ -54,6 +54,14 @@ public class Pricelist {
 		this.price = price;
 	}
 
+	public Pricelist(DrugInPharmacy drugInPharmacy, DateRange priceValidDataRange, float price) {
+		super();
+		this.drugInPharmacy = drugInPharmacy;
+		this.priceValidDataRange = priceValidDataRange;
+		this.price = price;
+	}
+	
+
 	public float getPrice() {
 		return price;
 	}

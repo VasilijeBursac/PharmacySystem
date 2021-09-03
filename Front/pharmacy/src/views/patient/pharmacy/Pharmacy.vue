@@ -1,7 +1,7 @@
 <template>
     <div class="container mt-4">
         <div class="title-options clearfix">
-            <h5 class="h5 float-left mb-4">Lekovi</h5>
+            <h5 class="h5 float-left mb-4">Apoteke</h5>
         </div>
 
         <b-row>
