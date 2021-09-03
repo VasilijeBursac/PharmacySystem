@@ -168,7 +168,7 @@ const routes = [
     path: "/reports-for-pharmacy/:id",
     name: "PharmacyReports",
     component: () =>
-      import("../views/pharmacy/PharmacyReports.vue")
+      import("../views/pharmacy/pharmacy-reports/PharmacyReports.vue")
   },
   {
     path: "/ratings",

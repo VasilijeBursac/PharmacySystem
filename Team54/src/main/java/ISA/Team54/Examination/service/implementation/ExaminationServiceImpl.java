@@ -562,5 +562,14 @@ public class ExaminationServiceImpl implements ExaminationService {
 	public long getMillisForTimePart(Date date) {
 		return date.getHours()*60*60*1000 + date.getMinutes()*60*1000;
 	}
+
+	@Override
+	public List<Examination> getFinishedExaminationReportData(String reportType, long pharmacyId, Date startDate, Date endDate) {
+		List<Examination> examinations = examinationRepository.getFinishedExaminationsForTimeInterval(pharmacyId, startDate, endDate);
+		
+		System.out.println("GLEDAJ VAMO");
+		System.out.println(examinations.size());
+		return examinations;
+	}
 	
 }
