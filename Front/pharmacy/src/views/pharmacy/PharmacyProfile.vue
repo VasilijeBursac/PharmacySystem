@@ -5,7 +5,8 @@
             
             <AddComplaintModal/>
                 
-            <div class="pharmacy-admin-actions-buttons text-right" v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId" >
+            <div class="pharmacy-admin-actions-buttons float-right d-flex" v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId" >
+                <b-link to="/pharmacies">Sve apoteke</b-link>
                 <b-button variant="success" class="mt-n2 mb-3 ml-2"
                     @click="$router.push({name: 'PharmacyReports', params: { id: pharmacyId }})">
                     <b-icon-graph-up shift-h="-3"></b-icon-graph-up>

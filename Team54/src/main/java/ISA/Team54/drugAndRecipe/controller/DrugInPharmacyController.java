@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ISA.Team54.drugAndRecipe.dto.DrugDTO;
+import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyPricelistDTO;
 import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyRequestDTO;
 import ISA.Team54.drugAndRecipe.dto.PharmacyForDrugDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugInPharmacyMapper;
@@ -79,6 +81,17 @@ public class DrugInPharmacyController {
 		try {
 			DrugInPharmacy drugInPharmacy = DrugInPharmacyMapper.DrugInPharmacyRequestDTOToDrugInPharmacy(drugInPharmacyRequestDTO);
 			drugInPharmacyService.addDrugToPharmacy(drugInPharmacy, false);
+			return new ResponseEntity<>( HttpStatus.OK);	
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
+		}
+	}
+	
+	@PutMapping("/editPrice")
+	@PreAuthorize("hasRole('PHARMACY_ADMIN')")
+	public  ResponseEntity<String> editDrugInPharmacyPrice(@RequestBody DrugInPharmacyPricelistDTO drugInPharmacyPricelistDTO){
+		try {
+			drugInPharmacyService.editDrugInPharmacyPrice(drugInPharmacyPricelistDTO.getDrugInPharmacyId(), drugInPharmacyPricelistDTO.getPriceValidDateRange(), drugInPharmacyPricelistDTO.getPrice());
 			return new ResponseEntity<>( HttpStatus.OK);	
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	

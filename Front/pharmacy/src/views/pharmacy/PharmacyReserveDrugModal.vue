@@ -2,7 +2,7 @@
     <b-modal :id="'reserve-drug-modal-' + drug.drugId" hide-footer title="Rezervacija leka">
         <p>Apoteka: {{ pharmacy.name }}</p>
         <p>Lek: {{ drug.drugName }}</p>
-        <p>Cena: {{ drug.price }} din</p>
+        <p>Cena: {{ drug.price }} </p>
         <p>Broj Loyalty poena: {{ drug.loyaltyPoints }}</p>    
 
         <b-form>

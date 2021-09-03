@@ -1,6 +1,7 @@
 <template>
     <div class="pharmacy-drugs">
         <PharmacyReserveDrugModal :pharmacyId="pharmacyId" :drug="selectedDrug" />
+        <EditDrugPriceModal :pharmacyId="pharmacyId" :drug="selectedDrug" />
 
         <b-table striped hover :busy="isBusy" :items="items | formatRating | formatPrice" :fields="fields"  class="text-middle mt-0">
             <template #table-busy>
@@ -27,6 +28,10 @@
                     Rezerviši
                 </b-button>
 
+                <b-button v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId"
+                size="sm" class="ml-2" @click="selectDrugForPriceChange(row.item)">
+					Izmeni cenu
+				</b-button>
                 <b-button v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId"
                 size="sm" variant="danger" class="ml-2" @click="removeDrugFromPharmacy(row.item)">
                     <b-icon icon="x"></b-icon>
@@ -88,7 +93,7 @@ export default {
             this.fields = [
                 { key: 'drugName', label: 'Naziv leka', sortable: true}, 
                 { key: 'drugCode', label: 'Šifra leka', sortable: true}, 
-                { key: 'loyaltyPoints', label: 'Loyalty poena', sortable: true}, 
+                // { key: 'loyaltyPoints', label: 'Loyalty poena', sortable: true}, 
                 { key: 'quantity', label: 'Količina na stanju', sortable: true},
                 { key: 'rating', label: 'Ocena', sortable: true},
                 { key: 'price', label: 'Cena', sortable: true},
@@ -124,7 +129,7 @@ export default {
                         this.toast('danger', 'Neuspešno', 'Trenutno nema lekova u sistemu.')
                     else {
                         this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
-                        window.location.reload() 
+                        // window.location.reload() 
                     } 
                 })
         },
@@ -159,6 +164,11 @@ export default {
             this.selectedDrug = drug
         },
 
+        selectDrugForPriceChange(drug){
+            this.$bvModal.show('edit-drug-price-modal')
+            this.selectedDrug = drug
+        },
+
         toast(variant, title, message){
             this.$bvToast.toast(message, {
                 title: title,
@@ -169,7 +179,8 @@ export default {
     },
 
     components:{
-        PharmacyReserveDrugModal: () => import('../../views/pharmacy/PharmacyReserveDrugModal.vue')
+        PharmacyReserveDrugModal: () => import('../../views/pharmacy/PharmacyReserveDrugModal.vue'),
+        EditDrugPriceModal: () => import("@/views/pharmacyAdmin/drugs/EditDrugPriceModal.vue")
     }
 }
 </script>
