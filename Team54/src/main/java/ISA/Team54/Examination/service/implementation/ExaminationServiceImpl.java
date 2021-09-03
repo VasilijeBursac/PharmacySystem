@@ -40,10 +40,12 @@ import ISA.Team54.users.model.Dermatologist;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacist;
 import ISA.Team54.users.model.Pharmacy;
+import ISA.Team54.users.model.PharmacyAdministrator;
 import ISA.Team54.users.model.User;
 import ISA.Team54.users.repository.DermatologistRepository;
 import ISA.Team54.users.repository.PatientRepository;
 import ISA.Team54.users.repository.PharmacistRepository;
+import ISA.Team54.users.repository.PharmacyAdministratorRepository;
 import ISA.Team54.users.repository.UserRepository;
 import ISA.Team54.vacationAndWorkingTime.model.DermatologistWorkSchedule;
 import ISA.Team54.vacationAndWorkingTime.repository.DermatologistWorkScheduleRepository;
@@ -73,6 +75,8 @@ public class ExaminationServiceImpl implements ExaminationService {
 	private EmailService emailService;
 	@Autowired
 	private LoyaltyRepository loyaltyRepository;
+	@Autowired PharmacyAdministratorRepository pharmacyAdminRepository;
+	
 
 	public Long getCurrentEmployedId() {
 		ExaminationType examinaitonType = ExaminationType.DermatologistExamination;
@@ -488,6 +492,19 @@ public class ExaminationServiceImpl implements ExaminationService {
 	@Override
 	public boolean checkIfEmployeeHasScheduledExaminationsInFuture(long employeeId, long pharmacyId) {
 		return !examinationRepository.getAllFutureExaminationsInPharmacyForEmployee(employeeId, pharmacyId).isEmpty();
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void addDermatologistExaminationTerm(Examination examination) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		PharmacyAdministrator pharmacyAdministrator = pharmacyAdminRepository.findOneById(((PharmacyAdministrator) authentication.getPrincipal()).getId());
+	
+		examination.setStatus(ExaminationStatus.Unfilled);
+		examination.setType(ExaminationType.DermatologistExamination);
+		examination.setPharmacy(pharmacyAdministrator.getPharmacy());
+		
+		examinationRepository.save(examination);
 	}
 
 	

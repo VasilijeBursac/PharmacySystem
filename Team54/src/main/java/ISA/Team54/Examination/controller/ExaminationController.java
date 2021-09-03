@@ -23,6 +23,7 @@ import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.Examination.dto.DefinedExaminationDTO;
 import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
+import ISA.Team54.Examination.dto.EmployeeExaminationTermRequestDTO;
 import ISA.Team54.Examination.dto.ExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
 import ISA.Team54.Examination.dto.ExaminationInformationDTO;
@@ -233,5 +234,17 @@ public class ExaminationController {
 		List<UserInfoDTO> employeeDTOs = new ArrayList<UserInfoDTO>();
 		employees.forEach(e -> employeeDTOs.add(new UserInfoMapper().UserTOUserInfoDTO(e)));
 		return new ResponseEntity<List<UserInfoDTO>>(employeeDTOs, HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/addDermatologistTerm")
+	@PreAuthorize("hasRole('ROLE_PHARMACY_ADMIN')")
+	public ResponseEntity<String> addDermatologistExaminationTerm(@RequestBody EmployeeExaminationTermRequestDTO employeeExaminationTermRequestDTO) {
+		try {
+		examinationService.addDermatologistExaminationTerm(ExaminationMapper.EmployeeExaminationTermRequestToExamination(employeeExaminationTermRequestDTO));
+		return new ResponseEntity<>(HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 }
