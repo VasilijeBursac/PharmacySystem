@@ -9,13 +9,16 @@
                         <ReportPharmacyRating :pharmacyId="pharmacyId" />
                     </b-tab>
 
-                    <b-tab title="Ocene farmaceuta">    
+                    <b-tab title="Ocene farmaceuta">
+                        <PharmacyPharmacistsTable :pharmacyId="pharmacyId" :isReport="true" />    
                     </b-tab>
 
-                    <b-tab title="Ocene dermatologa">    
+                    <b-tab title="Ocene dermatologa">
+                        <PharmacyDermatologistsTable :pharmacyId="pharmacyId" :isReport="true" />         
                     </b-tab>
 
-                    <b-tab title="Održani pregledi">   
+                    <b-tab title="Održani pregledi">
+                        <ReportFinishedExaminations :pharmacyId="pharmacyId" />  
                     </b-tab>
 
                     <b-tab title="Potrošnja lekova">   
@@ -42,7 +45,10 @@ export default {
     },
 
     components: {
-        ReportPharmacyRating: () => import("./ReportPharmacyRating.vue")
+        ReportPharmacyRating: () => import("./ReportPharmacyRating.vue"),
+        PharmacyPharmacistsTable: () => import("@/components/tables/PharmacyPharmacistsTable.vue"),
+        PharmacyDermatologistsTable: () => import("@/components/tables/PharmacyDermatologistsTable.vue"),
+        ReportFinishedExaminations: () => import("./ReportFinishedExaminations.vue"),
     }
 }
 </script>

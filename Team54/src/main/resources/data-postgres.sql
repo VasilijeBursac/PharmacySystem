@@ -410,6 +410,17 @@ values(null, 4, 1750, 'Unfilled', 30, '2021-10-18 14:30', 30, 'DermatologistExam
 insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
 values(null, 1, 1500, 'Filled', 30, '2021-09-20 13:00', 30, 'DermatologistExamination', 6, 1);
 
+insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
+values(null, 1, 1500, 'Filled', 30, '2021-09-02 13:00', 30, 'DermatologistExamination', 6, 1);
+insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
+values(null, 1, 1500, 'Filled', 30, '2021-09-01 13:00', 30, 'DermatologistExamination', 6, 1);
+insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
+values(null, 1, 1500, 'Filled', 30, '2021-08-29 13:00', 30, 'DermatologistExamination', 6, 1);
+insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
+values(null, 1, 1500, 'Filled', 30, '2021-08-29 13:00', 30, 'DermatologistExamination', 6, 1);
+insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
+values(null, 1, 1500, 'Filled', 30, '2021-08-15 13:00', 30, 'DermatologistExamination', 6, 1);
+
 
 
 /*-- SCHEDULED EXAMINATIONS -PHARMACIST --*/

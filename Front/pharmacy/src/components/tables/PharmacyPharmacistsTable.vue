@@ -30,7 +30,11 @@ export default {
         isTableOnPharmacyProfile: {
             type: Boolean,
             default: false
-        }
+        },
+        isReport: {
+            type: Boolean,
+            default: false
+        },
     },
     data: function() {
         return{
@@ -81,6 +85,14 @@ export default {
                 { key: 'rating', label: 'Ocena', sortable: true},
                 { key: 'price', label: 'Cena pregleda', sortable: true},
                 { key: 'pharmacyName', label: 'Apoteka u kojoj radi', sortable: true}
+            ]
+
+
+        if (this.isReport)
+            this.fields = [
+                { key: 'name', label: 'Ime', sortable: true}, 
+                { key: 'surname', label: 'Prezime', sortable: true},
+                { key: 'rating', label: 'Ocena', sortable: true},
             ]
 
         this.$root.$on('update-pharmacy-pharmacists', () => {
