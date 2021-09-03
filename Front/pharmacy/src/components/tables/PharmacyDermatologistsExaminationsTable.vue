@@ -33,13 +33,15 @@ export default {
 
 			data: [],
             fields: [
-                {key:'termin', label: 'Termin', sortable:true}, 
+                {key:'termin', label: 'Termin', sortable:true},
+                {key:'trajanje', label: 'Trajanje', sortable:true}, 
 				{key:'dermatolog', label: 'Dermatolog',sortable:true},  	
                 {key:'ocena', label: 'Ocena', sortable:true}, 
 				{key:'cena sa popustom', label: 'Cena pregleda', sortable:true}
             ],
 			fieldsPatient: [
-				{key:'termin', label: 'Termin', sortable:true}, 
+				{key:'termin', label: 'Termin', sortable:true},
+                {key:'trajanje', label: 'Trajanje', sortable:true}, 
 				{key:'dermatolog', label: 'Dermatolog',sortable:true},  	
                 {key:'ocena', label: 'Ocena', sortable:true}, 
 				{key:'cena sa popustom', label: 'Cena pregleda sa popustom', sortable:true},
@@ -60,6 +62,10 @@ export default {
 
     mounted(){
 		this.getAvailableDermatologistsExaminations()
+
+        this.$root.$on('update-pharmacy-dermatologists-examinations', () => {
+            this.getAvailableDermatologistsExaminations()
+        })
 	},
 
 	methods:{
@@ -74,7 +80,8 @@ export default {
 				let data = []
                 res.data.forEach(element => {
 					data.push({ 
-						termin: new Date(element.term).toLocaleString(), 
+						termin: new Date(element.term).toLocaleString(),
+                        trajanje: element.duration, 
 						dermatolog: element.employee, 
 						ocena: element.employeeRating != 0 ? element.employeeRating : 'Nema ocenu',
 						'cena sa popustom': element.price,

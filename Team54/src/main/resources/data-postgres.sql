@@ -255,6 +255,7 @@ insert into vacation_request( response_message, status, end_date, start_date, de
 insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values ('Neozbiljan radnik.', 'Rejected','2021-04-25', '2021-03-25', null, 18);
 insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values (null, 'Created','2021-10-15', '2021-09-26', 2, null);
 insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values (null, 'Created','2021-10-20', '2021-09-25', 3, null);
+insert into vacation_request( response_message, status, end_date, start_date, dermatologist_id, pharmacist_id) values (null, 'Approved','2021-09-30', '2021-09-25', 1, null);
 
 
 insert into promotion(id, end_date, start_date, description, pharmacy_id) values (1,'2021-03-22', '2021-02-19', '20 posto popusta', 1);
@@ -352,17 +353,19 @@ insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (2,3
 
 
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-01 7:00','2021-06-01 15:00',1,1);
+values('2021-06-01 15:00','2021-06-01 7:00',1,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-02 7:00','2021-06-02 15:00',2,1);
+values('2021-06-02 15:00','2021-06-02 7:00',2,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-07-06 7:00','2021-07-06 15:00',3,1);
+values('2021-07-06 15:00','2021-07-06 7:00',3,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-02 15:00','2021-06-02 20:00',4,2);
+values('2021-06-02 20:00','2021-06-02 15:00',2,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-02 15:00','2021-06-02 20:00',1,2);
+values('2021-06-02 20:00','2021-06-02 15:00',4,2);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-02 15:00','2021-06-02 20:00',1,2);
+values('2021-06-02 20:00','2021-06-02 15:00',1,2);
+insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
+values('2021-06-02 20:00','2021-06-02 15:00',1,2);
 
 /*-- SCHEDULED EXAMINATIONS -DERMATOLOGIST  --*/
 
@@ -404,6 +407,8 @@ insert into examination(diagnose, emplyeed_id, price, status, duration, start, t
 values(null, 1, 1750, 'Filled', 30, '2021-02-18 13:30', 30, 'DermatologistExamination', 6, 2);
 insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
 values(null, 4, 1750, 'Unfilled', 30, '2021-10-18 14:30', 30, 'DermatologistExamination', null, 1);
+insert into examination(diagnose, emplyeed_id, price, status, duration, start, therapy_duration, type, patient_id, pharmacy_id)
+values(null, 1, 1500, 'Filled', 30, '2021-09-20 13:00', 30, 'DermatologistExamination', 6, 1);
 
 
 

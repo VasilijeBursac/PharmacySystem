@@ -8,6 +8,7 @@ import ISA.Team54.Examination.model.Term;
 public class EmployeeExaminationDTO {
 	private long examinationId;
 	private Date term;
+	private int duration;	
 	private String employee;
 	private long employeeId;
 	private double employeeRating;
@@ -18,6 +19,7 @@ public class EmployeeExaminationDTO {
 		super();
 		this.examinationId = examinationId;
 		this.term = term.getStart();
+		this.duration = term.getDuration();
 		this.employee = employee;
 		this.employeeId = employeeId;
 		this.employeeRating = employeeRating;
@@ -74,6 +76,14 @@ public class EmployeeExaminationDTO {
 
 	public void setEmployeeId(long employeeId) {
 		this.employeeId = employeeId;
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
 	}
 
 	
