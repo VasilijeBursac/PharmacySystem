@@ -30,7 +30,7 @@ public class DrugReservation {
 	private ReservationStatus status; 
 	
 	@Column(unique = false, nullable = true)
-	private Float sellingPrice;
+	private float sellingPrice;
 	
 	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
@@ -106,8 +106,10 @@ public class DrugReservation {
 		return sellingPrice;
 	}
 
-	public void setSellingPrice(Float sellingPrice) {
+	public void setSellingPrice(float sellingPrice) {
 		this.sellingPrice = sellingPrice;
 	}
+
+	
 
 }
