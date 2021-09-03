@@ -492,18 +492,21 @@ update drug_in_pharmacy set pricelist_id = 9 where drug_id = 5 and pharmaci_id =
 
 	/* -- DRUG RESERVATION --*/
 
- insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
- values ('2021-03-09 10:00',0,7,3,1);
- insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
- values ('2021-02-06 11:00',1,5,4,1);
+ insert into drug_reservation(reservation_to_date,selling_price,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
+ values ('2021-03-09 10:00',null,0,7,3,1);
+ insert into drug_reservation(reservation_to_date,selling_price,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
+ values ('2021-02-06 11:00',1500,1,5,4,1);
+ 
+ insert into drug_reservation(reservation_to_date,selling_price,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
+ values ('2021-09-02 11:00',null,0,5,4,1);
 
- insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
- values ('2021-05-07 10:00',2,5,1,2);
- insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
- values ('2021-03-04 12:00',0,8,1,2);
+ insert into drug_reservation(reservation_to_date,selling_price,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
+ values ('2021-05-07 10:00',null,2,5,1,2);
+ insert into drug_reservation(reservation_to_date,selling_price,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
+ values ('2021-03-04 12:00',null,0,8,1,2);
 
- insert into drug_reservation(reservation_to_date,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
-  values ('2021-02-09 12:00',0,6,1,2);
+ insert into drug_reservation(reservation_to_date,selling_price,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
+  values ('2021-02-09 12:00',null,0,6,1,2);
   
  /* -- ERECIPE --*/
  
