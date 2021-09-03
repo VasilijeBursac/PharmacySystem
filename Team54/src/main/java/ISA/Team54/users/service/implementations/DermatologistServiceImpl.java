@@ -79,6 +79,8 @@ public class DermatologistServiceImpl implements DermatologistService {
 		
 		List<Dermatologist> pharmacyDermatologists = pharmacy.getDermatologists();
 		
+//		dermatologistWorkScheduleService.deleteByDermatologistAndPharmacy(dermatologistId, pharmacyId);
+		
 		Iterator<Dermatologist> it = pharmacyDermatologists.iterator();
 		while (it.hasNext()) {
 			Dermatologist dermatologist = it.next();
@@ -99,9 +101,9 @@ public class DermatologistServiceImpl implements DermatologistService {
 		Dermatologist dermatologist = dermatologistRepository.findOneById(dermatologistId);
 		
 		DermatologistWorkSchedule workSchedule = dermatologistWorkScheduleService.getDermatologistWorkScheduleInPharmacy(dermatologistId, pharmacyId);
-		if (workSchedule != null)
-			workSchedule.setTimePeriod(new DateRange(dermatologistToPharmacyDTO.getStartDate(), dermatologistToPharmacyDTO.getEndDate()));
-		else
+//		if (workSchedule != null)
+//			workSchedule.setTimePeriod(new DateRange(dermatologistToPharmacyDTO.getStartDate(), dermatologistToPharmacyDTO.getEndDate()));
+//		else
 			dermatologist.getWorkSchedule().add(new DermatologistWorkSchedule(new DateRange(dermatologistToPharmacyDTO.getStartDate(), dermatologistToPharmacyDTO.getEndDate()), dermatologist, pharmacy));
 		
 //		List<DermatologistWorkSchedule> dermatologistWorkSchedules = dermatologist.getWorkSchedule();
@@ -109,18 +111,5 @@ public class DermatologistServiceImpl implements DermatologistService {
 		dermatologistRepository.save(dermatologist);
 		pharmacy.getDermatologists().add(dermatologist);
 		pharmacyRepository.save(pharmacy);
-	}
-
-	
-	public boolean checkIfDermatologistIsFreeInTimePeriod(Dermatologist dermatologist, Date startDate, Date endDate) {
-//		startDate.setDate(0);
-//		startDate.setMonth(0);
-//		startDate.setYear(0);
-//		
-//		for(DermatologistWorkSchedule workSchedule : dermatologist.getWorkSchedule()) {
-//			if(startDate.get)
-//		}
-		
-		return false;
 	}
 }
