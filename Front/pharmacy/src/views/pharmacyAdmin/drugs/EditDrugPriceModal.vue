@@ -39,7 +39,6 @@ import { mapState } from 'vuex';
 export default {
     props: {
         pharmacyId: {
-            type: Number,
             default: null
         },
         drug: {

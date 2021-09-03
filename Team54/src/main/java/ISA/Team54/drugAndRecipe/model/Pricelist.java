@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 
 import ISA.Team54.shared.model.DateRange;
 
@@ -19,7 +20,8 @@ import ISA.Team54.shared.model.DateRange;
 @Entity
 public class Pricelist {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "pricelistSeqGen", sequenceName = "pricelistSeq",initialValue = 10,allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pricelistSeqGen")
 	private long id;
 	
 	@Column(unique = false, nullable = false)

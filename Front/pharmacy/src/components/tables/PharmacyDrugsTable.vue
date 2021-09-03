@@ -16,10 +16,6 @@
 					Prikaži detaljnije
 				</b-button>
 
-                <b-button size="sm" @click="selectDrugForPriceChange(row.item)">
-					Izmeni cenu
-				</b-button>
-
                 <!-- <b-button 
                 size="sm" variant="primary" class="ml-2" @click="displayDrugInformations(row.item)">
                     <b-icon icon="question-circle"></b-icon>
@@ -32,6 +28,10 @@
                     Rezerviši
                 </b-button>
 
+                <b-button v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId"
+                size="sm" class="ml-2" @click="selectDrugForPriceChange(row.item)">
+					Izmeni cenu
+				</b-button>
                 <b-button v-if="loggedUserRole == 'ROLE_PHARMACY_ADMIN' && myPharmacyId == pharmacyId"
                 size="sm" variant="danger" class="ml-2" @click="removeDrugFromPharmacy(row.item)">
                     <b-icon icon="x"></b-icon>
@@ -129,7 +129,7 @@ export default {
                         this.toast('danger', 'Neuspešno', 'Trenutno nema lekova u sistemu.')
                     else {
                         this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
-                        window.location.reload() 
+                        // window.location.reload() 
                     } 
                 })
         },

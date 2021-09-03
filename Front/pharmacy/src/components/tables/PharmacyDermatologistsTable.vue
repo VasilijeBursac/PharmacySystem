@@ -118,7 +118,7 @@ export default {
         getDermatologists() {
             let dermatologistsPath
             if(this.loggedUserRole == 'ROLE_PHARMACY_ADMIN' || this.isTableOnPharmacyProfile)
-                dermatologistsPath = '/dermatologist/byPharmacyId/' + this.myPharmacyId
+                dermatologistsPath = '/dermatologist/byPharmacyId/' + this.pharmacyId
             else
                 dermatologistsPath = '/dermatologist'
 
@@ -136,7 +136,7 @@ export default {
                     console.log(error)
                     if (error.response.status == 403 || error.response.status == 401) {
                         this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
-                        window.location.reload()
+                        // window.location.reload()
                     }
                     else if (error.response.status == 404)
                         this.toast('danger', 'Neuspešno', 'Trenutno nema dermatologa u sistemu.')
