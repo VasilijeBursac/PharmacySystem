@@ -42,5 +42,5 @@ public interface ExaminationService {
 	List<EmployeeExaminationDTO> getExaminationsForPharmacy(long id, ExaminationType type);
 	
 	boolean checkIfEmployeeHasScheduledExaminationsInFuture(long pharmacistId, long pharmacyId);
-	void addDermatologistExaminationTerm(Examination examination);
+	void addDermatologistExaminationTerm(Examination examination) throws Exception;
 }

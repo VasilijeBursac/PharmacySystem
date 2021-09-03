@@ -91,7 +91,7 @@ export default {
                 autoHideDelay: 5000
             })
         },
-     
+    
         closeModal(){
             this.$bvModal.hide('offerModal')
             this.date = ''

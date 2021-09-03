@@ -496,7 +496,7 @@ public class ExaminationServiceImpl implements ExaminationService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void addDermatologistExaminationTerm(Examination examination) {
+	public void addDermatologistExaminationTerm(Examination examination) throws Exception{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		PharmacyAdministrator pharmacyAdministrator = pharmacyAdminRepository.findOneById(((PharmacyAdministrator) authentication.getPrincipal()).getId());
 	
