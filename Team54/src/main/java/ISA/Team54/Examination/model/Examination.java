@@ -102,6 +102,15 @@ public class Examination {
 		this.drugs = examination.drugs;
 	}
 	
+	
+	
+	public Examination(long emplyeedId, Term term, int price) {
+		super();
+		this.emplyeedId = emplyeedId;
+		this.term = term;
+		this.price = price;
+	}
+
 	public Examination() {
 		super();
 	}

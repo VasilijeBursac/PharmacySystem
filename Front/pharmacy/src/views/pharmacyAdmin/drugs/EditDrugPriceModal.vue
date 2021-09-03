@@ -102,11 +102,6 @@ export default {
             })
         },
 
-        formatDateTime(selectedTime) {
-            let currentDate = new Date().toISOString().split("T")[0]
-            return new Date(currentDate + " " + selectedTime).getTime()
-        },
-
         resetFields(){
             this.drugPrice = ""
             this.startDate = ""

@@ -270,7 +270,13 @@ const routes = [
     name: "VacationRequests",
     component: () =>
     import("../views/pharmacyAdmin/vacation-requests/VacationRequests.vue")
-  }
+  },
+  {
+    path: "/pharmacy-examinations",
+    name: "PharmacyExaminations",
+    component: () =>
+    import("../views/pharmacyAdmin/examinations/PharmacyExaminations.vue")
+  },
 
 ];
 

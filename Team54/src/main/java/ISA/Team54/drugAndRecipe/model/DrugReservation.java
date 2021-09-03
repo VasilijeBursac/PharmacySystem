@@ -29,6 +29,9 @@ public class DrugReservation {
 	@Column(unique = false,nullable = true)
 	private ReservationStatus status; 
 	
+	@Column(unique = false, nullable = true)
+	private float sellingPrice;
+	
 	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Patient patient;
@@ -98,4 +101,15 @@ public class DrugReservation {
 	public void setVersion(Long version) {
 		this.version = version;
 	}
+
+	public float getSellingPrice() {
+		return sellingPrice;
+	}
+
+	public void setSellingPrice(float sellingPrice) {
+		this.sellingPrice = sellingPrice;
+	}
+
+	
+
 }

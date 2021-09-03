@@ -25,6 +25,9 @@ import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
 import ISA.Team54.Examination.dto.ExaminationInformationDTO;
 import ISA.Team54.Examination.enums.ExaminationStatus;
 import ISA.Team54.Examination.enums.ExaminationType;
+import ISA.Team54.Examination.exceptions.EmployeeBusyException;
+import ISA.Team54.Examination.exceptions.EmployeeOnVacationException;
+import ISA.Team54.Examination.exceptions.NotInEmployeeWorkScheduleException;
 import ISA.Team54.Examination.mapper.ExaminationForCalendarMapper;
 import ISA.Team54.Examination.mapper.ExaminationMapper;
 import ISA.Team54.Examination.model.Examination;
@@ -40,13 +43,18 @@ import ISA.Team54.users.model.Dermatologist;
 import ISA.Team54.users.model.Patient;
 import ISA.Team54.users.model.Pharmacist;
 import ISA.Team54.users.model.Pharmacy;
+import ISA.Team54.users.model.PharmacyAdministrator;
 import ISA.Team54.users.model.User;
 import ISA.Team54.users.repository.DermatologistRepository;
 import ISA.Team54.users.repository.PatientRepository;
 import ISA.Team54.users.repository.PharmacistRepository;
+import ISA.Team54.users.repository.PharmacyAdministratorRepository;
 import ISA.Team54.users.repository.UserRepository;
 import ISA.Team54.vacationAndWorkingTime.model.DermatologistWorkSchedule;
+import ISA.Team54.vacationAndWorkingTime.model.VacationRequest;
 import ISA.Team54.vacationAndWorkingTime.repository.DermatologistWorkScheduleRepository;
+import ISA.Team54.vacationAndWorkingTime.repository.VacationRequestRepository;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -73,6 +81,11 @@ public class ExaminationServiceImpl implements ExaminationService {
 	private EmailService emailService;
 	@Autowired
 	private LoyaltyRepository loyaltyRepository;
+	@Autowired 
+	PharmacyAdministratorRepository pharmacyAdminRepository;
+	@Autowired
+	VacationRequestRepository vacationRequestRepository;
+	
 
 	public Long getCurrentEmployedId() {
 		ExaminationType examinaitonType = ExaminationType.DermatologistExamination;
@@ -490,5 +503,64 @@ public class ExaminationServiceImpl implements ExaminationService {
 		return !examinationRepository.getAllFutureExaminationsInPharmacyForEmployee(employeeId, pharmacyId).isEmpty();
 	}
 
+	@Override
+	@Transactional(readOnly = false)
+	public void addDermatologistExaminationTerm(Examination examination) throws Exception{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		PharmacyAdministrator pharmacyAdministrator = pharmacyAdminRepository.findOneById(((PharmacyAdministrator) authentication.getPrincipal()).getId());
+	
+		if (checkIsEmployeeOnAnotherExamination(examination.getEmplyeedId(), pharmacyAdministrator.getPharmacy().getId(), examination.getTerm()))
+			throw new EmployeeBusyException();
+		if (checkIfEmployeeIsOnVacationForPeriod(examination.getEmplyeedId(), examination.getTerm()))
+			throw new EmployeeOnVacationException();
+		if (!checkIfTermInDermatologistPharmacyWorkingSchedule(examination.getEmplyeedId(), pharmacyAdministrator.getPharmacy().getId(), examination.getTerm()))
+			throw new NotInEmployeeWorkScheduleException();
+		
+		examination.setStatus(ExaminationStatus.Unfilled);
+		examination.setType(ExaminationType.DermatologistExamination);
+		examination.setPharmacy(pharmacyAdministrator.getPharmacy());
+		
+		examinationRepository.save(examination);
+	}
+
+	public boolean checkIsEmployeeOnAnotherExamination(long employeeId, long pharmacyId, Term term) {
+		List<Examination> futureExaminations = examinationRepository.getAllFutureExaminationsInPharmacyForEmployee(employeeId, pharmacyId);
+		
+		for(Examination examination : futureExaminations) {
+			if((term.getStart().getTime() >= examination.getTerm().getStart().getTime() 
+					&& term.getStart().getTime() < examination.getTerm().getStart().getTime() + examination.getTerm().getDuration()*60*1000)
+			|| (term.getStart().getTime() + term.getDuration()*60*1000 > examination.getTerm().getStart().getTime() 
+					&& term.getStart().getTime() + term.getDuration()*60*1000 < examination.getTerm().getStart().getTime() + examination.getTerm().getDuration()*60*1000))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean checkIfEmployeeIsOnVacationForPeriod(long employeeId, Term term) {
+		List<VacationRequest> futureVacations = vacationRequestRepository.getAllApprovedVacationRequestsForEmployee(employeeId);
+	
+		for(VacationRequest vacation : futureVacations) {
+			if(term.getStart().getTime() >= vacation.getTimePeriod().getStartDate().getTime() && term.getStart().getTime() <= vacation.getTimePeriod().getEndDate().getTime()
+					|| (term.getStart().getTime() + term.getDuration()*60*1000 >= vacation.getTimePeriod().getStartDate().getTime() && term.getStart().getTime() + term.getDuration()*60*1000 <= vacation.getTimePeriod().getEndDate().getTime()))
+					return true;
+		}
+		return false;
+	}
+	
+	public boolean checkIfTermInDermatologistPharmacyWorkingSchedule(long employeeId, long pharmacyId, Term term) {
+		DermatologistWorkSchedule workSchedule = dermatologistWorkScheduleRepository.getByDermatologistIdPharmacyId(employeeId, pharmacyId);
+		
+		if((getMillisForTimePart(term.getStart()) >= getMillisForTimePart(workSchedule.getTimePeriod().getStartDate())
+				&& getMillisForTimePart(term.getStart()) < getMillisForTimePart(workSchedule.getTimePeriod().getEndDate()))
+		&& (getMillisForTimePart(term.getStart()) + term.getDuration()*60*1000 > getMillisForTimePart(workSchedule.getTimePeriod().getStartDate()) 
+				&& getMillisForTimePart(term.getStart()) + term.getDuration()*60*1000 <= getMillisForTimePart(workSchedule.getTimePeriod().getEndDate())))
+			return true;
+		else
+			return false;
+	}
+	
+	public long getMillisForTimePart(Date date) {
+		return date.getHours()*60*60*1000 + date.getMinutes()*60*1000;
+	}
 	
 }

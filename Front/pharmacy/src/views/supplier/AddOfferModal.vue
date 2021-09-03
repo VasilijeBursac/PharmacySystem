@@ -56,7 +56,7 @@ export default {
                     this.toast('Morate izabrati datum i vreme!', 'Neuspešno', 'danger')
                     return;
                 }
-                 if(new Date(this.date + ' ' + this.time).getTime() < new Date()){
+                if(new Date(this.date + ' ' + this.time).getTime() < new Date()){
                     this.toast('Rok isporuke ne moze biti pre danasnjeg datuma!', 'Neuspešno', 'danger')
                     return;
                 }
@@ -91,7 +91,7 @@ export default {
                 autoHideDelay: 5000
             })
         },
-     
+    
         closeModal(){
             this.$bvModal.hide('offerModal')
             this.date = ''

@@ -23,6 +23,7 @@ import ISA.Team54.drugAndRecipe.model.Drug;
 import ISA.Team54.drugAndRecipe.service.interfaces.DrugService;
 import ISA.Team54.Examination.dto.DefinedExaminationDTO;
 import ISA.Team54.Examination.dto.EmployeeExaminationDTO;
+import ISA.Team54.Examination.dto.EmployeeExaminationTermRequestDTO;
 import ISA.Team54.Examination.dto.ExaminationDTO;
 import ISA.Team54.Examination.dto.ExaminationForCalendarDTO;
 import ISA.Team54.Examination.dto.ExaminationInformationDTO;
@@ -31,6 +32,10 @@ import ISA.Team54.Examination.dto.NewExaminationDTO;
 import ISA.Team54.Examination.dto.ScheduleExaminaitonDTO;
 import ISA.Team54.Examination.dto.StartExaminationDTO;
 import ISA.Team54.Examination.enums.ExaminationType;
+
+import ISA.Team54.Examination.exceptions.EmployeeBusyException;
+import ISA.Team54.Examination.exceptions.EmployeeOnVacationException;
+import ISA.Team54.Examination.exceptions.NotInEmployeeWorkScheduleException;
 import ISA.Team54.Examination.mapper.DefinedExamiantionMapper;
 import ISA.Team54.Examination.mapper.ExaminationMapper;
 import ISA.Team54.Examination.model.Examination;
@@ -233,5 +238,23 @@ public class ExaminationController {
 		List<UserInfoDTO> employeeDTOs = new ArrayList<UserInfoDTO>();
 		employees.forEach(e -> employeeDTOs.add(new UserInfoMapper().UserTOUserInfoDTO(e)));
 		return new ResponseEntity<List<UserInfoDTO>>(employeeDTOs, HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/addDermatologistTerm")
+	@PreAuthorize("hasRole('ROLE_PHARMACY_ADMIN')")
+	public ResponseEntity<String> addDermatologistExaminationTerm(@RequestBody EmployeeExaminationTermRequestDTO employeeExaminationTermRequestDTO) {
+		try {
+		examinationService.addDermatologistExaminationTerm(ExaminationMapper.EmployeeExaminationTermRequestToExamination(employeeExaminationTermRequestDTO));
+		return new ResponseEntity<>(HttpStatus.OK);
+		}catch(NotInEmployeeWorkScheduleException e) {
+			return new ResponseEntity<>("Uneto vreme je van radnog vremena dermatologa u ovoj apoteci!",HttpStatus.BAD_REQUEST);
+		}catch(EmployeeOnVacationException e) {
+			return new ResponseEntity<>("Dermatolog je u uneto vreme na odsustvu ili godišnjem odmoru!",HttpStatus.BAD_REQUEST);
+		}catch(EmployeeBusyException e) {
+			return new ResponseEntity<>("Dermatolog ima zakazan pregled u unetom terminu!",HttpStatus.BAD_REQUEST);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 }
