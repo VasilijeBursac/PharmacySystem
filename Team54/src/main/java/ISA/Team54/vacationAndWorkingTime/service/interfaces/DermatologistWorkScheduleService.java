@@ -4,4 +4,5 @@ import ISA.Team54.vacationAndWorkingTime.model.DermatologistWorkSchedule;
 
 public interface DermatologistWorkScheduleService {
 	DermatologistWorkSchedule getDermatologistWorkScheduleInPharmacy(long dermatologistId, long pharmacyId);
+	void deleteByDermatologistAndPharmacy(long dermatologistId, long pharmacyId);
 }

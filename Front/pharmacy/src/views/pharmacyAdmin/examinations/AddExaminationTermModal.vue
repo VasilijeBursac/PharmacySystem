@@ -97,8 +97,6 @@ export default {
                         this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
                         // window.location.reload()
                     }
-                    else if (error.response.status == 400)
-                        this.toast('danger', 'Neuspešno', error.response.data)
                     else if (error.response.status == 404)
                         this.toast('danger', 'Neuspešno', 'Trenutno nema dermatologa u sistemu.')
                     else 
@@ -134,7 +132,7 @@ export default {
                 if (error.response.status == 403 || error.response.status == 401)
                     this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
                 else if (error.response.status == 400)
-                    this.toast('danger', 'Neuspešno', 'Neispravan zahtev.')
+                    this.toast('danger', 'Neuspešno', error.response.data)
                 else 
                     this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
             })

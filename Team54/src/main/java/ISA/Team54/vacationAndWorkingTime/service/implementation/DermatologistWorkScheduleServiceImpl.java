@@ -19,4 +19,10 @@ public class DermatologistWorkScheduleServiceImpl implements DermatologistWorkSc
 		return dermatologistWorkScheduleRepository.getByDermatologistIdPharmacyId(dermatologistId, pharmacyId);
 	}
 
+
+	@Override
+	public void deleteByDermatologistAndPharmacy(long dermatologistId, long pharmacyId) {
+		dermatologistWorkScheduleRepository.deleteByDermatologistIdAndPharmacyId(dermatologistId, pharmacyId);
+	}
+
 }

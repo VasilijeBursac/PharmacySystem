@@ -1,5 +1,6 @@
 package ISA.Team54.users.service.implementations;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import ISA.Team54.users.repository.PharmacyRepository;
 import ISA.Team54.users.service.interfaces.DermatologistService;
 import ISA.Team54.users.service.interfaces.PharmacyService;
 import ISA.Team54.vacationAndWorkingTime.model.DermatologistWorkSchedule;
+import ISA.Team54.vacationAndWorkingTime.service.interfaces.DermatologistWorkScheduleService;
 
 @Service
 public class DermatologistServiceImpl implements DermatologistService {
@@ -30,6 +32,9 @@ public class DermatologistServiceImpl implements DermatologistService {
 	
 	@Autowired 
 	ExaminationService examinationService;
+	
+	@Autowired 
+	DermatologistWorkScheduleService dermatologistWorkScheduleService;
 	
 	
 	@Override
@@ -93,20 +98,29 @@ public class DermatologistServiceImpl implements DermatologistService {
 		Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId);
 		Dermatologist dermatologist = dermatologistRepository.findOneById(dermatologistId);
 		
+		DermatologistWorkSchedule workSchedule = dermatologistWorkScheduleService.getDermatologistWorkScheduleInPharmacy(dermatologistId, pharmacyId);
+		if (workSchedule != null)
+			workSchedule.setTimePeriod(new DateRange(dermatologistToPharmacyDTO.getStartDate(), dermatologistToPharmacyDTO.getEndDate()));
+		else
+			dermatologist.getWorkSchedule().add(new DermatologistWorkSchedule(new DateRange(dermatologistToPharmacyDTO.getStartDate(), dermatologistToPharmacyDTO.getEndDate()), dermatologist, pharmacy));
 		
+//		List<DermatologistWorkSchedule> dermatologistWorkSchedules = dermatologist.getWorkSchedule();
 		
-//		dermatologist.getWorkSchedule().add(new DermatologistWorkSchedule(new DateRange(startDate, endDate), dermatologist, pharmacy));
-		
-		List<DermatologistWorkSchedule> dermatologistWorkSchedules = dermatologist.getWorkSchedule();
-		
-		for(DermatologistWorkSchedule workSchedule : dermatologistWorkSchedules) {
-			if (workSchedule.getDermatologist().getId() == dermatologistId && workSchedule.getPharmacy().getId() == pharmacyId) {
-				workSchedule.setTimePeriod(new DateRange(dermatologistToPharmacyDTO.getStartDate(), dermatologistToPharmacyDTO.getEndDate()));
-			}
-		}
 		dermatologistRepository.save(dermatologist);
 		pharmacy.getDermatologists().add(dermatologist);
 		pharmacyRepository.save(pharmacy);
 	}
 
+	
+	public boolean checkIfDermatologistIsFreeInTimePeriod(Dermatologist dermatologist, Date startDate, Date endDate) {
+//		startDate.setDate(0);
+//		startDate.setMonth(0);
+//		startDate.setYear(0);
+//		
+//		for(DermatologistWorkSchedule workSchedule : dermatologist.getWorkSchedule()) {
+//			if(startDate.get)
+//		}
+		
+		return false;
+	}
 }
