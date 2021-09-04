@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ISA.Team54.Examination.exceptions.EmployeeBusyException;
 import ISA.Team54.drugAndRecipe.dto.DrugInPharmacyRequestDTO;
 import ISA.Team54.drugAndRecipe.mapper.DrugInPharmacyMapper;
 import ISA.Team54.drugAndRecipe.model.DrugInPharmacy;
@@ -108,7 +109,9 @@ public class DermatologistController {
 	public  ResponseEntity<String> addDermatologistToPharmacy(@RequestBody DermatologistToPharmacyDTO dermatologistToPharmacyDTO, @PathVariable long pharmacyId){
 		try {
 			dermatologistService.addDermatologistToPharmacy(dermatologistToPharmacyDTO, pharmacyId);
-			return new ResponseEntity<>( HttpStatus.OK);	
+			return new ResponseEntity<>( HttpStatus.OK);
+		} catch (EmployeeBusyException e) {
+			return new ResponseEntity<>("Uneto radno vreme se preklapa sa radnim vremenom dermatologa u nekoj drugoj apoteci!",HttpStatus.BAD_REQUEST);	
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
 		}

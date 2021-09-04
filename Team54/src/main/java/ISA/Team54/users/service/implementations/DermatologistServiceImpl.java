@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ISA.Team54.Examination.exceptions.EmployeeBusyException;
 import ISA.Team54.Examination.service.interfaces.ExaminationService;
 import ISA.Team54.shared.model.DateRange;
 import ISA.Team54.users.dto.DermatologistRequestDTO;
@@ -94,8 +95,11 @@ public class DermatologistServiceImpl implements DermatologistService {
 	}
 
 	@Override
-	public void addDermatologistToPharmacy(DermatologistToPharmacyDTO dermatologistToPharmacyDTO, long pharmacyId) {
+	public void addDermatologistToPharmacy(DermatologistToPharmacyDTO dermatologistToPharmacyDTO, long pharmacyId) throws Exception{
 		long dermatologistId = dermatologistToPharmacyDTO.getDermatologistId();
+		
+		if(checkIfTimePeriodOverlapsWithAnyDermatologistsWorkSchedule(dermatologistId, dermatologistToPharmacyDTO.getStartDate(), dermatologistToPharmacyDTO.getEndDate()))
+			throw new EmployeeBusyException();
 		
 		Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId);
 		Dermatologist dermatologist = dermatologistRepository.findOneById(dermatologistId);
@@ -111,5 +115,24 @@ public class DermatologistServiceImpl implements DermatologistService {
 		dermatologistRepository.save(dermatologist);
 		pharmacy.getDermatologists().add(dermatologist);
 		pharmacyRepository.save(pharmacy);
+	}
+	
+	public boolean checkIfTimePeriodOverlapsWithAnyDermatologistsWorkSchedule(long dermatologistId, Date startDate, Date endDate) {
+		Dermatologist dermatologist = dermatologistRepository.findOneById(dermatologistId);
+		List<DermatologistWorkSchedule> workSchedules = dermatologist.getWorkSchedule();
+		
+		for(DermatologistWorkSchedule workSchedule : workSchedules) {
+			if((getMillisForTimePart(startDate) >= getMillisForTimePart(workSchedule.getTimePeriod().getStartDate())
+					&& getMillisForTimePart(startDate) < getMillisForTimePart(workSchedule.getTimePeriod().getEndDate()))
+			|| getMillisForTimePart(endDate) > getMillisForTimePart(workSchedule.getTimePeriod().getStartDate()) 
+					&& getMillisForTimePart(endDate) <= getMillisForTimePart(workSchedule.getTimePeriod().getEndDate()))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public long getMillisForTimePart(Date date) {
+		return date.getHours()*60*60*1000 + date.getMinutes()*60*1000;
 	}
 }
