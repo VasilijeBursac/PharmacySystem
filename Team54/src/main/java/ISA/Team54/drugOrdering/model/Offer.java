@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 import ISA.Team54.drugOrdering.enums.OfferStatus;
 import ISA.Team54.users.model.Supplier;
@@ -21,6 +22,10 @@ public class Offer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	
+	@Version
+    @Column(nullable = false, columnDefinition = "int default 1")
+    private Long version;
 	
 	@Column(unique = false)
 	private double totalPrice;
@@ -106,6 +111,14 @@ public class Offer {
 
 	public void setOrder(DrugsOrder order) {
 		this.order = order;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 	
 	

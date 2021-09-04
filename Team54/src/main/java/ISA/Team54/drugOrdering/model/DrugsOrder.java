@@ -19,6 +19,10 @@ public class DrugsOrder {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@Version
+    @Column(nullable = false, columnDefinition = "int default 1")
+    private Long version;
+	
 	@Column
 	private Date deadline;
 	
@@ -92,6 +96,14 @@ public class DrugsOrder {
 
 	public void setAdministrator(PharmacyAdministrator administrator) {
 		this.administrator = administrator;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 	
 	
