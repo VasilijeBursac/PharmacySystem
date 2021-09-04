@@ -96,6 +96,11 @@ export default {
                 this.toast('danger', 'Neuspešno', 'Morate izabrati dermatologa i uneti početak i kraj radnog vremena!')
                 return;
             }
+
+            if (this.formatDateTime(this.startTime) > this.formatDateTime(this.endTime)){
+                this.toast('danger', 'Neuspešno', 'Kraj radnog vremena ne može biti pre početka radnog vremena!')
+                return;
+            }
             
             this.$http
             .post('dermatologist/addToPharmacy/' + this.pharmacyId, {
@@ -107,12 +112,13 @@ export default {
                 this.toast('success', 'Uspešno', 'Uspešno ste dodali dermatologa u apoteku.')
                 this.closeModal();
                 this.$root.$emit('update-pharmacy-dermatologists')
+                this.$root.$emit('update-not-pharmacy-dermatologists')
             })
             .catch( (error) => {
                 if (error.response.status == 403 || error.response.status == 401)
                     this.toast('danger', 'Neuspešno', 'Niste autorizovani za datu akciju.')
                 else if (error.response.status == 400)
-                    this.toast('danger', 'Neuspešno', 'Dermatolog je u unetom periodu zauzet u nekoj drugoj apoteci.')
+                    this.toast('danger', 'Neuspešno', error.response.data)
                 else 
                     this.toast('danger', 'Neuspešno', 'Desila se greška! Molimo pokušajte kasnije.')
             })
