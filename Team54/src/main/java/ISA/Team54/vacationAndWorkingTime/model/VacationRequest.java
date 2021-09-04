@@ -13,6 +13,10 @@ public class VacationRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Version
+    @Column(nullable = false, columnDefinition = "int default 1")
+    private Long version;
+	
 	@Embedded
 	private DateRange timePeriod;
 	
