@@ -525,6 +525,9 @@ update drug_in_pharmacy set pricelist_id = 9 where drug_id = 5 and pharmaci_id =
  insert into drug_reservation(reservation_to_date,selling_price,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
  values ('2021-02-09 12:00',0,0,6,1,2);
   
+ /* -- DRUG DEFICIT QUERY -- */
+ 
+ 
  /* -- ERECIPE --*/
  
  insert into erecipe(date_of_issue,patient_id, code) values ('2021-01-01 12:00',8, '2345');
