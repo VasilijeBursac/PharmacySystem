@@ -345,27 +345,28 @@ insert into drug_in_order( drug_id, order_id, quantity) values ( 4, 10, 20);
 /*-- DERMATOLOGISTS IN PHARMACY --*/
 
 insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (1,1);
-insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (1,2);
+--insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (1,2);
 insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (1,3);
 insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (1,4);
 insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (2,1);
 insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (2,3);
+insert into dermatologists_in_pharmacy(pharmacy_id,dermatologist_id) values (2,2);
 
 
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
 values('2021-06-01 15:00','2021-06-01 7:00',1,1);
-insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-02 15:00','2021-06-02 7:00',2,1);
+--insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
+--values('2021-06-02 15:00','2021-06-02 7:00',2,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
 values('2021-07-06 15:00','2021-07-06 7:00',3,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-02 20:00','2021-06-02 15:00',2,1);
-insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-02 20:00','2021-06-02 15:00',4,2);
+values('2021-06-02 20:00','2021-06-02 15:00',4,1);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
 values('2021-06-02 20:00','2021-06-02 15:00',1,2);
 insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
-values('2021-06-02 20:00','2021-06-02 15:00',1,2);
+values('2021-06-02 20:00','2021-06-02 15:00',3,2);
+insert into dermatologist_work_schedule(end_date,start_date,dermatologist_id,pharmacy_id)
+values('2021-06-02 20:00','2021-06-02 15:00',2,2);
 
 /*-- SCHEDULED EXAMINATIONS -DERMATOLOGIST  --*/
 
@@ -524,6 +525,9 @@ update drug_in_pharmacy set pricelist_id = 9 where drug_id = 5 and pharmaci_id =
  insert into drug_reservation(reservation_to_date,selling_price,status,patient_id,reserved_drug_drug_id,reserved_drug_pharmaci_id)
  values ('2021-02-09 12:00',0,0,6,1,2);
   
+ /* -- DRUG DEFICIT QUERY -- */
+ 
+ 
  /* -- ERECIPE --*/
  
  insert into erecipe(date_of_issue,patient_id, code) values ('2021-01-01 12:00',8, '2345');

@@ -16,7 +16,7 @@ public interface VacationRequestRepository extends JpaRepository<VacationRequest
 	@Query("select vr from VacationRequest vr where vr.dermatologist != null")
 	List<VacationRequest> getDermatologistsVacationRequests();
 	
-	@Query("select vr from VacationRequest vr where vr.dermatologist.id = ?1 or vr.pharmacist.id = ?1")
+	@Query("select vr from VacationRequest vr where (vr.dermatologist.id = ?1 or vr.pharmacist.id = ?1) and vr.status='Approved'")
 	List<VacationRequest> getAllApprovedVacationRequestsForEmployee(long employeeId);
 	
 	
