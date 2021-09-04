@@ -17,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -33,6 +34,10 @@ public class Pharmacy {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGen2")
 	private long id;
 
+	@Version
+    @Column(nullable = false, columnDefinition = "int default 1")
+    private Long version;
+	
 	@Column(unique = false, nullable = false)
 	private String name;
 	@Column(unique = false, nullable = false)
@@ -259,7 +264,19 @@ public class Pharmacy {
 		this.patients = patients;
 	}
 
+	public long getVersion() {
+		return version;
+	}
 
+	public void setVersion(long version) {
+		this.version = version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+	
 	
 	
 }
